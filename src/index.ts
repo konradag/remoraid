@@ -1,2 +1,8 @@
-export const one = 1
-export const two = 2
+export { default as UserExperienceProvider } from "./components/UserExperienceProvider";
+export { default as AppShell } from "./components/AppShell";
+export {
+  useUserExperience,
+  useUpdateUserExperience,
+} from "./components/UserExperienceProvider";
+export { defaultNavbarSettings } from "./lib/navbar-utils";
+export * from "@/lib/types";

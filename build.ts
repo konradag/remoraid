@@ -1,21 +1,44 @@
-import type { BuildConfig } from 'bun'
-import dts from 'bun-plugin-dts'
+import type { BuildConfig } from "bun";
+import dts from "bun-plugin-dts";
+import { cp } from "fs/promises";
+import pkg from "./package.json";
 
-const defaultBuildConfig: BuildConfig = {
-  entrypoints: ['./src/index.ts'],
-  outdir: './dist'
-}
+const sharedBuildConfig: Omit<BuildConfig, "entrypoints"> = {
+  outdir: "./dist",
+  external: Object.keys(pkg.peerDependencies || {}),
+};
+const clientBuildConfig: BuildConfig = {
+  ...sharedBuildConfig,
+  entrypoints: ["./src/index.ts"],
+  banner: '"use client";',
+};
+const sscBuildConfig: BuildConfig = {
+  ...sharedBuildConfig,
+  entrypoints: ["./src/ssc.ts"],
+};
 
 await Promise.all([
   Bun.build({
-    ...defaultBuildConfig,
+    ...clientBuildConfig,
     plugins: [dts()],
-    format: 'esm',
+    format: "esm",
     naming: "[dir]/[name].js",
   }),
   Bun.build({
-    ...defaultBuildConfig,
-    format: 'cjs',
+    ...clientBuildConfig,
+    format: "cjs",
     naming: "[dir]/[name].cjs",
-  })
-])
+  }),
+  Bun.build({
+    ...sscBuildConfig,
+    plugins: [dts()],
+    format: "esm",
+    naming: "[dir]/[name].js",
+  }),
+  Bun.build({
+    ...sscBuildConfig,
+    format: "cjs",
+    naming: "[dir]/[name].cjs",
+  }),
+  cp("src/styles.css", "dist/styles.css"),
+]);

@@ -1,36 +1,59 @@
 {
-  "name": "mantyke",
-  "type": "module",
-  "version": "0.0.0",
+  "name": "remoraid",
+  "version": "1.0.49",
+  "author": "Konrad Goldammer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/konradag/remoraid.git"
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "description": "",
+  "devDependencies": {
+    "@types/bun": "^1.1.10",
+    "@types/css-modules": "^1.0.5",
+    "@types/react": "^19.1.2",
+    "bun-plugin-dts": "^0.3.0",
+    "next": "^15.3.1",
+    "react": "^19.1.0",
+    "react-cookie": "^8.0.1"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-cookie": "^8.0.1",
+    "next": "^15.3.1",
+    "@mantine/core": "^7.17.4",
+    "@mantine/hooks": "^7.17.4",
+    "@tabler/icons-react": "^3.31.0"
+  },
   "exports": {
-    "types": "./dist/index.d.ts",
-    "import": "./dist/index.js",
-    "require": "./dist/index.cjs"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./ssc": {
+      "types": "./dist/ssc.d.ts",
+      "import": "./dist/ssc.js",
+      "require": "./dist/ssc.cjs"
+    },
+    "./styles": "./dist/styles.css"
   },
-  "scripts": {
-    "build": "bun run build.ts",
-    "prepublishOnly": "bun run build"
-  },
+  "bugs": "https://github.com/konradag/remoraid/issues",
+  "description": "A React components library built on top of Mantine",
   "files": [
     "dist"
   ],
   "keywords": [
-    "bun"
+    "bun",
+    "react",
+    "mantine"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/wobsoriano/pkg-name#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wobsoriano/pkg-name.git"
+  "scripts": {
+    "build": "bun run build.ts",
+    "prepublishOnly": "bun run build"
   },
-  "bugs": "https://github.com/wobsoriano/pkg-name/issues",
-  "author": "Robert Soriano <sorianorobertc@gmail.com>",
-  "devDependencies": {
-    "bun-plugin-dts": "^0.3.0",
-    "@types/bun": "^1.1.10"
-  }
+  "type": "module",
+  "types": "./dist/index.d.ts"
 }
