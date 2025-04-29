@@ -1,4 +1,4 @@
-import { IndicatorProps, MantineSize } from "@mantine/core";
+import { IndicatorProps, MantineSize, ScrollAreaProps } from "@mantine/core";
 import { Icon } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
 import { ReactNode } from "react";
@@ -21,6 +21,10 @@ export interface UserExperience {
   navbarSettings: NavbarSettings;
   showWelcomeMessage: boolean;
 }
+export interface RemoraidTheme {
+  transitionDurations: { short: number; medium: number; long: number };
+  scrollAreaProps: ScrollAreaProps;
+}
 export type AppShellLogo = (
   props: Omit<ImageProps, "src" | "alt">
 ) => ReactNode;
@@ -30,4 +34,9 @@ export interface NavbarProps {
   linkIndicator?: (isHovering: boolean) => IndicatorProps;
   logoIndicator?: (isHovering: boolean) => IndicatorProps;
   onLogout?: () => void;
+}
+export interface WidgetConfiguration {
+  widgetId: string;
+  name: string;
+  initialValue?: boolean;
 }

@@ -20,10 +20,7 @@ import {
   Page,
 } from "@/lib/types";
 import { co, getCustomStyles } from "@/lib/utils";
-import {
-  defaultNavbarSettings,
-  defaultNavbarVariant,
-} from "@/lib/navbar-utils";
+import { useUserExperience } from "../RemoraidProvider/UserExperienceProvider";
 
 interface AppShellProps {
   logo: AppShellLogo;
@@ -39,18 +36,17 @@ export default function AppShell({
   navbar,
   user,
 }: PropsWithChildren<AppShellProps>) {
-  const theme = useMantineTheme();
+  const userExperience = useUserExperience();
+  const mantineTheme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
-  const { spacingPx } = getCustomStyles(theme, colorScheme);
+  const { spacingPx } = getCustomStyles(mantineTheme, colorScheme);
   const [opened, { toggle }] = useDisclosure();
 
   // Helpers
   const navbarVariant: NavbarVariant =
-    navbar && navbar.variant ? navbar.variant : defaultNavbarVariant;
+    navbar && navbar.variant ? navbar.variant : userExperience.navbarVariant;
   const navbarSettings: NavbarSettings =
-    navbar && navbar.settings
-      ? navbar.settings
-      : defaultNavbarSettings[defaultNavbarVariant];
+    navbar && navbar.settings ? navbar.settings : userExperience.navbarSettings;
   const navbarLinkSizePx: number = co(
     (v) => !Number.isNaN(v),
     Number(px(navbarSettings.linkSize)),
@@ -69,13 +65,19 @@ export default function AppShell({
         breakpoint: "sm",
         collapsed: { mobile: !opened },
       }}
-      bg={colorScheme === "dark" ? theme.colors.dark[9] : theme.colors.gray[0]}
+      bg={
+        colorScheme === "dark"
+          ? mantineTheme.colors.dark[9]
+          : mantineTheme.colors.gray[0]
+      }
     >
       <MantineAppShell.Header withBorder={false}>
         <Group
           p="md"
           bg={
-            colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.gray[3]
+            colorScheme === "dark"
+              ? mantineTheme.colors.dark[8]
+              : mantineTheme.colors.gray[3]
           }
           hiddenFrom="sm"
         >

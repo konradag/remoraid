@@ -1,14 +1,15 @@
-import {
-  defaultNavbarSettings,
-  defaultNavbarVariant,
-} from "@/lib/navbar-utils";
-import { UserExperience } from "@/lib/types";
+import { NavbarSettings, NavbarVariant, UserExperience } from "@/lib/types";
 import React, { PropsWithChildren, useContext } from "react";
 import { useCookies } from "react-cookie";
+import { defaultSettings as navbarMinimalDefaultSettings } from "@/components/AppShell/NavbarMinimal";
+
+export const defaultNavbarSettings: { [V in NavbarVariant]: NavbarSettings } = {
+  minimal: navbarMinimalDefaultSettings,
+};
 
 export const defaultUserExperience: UserExperience = {
-  navbarVariant: defaultNavbarVariant,
-  navbarSettings: defaultNavbarSettings[defaultNavbarVariant],
+  navbarVariant: "minimal",
+  navbarSettings: defaultNavbarSettings.minimal,
   showWelcomeMessage: true,
 };
 
@@ -27,9 +28,14 @@ export const useUpdateUserExperience = () => {
   return useContext(updateUserExperienceContext);
 };
 
+export interface UserExperienceProviderProps {
+  initialValue?: UserExperience;
+}
+
 export default function UserExperienceProvider({
   children,
-}: PropsWithChildren) {
+  initialValue,
+}: PropsWithChildren<UserExperienceProviderProps>) {
   const [cookies, setCookie] = useCookies();
 
   // Helpers
@@ -66,7 +72,7 @@ export default function UserExperienceProvider({
   const userExperience: UserExperience =
     cookies["userExperience"] && isUserExperience(cookies["userExperience"])
       ? cookies["userExperience"]
-      : defaultUserExperience;
+      : initialValue || defaultUserExperience;
   const updateUserExperience = (
     p: UserExperience | ((prev: UserExperience) => UserExperience)
   ) => {

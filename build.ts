@@ -40,5 +40,5 @@ await Promise.all([
     format: "cjs",
     naming: "[dir]/[name].cjs",
   }),
-  cp("src/styles.css", "dist/styles.css"),
+  cp("src/styles/styles.css", "dist/styles.css"),
 ]);
