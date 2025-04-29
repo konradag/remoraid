@@ -17,4 +17,6 @@ export {
   useWidgetRegistration,
   useWidgetSelection,
 } from "./components/RemoraidProvider/WidgetsProvider";
+export { default as WidgetSelectionHeader } from "./components/WidgetSelectionHeader";
+export { default as CloseButton } from "./components/CloseButton";
 export * from "@/lib/types";

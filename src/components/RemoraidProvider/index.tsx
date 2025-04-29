@@ -5,6 +5,7 @@ import UserExperienceProvider, {
 import WidgetsProvider, { WidgetsProviderProps } from "./WidgetsProvider";
 import ThemeProvider, { ThemeProviderProps } from "./ThemeProvider";
 import { RemoraidTheme, UserExperience } from "@/lib/types";
+import { CookiesProvider, ReactCookieProps } from "react-cookie";
 
 interface RemoraidProviderProps {
   theme?: RemoraidTheme;
@@ -13,6 +14,7 @@ interface RemoraidProviderProps {
     ThemeProvider?: ThemeProviderProps;
     UserExperienceProvider?: UserExperienceProviderProps;
     WidgetsProvider?: WidgetsProviderProps;
+    CookiesProvider?: ReactCookieProps;
   };
 }
 
@@ -23,15 +25,17 @@ export default function RemoraidProvider({
   componentsProps,
 }: PropsWithChildren<RemoraidProviderProps>) {
   return (
-    <ThemeProvider theme={theme} {...componentsProps?.ThemeProvider}>
-      <UserExperienceProvider
-        initialValue={initialUserExperience}
-        {...componentsProps?.UserExperienceProvider}
-      >
-        <WidgetsProvider {...componentsProps?.WidgetsProvider}>
-          {children}
-        </WidgetsProvider>
-      </UserExperienceProvider>
-    </ThemeProvider>
+    <CookiesProvider {...componentsProps?.CookiesProvider}>
+      <ThemeProvider theme={theme} {...componentsProps?.ThemeProvider}>
+        <UserExperienceProvider
+          initialValue={initialUserExperience}
+          {...componentsProps?.UserExperienceProvider}
+        >
+          <WidgetsProvider {...componentsProps?.WidgetsProvider}>
+            {children}
+          </WidgetsProvider>
+        </UserExperienceProvider>
+      </ThemeProvider>
+    </CookiesProvider>
   );
 }

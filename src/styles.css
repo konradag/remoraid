@@ -20,3 +20,8 @@
     }
   }
 }
+.remoraid-widget-close-button {
+  top: calc(var(--ai-size-xs) * -0.25);
+  right: calc(var(--ai-size-xs) * -0.25);
+  z-index: 1;
+}

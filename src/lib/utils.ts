@@ -7,8 +7,6 @@ import {
   px,
   rgba,
 } from "@mantine/core";
-import { NavbarSettings, NavbarVariant } from "./types";
-import { defaultSettings as navbarMinimalDefaultSettings } from "@/components/AppShell/NavbarMinimal";
 
 export const co = <T>(
   condition: (value: T) => boolean,

@@ -1,6 +1,5 @@
 import { RemoraidTheme } from "@/lib/types";
 import React, { useContext, PropsWithChildren } from "react";
-import scrollAreaClasses from "@/styles/scroll.css";
 
 export const defaultRemoraidTheme: RemoraidTheme = {
   transitionDurations: {
@@ -11,7 +10,6 @@ export const defaultRemoraidTheme: RemoraidTheme = {
   scrollAreaProps: {
     scrollbarSize: 8,
     scrollHideDelay: 20,
-    classNames: scrollAreaClasses,
     type: "hover",
   },
 };

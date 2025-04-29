@@ -1,5 +1,4 @@
 import { ActionIcon, Transition, useMantineTheme } from "@mantine/core";
-import classes from "./CloseButton.module.css";
 import { IconX } from "@tabler/icons-react";
 import {
   useActiveWidget,
@@ -30,7 +29,7 @@ export default function CloseButton({ widgetId }: CloseButtonProps) {
         <ActionIcon
           pos="absolute"
           size="xs"
-          className={classes.closeButton}
+          className="remoraid-close-button"
           radius="xl"
           color="red"
           onClick={() => {
