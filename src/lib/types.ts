@@ -1,4 +1,9 @@
-import { IndicatorProps, MantineSize, ScrollAreaProps } from "@mantine/core";
+import {
+  IndicatorProps,
+  MantineBreakpoint,
+  MantineSize,
+  ScrollAreaProps,
+} from "@mantine/core";
 import { Icon } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
 import { ReactNode } from "react";
@@ -23,6 +28,10 @@ export interface UserExperience {
 }
 export interface RemoraidTheme {
   transitionDurations: { short: number; medium: number; long: number };
+  breakpoints: {
+    buttonCollapse: MantineBreakpoint;
+    badgeGroupCollapse: MantineBreakpoint;
+  };
   scrollAreaProps: ScrollAreaProps;
 }
 export type AppShellLogo = (

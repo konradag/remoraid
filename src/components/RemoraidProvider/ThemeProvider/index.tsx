@@ -4,8 +4,12 @@ import React, { useContext, PropsWithChildren } from "react";
 export const defaultRemoraidTheme: RemoraidTheme = {
   transitionDurations: {
     short: 200,
-    medium: 250,
+    medium: 350,
     long: 500,
+  },
+  breakpoints: {
+    buttonCollapse: "md",
+    badgeGroupCollapse: "md",
   },
   scrollAreaProps: {
     scrollbarSize: 8,
