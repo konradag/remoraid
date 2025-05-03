@@ -16,6 +16,7 @@ export const defaultRemoraidTheme: RemoraidTheme = {
     scrollHideDelay: 20,
     type: "hover",
   },
+  containerSize: 1300,
 };
 
 const themeContext = React.createContext<RemoraidTheme>(defaultRemoraidTheme);

@@ -4,8 +4,8 @@ import {
   useActiveWidget,
   useWidgetSelection,
 } from "@/components/RemoraidProvider/WidgetsProvider";
-import { usePathname } from "next/navigation";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import { usePage } from "../Page";
 
 interface CloseButtonProps {
   widgetId: string;
@@ -16,7 +16,7 @@ export default function CloseButton({ widgetId }: CloseButtonProps) {
   const mantineTheme = useMantineTheme();
   const activeWidget = useActiveWidget();
   const { updateWidgetSelection } = useWidgetSelection();
-  const pathname = usePathname();
+  const page = usePage();
 
   return (
     <Transition
@@ -33,7 +33,10 @@ export default function CloseButton({ widgetId }: CloseButtonProps) {
           radius="xl"
           color="red"
           onClick={() => {
-            updateWidgetSelection(pathname, widgetId, false);
+            if (!page) {
+              return;
+            }
+            updateWidgetSelection(page.pageId, widgetId, false);
           }}
           style={transitionStyle}
         >

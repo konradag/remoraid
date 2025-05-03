@@ -80,13 +80,13 @@ export default function WidgetsProvider({
       );
       return;
     }
-    setWidgets({
-      ...widgets,
+    setWidgets((prev) => ({
+      ...prev,
       [pageId]: {
         ...widgets[pageId],
         [widgetId]: { ...widgets[pageId][widgetId], selected: value },
       },
-    });
+    }));
   };
   const updateWidgetSelectionBulk = (
     pageId: string,
@@ -105,15 +105,42 @@ export default function WidgetsProvider({
         selected: selectedWidgetIds.includes(widgetId),
       };
     }
-    setWidgets({
-      ...widgets,
+    setWidgets((prev) => ({
+      ...prev,
       [pageId]: updatedPage,
-    });
+    }));
+  };
+  const registerPage = (
+    pageId: string,
+    initialWidgets: WidgetConfiguration[]
+  ) => {
+    setWidgets((prev) => ({
+      ...prev,
+      [pageId]: initialWidgets.reduce((t, w) => {
+        return {
+          ...t,
+          [w.widgetId]: {
+            name: w.name,
+            selected: w.initialValue === undefined ? true : w.initialValue,
+          },
+        };
+      }, {}),
+    }));
+  };
+  const isPageRegistered = (pageId: string) => {
+    if (!widgets[pageId]) {
+      return false;
+    }
+    return true;
   };
   const registerWidget = (pageId: string, widget: WidgetConfiguration) => {
-    if (!widgets[pageId]) {
+    if (!isPageRegistered(pageId)) {
+      if (widget.allowUnregisteredPageUsage !== false) {
+        registerPage(pageId, [widget]);
+        return;
+      }
       console.error(
-        `Cannot register widget in page ${pageId}. Because this page does exist. Try registering the page first.`
+        `Not allowed to register widget in unregistered page ${pageId}. Try registering the page first.`
       );
       return;
     }
@@ -129,34 +156,11 @@ export default function WidgetsProvider({
       },
     }));
   };
-  const registerPage = (
-    pageId: string,
-    initialWidgets: { widgetId: string; name: string; initialValue?: boolean }[]
-  ) => {
-    setWidgets({
-      ...widgets,
-      [pageId]: initialWidgets.reduce((t, w) => {
-        return {
-          ...t,
-          [w.widgetId]: {
-            name: w.name,
-            selected: w.initialValue === undefined ? true : w.initialValue,
-          },
-        };
-      }, {}),
-    });
-  };
   const isWidgetRegistered = (pageId: string, widgetId: string) => {
     if (!widgets[pageId]) {
       return false;
     }
     if (!widgets[pageId][widgetId]) {
-      return false;
-    }
-    return true;
-  };
-  const isPageRegistered = (pageId: string) => {
-    if (!widgets[pageId]) {
       return false;
     }
     return true;

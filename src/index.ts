@@ -24,4 +24,5 @@ export { default as BadgeMinimal } from "./components/BadgeMinimal";
 export { default as ResponsiveButton } from "./components/ResponsiveButton";
 export { default as WidgetWrapper } from "./components/Widget/WidgetWrapper";
 export { default as Widget } from "./components/Widget";
+export { default as Page } from "./components/Page";
 export * from "@/lib/types";

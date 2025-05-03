@@ -1,9 +1,12 @@
 import CloseButton from "@/components/CloseButton";
+import { usePage } from "@/components/Page";
 import { useRemoraidTheme } from "@/components/RemoraidProvider/ThemeProvider";
 import {
   useUpdateActiveWidget,
+  useWidgetRegistration,
   useWidgetSelection,
 } from "@/components/RemoraidProvider/WidgetsProvider";
+import { WidgetConfiguration } from "@/lib/types";
 import { getCustomStyles } from "@/lib/utils";
 import {
   BoxProps,
@@ -14,8 +17,7 @@ import {
   useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
-import { usePathname } from "next/navigation";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 
 export interface WidgetWrapperComponentsProps {
   container?: BoxProps;
@@ -23,7 +25,7 @@ export interface WidgetWrapperComponentsProps {
 }
 
 export interface WidgetWrapperProps {
-  widgetId: string;
+  config: WidgetConfiguration;
   mt?: MantineSize | number;
   withCloseButton?: boolean;
   componentsProps?: WidgetWrapperComponentsProps;
@@ -31,14 +33,16 @@ export interface WidgetWrapperProps {
 
 export default function WidgetWrapper({
   children,
-  widgetId,
+  config,
   mt,
   withCloseButton,
   componentsProps,
 }: PropsWithChildren<WidgetWrapperProps>) {
   const { isWidgetSelected } = useWidgetSelection();
-  const pathname = usePathname();
+  const { isPageRegistered, isWidgetRegistered, registerWidget } =
+    useWidgetRegistration();
   const updateActiveWidget = useUpdateActiveWidget();
+  const page = usePage();
 
   // Style
   const theme = useRemoraidTheme();
@@ -46,9 +50,22 @@ export default function WidgetWrapper({
   const { colorScheme } = useMantineColorScheme();
   const { transparentBackground } = getCustomStyles(mantineTheme, colorScheme);
 
+  // Helpers
+  const pageRegistered: boolean = page ? isPageRegistered(page.pageId) : false;
+
+  // Effects
+  useEffect(() => {
+    if (!page) {
+      return;
+    }
+    if (!isWidgetRegistered(page.pageId, config.widgetId)) {
+      registerWidget(page.pageId, config);
+    }
+  }, [pageRegistered]);
+
   return (
     <Transition
-      mounted={isWidgetSelected(pathname, widgetId)}
+      mounted={page !== null && isWidgetSelected(page.pageId, config.widgetId)}
       transition="fade-left"
       duration={theme.transitionDurations.medium}
       timingFunction="ease"
@@ -63,14 +80,16 @@ export default function WidgetWrapper({
           h="fit-content"
           style={transitionStyle}
           onMouseEnter={() => {
-            updateActiveWidget(widgetId);
+            updateActiveWidget(config.widgetId);
           }}
           onMouseLeave={() => {
             updateActiveWidget(null);
           }}
           {...componentsProps?.container}
         >
-          {withCloseButton !== false && <CloseButton widgetId={widgetId} />}
+          {withCloseButton !== false && (
+            <CloseButton widgetId={config.widgetId} />
+          )}
           {children}
         </Paper>
       )}

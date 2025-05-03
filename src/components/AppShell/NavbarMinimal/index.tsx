@@ -21,7 +21,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { AppShellLogo, NavbarProps, NavbarSettings, Page } from "@/lib/types";
+import { AppShellLogo, NavbarProps, NavbarSettings } from "@/lib/types";
 import { getCustomStyles } from "@/lib/utils";
 import { useUserExperience } from "@/components/RemoraidProvider/UserExperienceProvider";
 
@@ -104,7 +104,6 @@ function NavbarLink({
 
 interface NavbarMinimalProps extends NavbarProps {
   logo: AppShellLogo;
-  pages: Page[];
   user?: { name: string } | null;
 }
 
@@ -118,8 +117,8 @@ export const defaultSettings: NavbarSettings = {
 
 export default function NavbarMinimal({
   logo,
-  pages,
   user,
+  links: linksProp,
   settings: settingsProp,
   linkIndicator,
   logoIndicator,
@@ -140,7 +139,7 @@ export default function NavbarMinimal({
   // Helpers
   const settings: NavbarSettings =
     settingsProp || userExperience.navbarSettings;
-  const links = pages
+  const links = linksProp
     .filter((link) => !settings.hiddenPages.includes(link.href))
     .map((link) => (
       <NavbarLink

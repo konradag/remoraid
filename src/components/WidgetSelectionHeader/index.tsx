@@ -4,11 +4,11 @@ import {
   useWidgetSelection,
   useWidgets,
 } from "@/components/RemoraidProvider/WidgetsProvider";
-import { usePathname } from "next/navigation";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import { usePage } from "../Page";
 
 interface WidgetSelectionHeaderProps {
-  title: string;
+  title?: string;
   disabledWidgets?: string[];
 }
 
@@ -20,27 +20,34 @@ export default function WidgetSelectionHeader({
   const widgets = useWidgets();
   const { isPageRegistered } = useWidgetRegistration();
   const { updateWidgetSelectionBulk } = useWidgetSelection();
-  const pathname = usePathname();
+  const page = usePage();
+
+  if (!page) {
+    console.error(
+      "'WidgetSelectionHeader' must be rendered inside of a 'Page' component."
+    );
+    return null;
+  }
 
   return (
     <Flex justify="flex-start" align="center" gap="xs">
       <Text size="lg" fw={400}>
-        {title}
+        {title ?? page.name}
       </Text>
       <Divider orientation="vertical" />
-      {isPageRegistered(pathname) && (
+      {isPageRegistered(page.pageId) && (
         <ScrollArea flex={1} {...theme.scrollAreaProps}>
           <Chip.Group
             multiple
-            value={Object.keys(widgets[pathname]).filter(
-              (widgetId) => widgets[pathname][widgetId].selected
+            value={Object.keys(widgets[page.pageId]).filter(
+              (widgetId) => widgets[page.pageId][widgetId].selected
             )}
             onChange={(value: string[]) => {
-              updateWidgetSelectionBulk(pathname, value);
+              updateWidgetSelectionBulk(page.pageId, value);
             }}
           >
             <Flex justify="flex-start" align="center" gap="xs" h="auto">
-              {Object.keys(widgets[pathname]).map((widgetId) => (
+              {Object.keys(widgets[page.pageId]).map((widgetId) => (
                 <Chip
                   value={widgetId}
                   size="sm"
@@ -49,7 +56,7 @@ export default function WidgetSelectionHeader({
                     disabledWidgets && disabledWidgets.includes(widgetId)
                   }
                 >
-                  {widgets[pathname][widgetId].name}
+                  {widgets[page.pageId][widgetId].name}
                 </Chip>
               ))}
             </Flex>

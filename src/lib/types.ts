@@ -8,11 +8,6 @@ import { Icon } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
 import { ReactNode } from "react";
 
-export interface Page {
-  icon: Icon;
-  label: string;
-  href: string;
-}
 export type NavbarVariant = "minimal";
 export interface NavbarSettings {
   hiddenPages: string[];
@@ -33,11 +28,18 @@ export interface RemoraidTheme {
     badgeGroupCollapse: MantineBreakpoint;
   };
   scrollAreaProps: ScrollAreaProps;
+  containerSize: MantineSize | number;
 }
 export type AppShellLogo = (
   props: Omit<ImageProps, "src" | "alt">
 ) => ReactNode;
+export interface NavbarLink {
+  icon: Icon;
+  label: string;
+  href: string;
+}
 export interface NavbarProps {
+  links: NavbarLink[];
   settings?: NavbarSettings;
   variant?: NavbarVariant;
   linkIndicator?: (isHovering: boolean) => IndicatorProps;
@@ -48,4 +50,10 @@ export interface WidgetConfiguration {
   widgetId: string;
   name: string;
   initialValue?: boolean;
+  allowUnregisteredPageUsage?: boolean;
+}
+export interface PageConfiguration {
+  pageId: string;
+  name: string;
+  registerPageDirectly?: boolean;
 }

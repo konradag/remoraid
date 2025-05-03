@@ -17,22 +17,19 @@ import {
   NavbarProps,
   NavbarSettings,
   NavbarVariant,
-  Page,
 } from "@/lib/types";
 import { co, getCustomStyles } from "@/lib/utils";
 import { useUserExperience } from "../RemoraidProvider/UserExperienceProvider";
 
 interface AppShellProps {
   logo: AppShellLogo;
-  pages: Page[];
-  navbar?: NavbarProps;
+  navbar: NavbarProps;
   user?: { name: string } | null; // null when logged out
 }
 
 export default function AppShell({
   children,
   logo,
-  pages,
   navbar,
   user,
 }: PropsWithChildren<AppShellProps>) {
@@ -86,7 +83,7 @@ export default function AppShell({
       </MantineAppShell.Header>
       <MantineAppShell.Navbar withBorder={false}>
         {navbarVariant === "minimal" && (
-          <NavbarMinimal logo={logo} pages={pages} user={user} {...navbar} />
+          <NavbarMinimal logo={logo} user={user} {...navbar} />
         )}
       </MantineAppShell.Navbar>
       <MantineAppShell.Main>

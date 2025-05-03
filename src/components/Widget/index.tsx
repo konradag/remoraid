@@ -17,16 +17,19 @@ import ResponsiveButton, {
   ResponsiveButtonProps,
 } from "../ResponsiveButton";
 import { BadgeMinimalProps } from "../BadgeMinimal";
-import BadgeGroup from "../BadgeGroup";
+import BadgeGroup, { BadgeGroupProps } from "../BadgeGroup";
+import { WidgetConfiguration } from "@/lib/types";
 
 interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
   wrapper?: Omit<WidgetWrapperProps, "widgetId">;
   loader?: LoaderProps;
+  badgeGroup?: BadgeGroupProps;
 }
 
 interface WidgetProps {
   id: string;
   title: string;
+  config?: Partial<Omit<WidgetConfiguration, "widgetId">>;
   badges?: (BadgeMinimalProps | ReactNode)[];
   buttons?: (ResponsiveButtonProps | ReactNode)[];
   loading?: boolean;
@@ -37,6 +40,7 @@ interface WidgetProps {
 export default function Widget({
   children,
   id,
+  config,
   title,
   badges,
   buttons,
@@ -46,7 +50,11 @@ export default function Widget({
 }: PropsWithChildren<WidgetProps>) {
   return (
     <WidgetWrapper
-      widgetId={id}
+      config={{
+        widgetId: id,
+        name: title,
+        ...config,
+      }}
       mt={mt}
       componentsProps={{
         container: componentsProps?.container,
@@ -59,13 +67,15 @@ export default function Widget({
           <Title order={1} size="h3" lineClamp={1}>
             {title}
           </Title>
-          {badges !== undefined && <BadgeGroup badges={badges} />}
+          {badges !== undefined && (
+            <BadgeGroup badges={badges} {...componentsProps?.badgeGroup} />
+          )}
         </Group>
         <Group gap="xs" wrap="nowrap">
           {buttons !== undefined &&
-            buttons.map((e) => {
+            buttons.map((e, i) => {
               if (isResponsiveButtonProps(e)) {
-                return <ResponsiveButton {...e} />;
+                return <ResponsiveButton {...e} key={i} />;
               }
               return e;
             })}

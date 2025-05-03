@@ -1,5 +1,6 @@
 import {
   Badge,
+  BadgeProps,
   Group,
   MantineBreakpoint,
   MantineSize,
@@ -19,6 +20,7 @@ export interface BadgeGroupProps {
   breakpoint?: MantineBreakpoint;
   componentsProps?: {
     tooltip?: TooltipProps;
+    cumulativeBadge?: Omit<BadgeProps, "hiddenFrom" | "circle">;
   };
 }
 
@@ -47,21 +49,23 @@ export default function BadgeGroup({
         wrap="nowrap"
         visibleFrom={breakpoint || theme.breakpoints.badgeGroupCollapse}
       >
-        {badges.map((e) => {
+        {badges.map((e, i) => {
           if (isBadgeMinimalProps(e)) {
-            return <BadgeMinimal {...e} />;
+            return <BadgeMinimal {...e} key={i} />;
           }
           return e;
         })}
       </Group>
       <Tooltip
-        label={`${numVisibleBadges} badges`}
+        label={`${numVisibleBadges} Badges`}
         {...componentsProps?.tooltip}
       >
         <Badge
           hiddenFrom={breakpoint || theme.breakpoints.badgeGroupCollapse}
-          variant="default"
+          variant="light"
           circle
+          style={{ cursor: "pointer" }}
+          {...componentsProps?.cumulativeBadge}
         >
           {numVisibleBadges}
         </Badge>
