@@ -23,7 +23,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AppShellLogo, NavbarProps, NavbarSettings } from "@/lib/types";
 import { getCustomStyles } from "@/lib/utils";
-import { useUserExperience } from "@/components/RemoraidProvider/UserExperienceProvider";
+import { useRemoraidUserExperience } from "@/components/RemoraidProvider/UserExperienceProvider";
 
 interface NavbarLinkProps {
   icon: Icon;
@@ -124,7 +124,7 @@ export default function NavbarMinimal({
   logoIndicator,
   onLogout,
 }: NavbarMinimalProps) {
-  const userExperience = useUserExperience();
+  const { userExperience } = useRemoraidUserExperience();
   const pathname = usePathname();
 
   // Style

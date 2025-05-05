@@ -1,10 +1,11 @@
 import {
+  AlertProps,
   IndicatorProps,
   MantineBreakpoint,
   MantineSize,
   ScrollAreaProps,
 } from "@mantine/core";
-import { Icon } from "@tabler/icons-react";
+import { Icon, IconProps } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
 import { ReactNode } from "react";
 
@@ -28,7 +29,16 @@ export interface RemoraidTheme {
     badgeGroupCollapse: MantineBreakpoint;
   };
   scrollAreaProps: ScrollAreaProps;
+  alertProps: {
+    negative: AlertProps;
+    neutral: AlertProps;
+    positive: AlertProps;
+  };
   containerSize: MantineSize | number;
+  iconProps: {
+    tiny: IconProps;
+    medium: IconProps;
+  };
 }
 export type AppShellLogo = (
   props: Omit<ImageProps, "src" | "alt">

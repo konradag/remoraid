@@ -1,4 +1,3 @@
-import { getCustomStyles } from "@/lib/utils";
 import {
   ActionIcon,
   ActionIconVariant,
@@ -7,10 +6,9 @@ import {
   MantineBreakpoint,
   Tooltip,
   TooltipProps,
-  useMantineColorScheme,
-  useMantineTheme,
 } from "@mantine/core";
 import { Icon } from "@tabler/icons-react";
+import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 export interface ResponsiveButtonProps {
   label: string;
@@ -39,9 +37,7 @@ export default function ResponsiveButton(props: ResponsiveButtonProps) {
     props;
 
   // Style
-  const mantineTheme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
-  const { iconSize } = getCustomStyles(mantineTheme, colorScheme);
+  const theme = useRemoraidTheme();
 
   return (
     <>
@@ -54,14 +50,14 @@ export default function ResponsiveButton(props: ResponsiveButtonProps) {
           aria-label="Refresh"
           hiddenFrom={breakpoint || "md"}
         >
-          <props.icon size={iconSize} />
+          <props.icon {...theme.iconProps.medium} />
         </ActionIcon>
       </Tooltip>
       <Button
         onClick={onClick}
         loading={loading}
         variant={variant || "default"}
-        leftSection={<props.icon size={iconSize} />}
+        leftSection={<props.icon {...theme.iconProps.medium} />}
         visibleFrom={breakpoint || "md"}
       >
         {label}

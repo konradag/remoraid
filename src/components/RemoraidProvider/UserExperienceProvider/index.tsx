@@ -1,5 +1,10 @@
 import { NavbarSettings, NavbarVariant, UserExperience } from "@/lib/types";
-import React, { PropsWithChildren, useContext } from "react";
+import React, {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useCookies } from "react-cookie";
 import { defaultSettings as navbarMinimalDefaultSettings } from "@/components/AppShell/NavbarMinimal";
 
@@ -13,23 +18,26 @@ export const defaultUserExperience: UserExperience = {
   showWelcomeMessage: true,
 };
 
-const userExperienceContext = React.createContext<UserExperience>(
-  defaultUserExperience
-);
-const updateUserExperienceContext = React.createContext<
-  | ((p: UserExperience | ((prev: UserExperience) => UserExperience)) => void)
-  | null
->(null);
+const userExperienceContext = React.createContext<{
+  userExperience: UserExperience;
+  updateUserExperience:
+    | ((p: UserExperience | ((prev: UserExperience) => UserExperience)) => void)
+    | null;
+  processedCookie: boolean;
+}>({
+  userExperience: defaultUserExperience,
+  updateUserExperience: null,
+  processedCookie: false,
+});
 
-export const useUserExperience = () => {
+export const userExperienceCookieName = "remoraid-user-experience";
+
+export const useRemoraidUserExperience = () => {
   return useContext(userExperienceContext);
-};
-export const useUpdateUserExperience = () => {
-  return useContext(updateUserExperienceContext);
 };
 
 export interface UserExperienceProviderProps {
-  initialValue?: UserExperience;
+  initialValue?: Partial<UserExperience>;
 }
 
 export default function UserExperienceProvider({
@@ -37,6 +45,13 @@ export default function UserExperienceProvider({
   initialValue,
 }: PropsWithChildren<UserExperienceProviderProps>) {
   const [cookies, setCookie] = useCookies();
+
+  // State
+  const [userExperience, setUserExperience] = useState<UserExperience>({
+    ...defaultUserExperience,
+    ...initialValue,
+  });
+  const [processedCookie, setProcessedCookie] = useState<boolean>(false);
 
   // Helpers
   const isUserExperience = (x: any): x is UserExperience => {
@@ -69,25 +84,32 @@ export default function UserExperienceProvider({
     }
     return true;
   };
-  const userExperience: UserExperience =
-    cookies["userExperience"] && isUserExperience(cookies["userExperience"])
-      ? cookies["userExperience"]
-      : initialValue || defaultUserExperience;
+
   const updateUserExperience = (
     p: UserExperience | ((prev: UserExperience) => UserExperience)
   ) => {
-    if (typeof p === "function") {
-      setCookie("userExperience", p(userExperience), { path: "/" });
-      return;
-    }
-    setCookie("userExperience", p, { path: "/" });
+    const updatedUserExperience =
+      typeof p === "function" ? p(userExperience) : p;
+    setCookie(userExperienceCookieName, updatedUserExperience, { path: "/" });
+    setUserExperience(updatedUserExperience);
   };
 
+  // Effects
+  useEffect(() => {
+    const userExperienceCookie = cookies[userExperienceCookieName];
+    if (userExperienceCookie && isUserExperience(userExperienceCookie)) {
+      setUserExperience(userExperienceCookie);
+    }
+    if (cookies && !processedCookie) {
+      setProcessedCookie(true);
+    }
+  }, [cookies]);
+
   return (
-    <updateUserExperienceContext.Provider value={updateUserExperience}>
-      <userExperienceContext.Provider value={userExperience}>
-        {children}
-      </userExperienceContext.Provider>
-    </updateUserExperienceContext.Provider>
+    <userExperienceContext.Provider
+      value={{ userExperience, updateUserExperience, processedCookie }}
+    >
+      {children}
+    </userExperienceContext.Provider>
   );
 }

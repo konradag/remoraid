@@ -19,7 +19,7 @@ import {
   NavbarVariant,
 } from "@/lib/types";
 import { co, getCustomStyles } from "@/lib/utils";
-import { useUserExperience } from "../RemoraidProvider/UserExperienceProvider";
+import { useRemoraidUserExperience } from "../RemoraidProvider/UserExperienceProvider";
 
 interface AppShellProps {
   logo: AppShellLogo;
@@ -33,7 +33,7 @@ export default function AppShell({
   navbar,
   user,
 }: PropsWithChildren<AppShellProps>) {
-  const userExperience = useUserExperience();
+  const { userExperience } = useRemoraidUserExperience();
   const mantineTheme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
   const { spacingPx } = getCustomStyles(mantineTheme, colorScheme);

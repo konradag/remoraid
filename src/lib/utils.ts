@@ -28,7 +28,6 @@ export const getCustomStyles: (
   colorScheme: MantineColorScheme
 ) => {
   transparentBackground: string;
-  iconSize: string;
   primaryColor: string;
   spacingPx: { [S in MantineSize]: number };
 } = (theme, colorScheme) => {
@@ -37,7 +36,6 @@ export const getCustomStyles: (
       colorScheme === "dark"
         ? rgba(theme.colors.dark[8], 0.8)
         : rgba(theme.white, 0.8),
-    iconSize: "1.125em",
     primaryColor:
       theme.colors[theme.primaryColor][
         isMantinePrimaryShade(theme.primaryShade)

@@ -3,11 +3,10 @@ export { default as AppShell } from "./components/AppShell";
 export {
   defaultUserExperience,
   defaultNavbarSettings,
-  useUserExperience,
-  useUpdateUserExperience,
+  useRemoraidUserExperience,
 } from "./components/RemoraidProvider/UserExperienceProvider";
 export {
-  defaultRemoraidTheme,
+  defaultTheme,
   useRemoraidTheme,
 } from "./components/RemoraidProvider/ThemeProvider";
 export {
@@ -25,4 +24,6 @@ export { default as ResponsiveButton } from "./components/ResponsiveButton";
 export { default as WidgetWrapper } from "./components/Widget/WidgetWrapper";
 export { default as Widget } from "./components/Widget";
 export { default as Page } from "./components/Page";
+export { default as NotFoundPage } from "./components/Page/NotFoundPage";
+export { default as EnvironmentShell } from "./components/EnvironmentShell";
 export * from "@/lib/types";

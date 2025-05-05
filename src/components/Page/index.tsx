@@ -11,7 +11,7 @@ export const usePage = () => {
   return useContext(pageContext);
 };
 
-interface PageProps {
+export interface PageProps {
   name?: string;
   config?: Partial<Omit<PageConfiguration, "name">>;
   pt?: MantineSize | number;

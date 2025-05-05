@@ -1,4 +1,4 @@
-import { ActionIcon, Transition, useMantineTheme } from "@mantine/core";
+import { ActionIcon, Transition } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 import {
   useActiveWidget,
@@ -13,7 +13,6 @@ interface CloseButtonProps {
 
 export default function CloseButton({ widgetId }: CloseButtonProps) {
   const theme = useRemoraidTheme();
-  const mantineTheme = useMantineTheme();
   const activeWidget = useActiveWidget();
   const { updateWidgetSelection } = useWidgetSelection();
   const page = usePage();
@@ -40,7 +39,7 @@ export default function CloseButton({ widgetId }: CloseButtonProps) {
           }}
           style={transitionStyle}
         >
-          <IconX size={mantineTheme.fontSizes.sm} />
+          <IconX {...theme.iconProps.tiny} />
         </ActionIcon>
       )}
     </Transition>

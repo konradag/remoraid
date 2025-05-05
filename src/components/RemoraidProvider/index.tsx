@@ -8,8 +8,8 @@ import { RemoraidTheme, UserExperience } from "@/lib/types";
 import { CookiesProvider, ReactCookieProps } from "react-cookie";
 
 interface RemoraidProviderProps {
-  theme?: RemoraidTheme;
-  initialUserExperience?: UserExperience;
+  theme?: Partial<RemoraidTheme>;
+  initialUserExperience?: Partial<UserExperience>;
   componentsProps?: {
     ThemeProvider?: ThemeProviderProps;
     UserExperienceProvider?: UserExperienceProviderProps;

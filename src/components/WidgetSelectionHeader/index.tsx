@@ -1,4 +1,11 @@
-import { Chip, Divider, Flex, ScrollArea, Text } from "@mantine/core";
+import {
+  Chip,
+  Divider,
+  Flex,
+  MantineSize,
+  ScrollArea,
+  Text,
+} from "@mantine/core";
 import {
   useWidgetRegistration,
   useWidgetSelection,
@@ -6,15 +13,18 @@ import {
 } from "@/components/RemoraidProvider/WidgetsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { usePage } from "../Page";
+import { IconCheck } from "@tabler/icons-react";
 
 interface WidgetSelectionHeaderProps {
   title?: string;
   disabledWidgets?: string[];
+  mt?: MantineSize | number;
 }
 
 export default function WidgetSelectionHeader({
   title,
   disabledWidgets,
+  mt,
 }: WidgetSelectionHeaderProps) {
   const theme = useRemoraidTheme();
   const widgets = useWidgets();
@@ -30,7 +40,7 @@ export default function WidgetSelectionHeader({
   }
 
   return (
-    <Flex justify="flex-start" align="center" gap="xs">
+    <Flex justify="flex-start" align="center" gap="xs" mt={mt}>
       <Text size="lg" fw={400}>
         {title ?? page.name}
       </Text>
@@ -55,6 +65,7 @@ export default function WidgetSelectionHeader({
                   disabled={
                     disabledWidgets && disabledWidgets.includes(widgetId)
                   }
+                  icon={<IconCheck {...theme.iconProps.tiny} />}
                 >
                   {widgets[page.pageId][widgetId].name}
                 </Chip>

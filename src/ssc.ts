@@ -1,1 +1,1 @@
-export { default as EnvironmentShell } from "./components/EnvironmentShell";
+export { default as EnvironmentShell } from "./components/EnvironmentShell/ServerSideEnvironmentShell";
