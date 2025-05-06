@@ -1,12 +1,13 @@
 export { default as RemoraidProvider } from "./components/RemoraidProvider";
 export { default as AppShell } from "./components/AppShell";
 export {
+  userExperienceCookieName,
   defaultUserExperience,
   defaultNavbarSettings,
   useRemoraidUserExperience,
 } from "./components/RemoraidProvider/UserExperienceProvider";
 export {
-  defaultTheme,
+  createRemoraidTheme,
   useRemoraidTheme,
 } from "./components/RemoraidProvider/ThemeProvider";
 export {

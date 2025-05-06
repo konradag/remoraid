@@ -6,7 +6,6 @@ import {
   useMantineColorScheme,
   Flex,
   Paper,
-  useMantineTheme,
   Divider,
   Indicator,
   IndicatorProps,
@@ -22,8 +21,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { AppShellLogo, NavbarProps, NavbarSettings } from "@/lib/types";
-import { getCustomStyles } from "@/lib/utils";
 import { useRemoraidUserExperience } from "@/components/RemoraidProvider/UserExperienceProvider";
+import { useRemoraidTheme } from "@/components/RemoraidProvider/ThemeProvider";
 
 interface NavbarLinkProps {
   icon: Icon;
@@ -126,11 +125,8 @@ export default function NavbarMinimal({
 }: NavbarMinimalProps) {
   const { userExperience } = useRemoraidUserExperience();
   const pathname = usePathname();
-
-  // Style
-  const theme = useMantineTheme();
+  const theme = useRemoraidTheme();
   const { setColorScheme, colorScheme } = useMantineColorScheme();
-  const { transparentBackground } = getCustomStyles(theme, colorScheme);
 
   // State
   const [isHoveringRoleIndicator, setIsHoveringRoleIndicator] =
@@ -162,7 +158,7 @@ export default function NavbarMinimal({
     <Paper
       h="100%"
       py={settings.py}
-      bg={transparentBackground}
+      bg={theme.transparentBackground}
       radius={0}
       shadow="md"
     >

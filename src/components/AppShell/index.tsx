@@ -18,8 +18,9 @@ import {
   NavbarSettings,
   NavbarVariant,
 } from "@/lib/types";
-import { co, getCustomStyles } from "@/lib/utils";
+import { co } from "@/lib/utils";
 import { useRemoraidUserExperience } from "../RemoraidProvider/UserExperienceProvider";
+import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 interface AppShellProps {
   logo: AppShellLogo;
@@ -35,8 +36,8 @@ export default function AppShell({
 }: PropsWithChildren<AppShellProps>) {
   const { userExperience } = useRemoraidUserExperience();
   const mantineTheme = useMantineTheme();
+  const theme = useRemoraidTheme();
   const { colorScheme } = useMantineColorScheme();
-  const { spacingPx } = getCustomStyles(mantineTheme, colorScheme);
   const [opened, { toggle }] = useDisclosure();
 
   // Helpers
@@ -52,7 +53,9 @@ export default function AppShell({
   const navbarPaddingPx =
     typeof navbarSettings.px === "number"
       ? navbarSettings.px
-      : spacingPx[navbarSettings.px];
+      : theme.spacingPx
+      ? theme.spacingPx[navbarSettings.px]
+      : 0;
 
   return (
     <MantineAppShell

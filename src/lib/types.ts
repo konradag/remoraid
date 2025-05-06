@@ -2,7 +2,9 @@ import {
   AlertProps,
   IndicatorProps,
   MantineBreakpoint,
+  MantineColorScheme,
   MantineSize,
+  MantineTheme,
   ScrollAreaProps,
 } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
@@ -23,6 +25,7 @@ export interface UserExperience {
   showWelcomeMessage: boolean;
 }
 export interface RemoraidTheme {
+  complete: true;
   transitionDurations: { short: number; medium: number; long: number };
   breakpoints: {
     buttonCollapse: MantineBreakpoint;
@@ -39,7 +42,15 @@ export interface RemoraidTheme {
     tiny: IconProps;
     medium: IconProps;
   };
+  transparentBackground?: string;
+  primaryColor?: string;
+  spacingPx?: { [S in MantineSize]: number };
 }
+export type RemoraidThemeCallback = (
+  mantineTheme: MantineTheme,
+  colorScheme: MantineColorScheme
+) => RemoraidTheme;
+export type PartialRemoraidTheme = Omit<Partial<RemoraidTheme>, "complete">;
 export type AppShellLogo = (
   props: Omit<ImageProps, "src" | "alt">
 ) => ReactNode;

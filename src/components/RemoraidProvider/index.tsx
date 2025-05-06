@@ -4,11 +4,16 @@ import UserExperienceProvider, {
 } from "./UserExperienceProvider";
 import WidgetsProvider, { WidgetsProviderProps } from "./WidgetsProvider";
 import ThemeProvider, { ThemeProviderProps } from "./ThemeProvider";
-import { RemoraidTheme, UserExperience } from "@/lib/types";
+import {
+  PartialRemoraidTheme,
+  RemoraidTheme,
+  RemoraidThemeCallback,
+  UserExperience,
+} from "@/lib/types";
 import { CookiesProvider, ReactCookieProps } from "react-cookie";
 
 interface RemoraidProviderProps {
-  theme?: Partial<RemoraidTheme>;
+  theme?: RemoraidTheme | RemoraidThemeCallback | PartialRemoraidTheme;
   initialUserExperience?: Partial<UserExperience>;
   componentsProps?: {
     ThemeProvider?: ThemeProviderProps;

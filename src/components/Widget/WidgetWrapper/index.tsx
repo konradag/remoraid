@@ -7,15 +7,12 @@ import {
   useWidgetSelection,
 } from "@/components/RemoraidProvider/WidgetsProvider";
 import { WidgetConfiguration } from "@/lib/types";
-import { getCustomStyles } from "@/lib/utils";
 import {
   BoxProps,
   MantineSize,
   Paper,
   Transition,
   TransitionProps,
-  useMantineColorScheme,
-  useMantineTheme,
 } from "@mantine/core";
 import { PropsWithChildren, useEffect } from "react";
 
@@ -43,12 +40,7 @@ export default function WidgetWrapper({
     useWidgetRegistration();
   const updateActiveWidget = useUpdateActiveWidget();
   const page = usePage();
-
-  // Style
   const theme = useRemoraidTheme();
-  const mantineTheme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
-  const { transparentBackground } = getCustomStyles(mantineTheme, colorScheme);
 
   // Helpers
   const pageRegistered: boolean = page ? isPageRegistered(page.pageId) : false;
@@ -74,7 +66,7 @@ export default function WidgetWrapper({
         <Paper
           p="md"
           shadow="md"
-          bg={transparentBackground}
+          bg={theme.transparentBackground}
           mt={mt || 0}
           pos="relative"
           h="fit-content"
