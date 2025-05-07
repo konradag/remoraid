@@ -16,6 +16,11 @@ const sscBuildConfig: BuildConfig = {
   ...sharedBuildConfig,
   entrypoints: ["./src/ssc.ts"],
 };
+const jsonFormsBuildConfig: BuildConfig = {
+  ...sharedBuildConfig,
+  entrypoints: ["./src/jsonforms.ts"],
+  banner: '"use client";',
+};
 
 await Promise.all([
   Bun.build({
@@ -37,6 +42,17 @@ await Promise.all([
   }),
   Bun.build({
     ...sscBuildConfig,
+    format: "cjs",
+    naming: "[dir]/[name].cjs",
+  }),
+  Bun.build({
+    ...jsonFormsBuildConfig,
+    plugins: [dts()],
+    format: "esm",
+    naming: "[dir]/[name].js",
+  }),
+  Bun.build({
+    ...jsonFormsBuildConfig,
     format: "cjs",
     naming: "[dir]/[name].cjs",
   }),

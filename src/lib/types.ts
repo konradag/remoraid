@@ -78,3 +78,6 @@ export interface PageConfiguration {
   name: string;
   registerPageDirectly?: boolean;
 }
+export interface FormOptions {
+  withDescriptions: boolean;
+}
