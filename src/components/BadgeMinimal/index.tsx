@@ -14,7 +14,7 @@ export interface BadgeMinimalProps {
   mounted?: boolean;
   componentsProps?: {
     badge?: BadgeProps;
-    transition?: Omit<TransitionProps, "mounted">;
+    transition?: Partial<Omit<TransitionProps, "mounted">>;
     tooltip?: TooltipProps;
   };
 }
@@ -51,8 +51,12 @@ export default function BadgeMinimal(props: BadgeMinimalProps) {
         >
           <Badge
             variant="default"
-            style={{ ...transitionStyle, cursor: "pointer" }}
             {...componentsProps?.badge}
+            style={{
+              ...transitionStyle,
+              cursor: "pointer",
+              ...componentsProps?.badge?.style,
+            }}
           >
             {label}
           </Badge>

@@ -7,18 +7,18 @@ import {
   Tooltip,
   TooltipProps,
 } from "@mantine/core";
-import { Icon } from "@tabler/icons-react";
+import { Icon, IconClick } from "@tabler/icons-react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 export interface ResponsiveButtonProps {
   label: string;
-  icon: Icon;
+  icon?: Icon;
   onClick?: () => void;
   breakpoint?: MantineBreakpoint;
   loading?: boolean;
   variant?: Extract<ButtonVariant, ActionIconVariant>;
   componentsProps?: {
-    tooltip?: TooltipProps;
+    tooltip?: Partial<TooltipProps>;
   };
 }
 
@@ -26,7 +26,7 @@ export const isResponsiveButtonProps = (e: any): e is ResponsiveButtonProps => {
   if (typeof e !== "object") {
     return false;
   }
-  if (!("label" in e) || !("icon" in e)) {
+  if (!("label" in e)) {
     return false;
   }
   return true;
@@ -35,9 +35,14 @@ export const isResponsiveButtonProps = (e: any): e is ResponsiveButtonProps => {
 export default function ResponsiveButton(props: ResponsiveButtonProps) {
   const { onClick, label, loading, variant, componentsProps, breakpoint } =
     props;
-
-  // Style
   const theme = useRemoraidTheme();
+
+  // Helpers
+  const icon = props.icon ? (
+    <props.icon {...theme.iconProps.medium} />
+  ) : (
+    <IconClick {...theme.iconProps.medium} />
+  );
 
   return (
     <>
@@ -50,14 +55,14 @@ export default function ResponsiveButton(props: ResponsiveButtonProps) {
           aria-label="Refresh"
           hiddenFrom={breakpoint || "md"}
         >
-          <props.icon {...theme.iconProps.medium} />
+          {icon}
         </ActionIcon>
       </Tooltip>
       <Button
         onClick={onClick}
         loading={loading}
         variant={variant || "default"}
-        leftSection={<props.icon {...theme.iconProps.medium} />}
+        leftSection={props.icon ? icon : undefined}
         visibleFrom={breakpoint || "md"}
       >
         {label}

@@ -17,8 +17,8 @@ import {
 import { PropsWithChildren, useEffect } from "react";
 
 export interface WidgetWrapperComponentsProps {
-  container?: BoxProps;
-  transition?: Omit<TransitionProps, "mounted">;
+  container?: Partial<BoxProps>;
+  transition?: Partial<Omit<TransitionProps, "mounted">>;
 }
 
 export interface WidgetWrapperProps {

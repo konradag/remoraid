@@ -19,8 +19,8 @@ export interface BadgeGroupProps {
   gap?: MantineSize | number;
   breakpoint?: MantineBreakpoint;
   componentsProps?: {
-    tooltip?: TooltipProps;
-    cumulativeBadge?: Omit<BadgeProps, "hiddenFrom" | "circle">;
+    tooltip?: Partial<TooltipProps>;
+    cumulativeBadge?: Partial<Omit<BadgeProps, "hiddenFrom" | "circle">>;
   };
 }
 
@@ -38,16 +38,12 @@ export default function BadgeGroup({
     isBadgeMinimalProps(e) ? e.mounted !== false : true
   ).length;
 
-  if (numVisibleBadges === 0) {
-    return <></>;
-  }
-
   return (
     <>
       <Group
-        gap={gap || "xs"}
+        gap={gap ?? "xs"}
         wrap="nowrap"
-        visibleFrom={breakpoint || theme.breakpoints.badgeGroupCollapse}
+        visibleFrom={breakpoint ?? theme.breakpoints.badgeGroupCollapse}
       >
         {badges.map((e, i) => {
           if (isBadgeMinimalProps(e)) {
@@ -57,11 +53,12 @@ export default function BadgeGroup({
         })}
       </Group>
       <Tooltip
-        label={`${numVisibleBadges} Badges`}
+        label={`${numVisibleBadges} badge${numVisibleBadges === 1 ? "" : "s"}`}
         {...componentsProps?.tooltip}
       >
         <Badge
-          hiddenFrom={breakpoint || theme.breakpoints.badgeGroupCollapse}
+          hiddenFrom={breakpoint ?? theme.breakpoints.badgeGroupCollapse}
+          hidden={numVisibleBadges === 0}
           variant="light"
           circle
           style={{ cursor: "pointer" }}

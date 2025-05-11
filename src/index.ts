@@ -21,6 +21,7 @@ export { default as WidgetSelectionHeader } from "./components/WidgetSelectionHe
 export { default as CloseButton } from "./components/CloseButton";
 export { default as BadgeGroup } from "./components/BadgeGroup";
 export { default as BadgeMinimal } from "./components/BadgeMinimal";
+export { default as AlertMinimal } from "./components/AlertMinimal";
 export { default as ResponsiveButton } from "./components/ResponsiveButton";
 export { default as WidgetWrapper } from "./components/Widget/WidgetWrapper";
 export { default as Widget } from "./components/Widget";

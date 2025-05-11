@@ -24,6 +24,7 @@ export interface UserExperience {
   navbarSettings: NavbarSettings;
   showWelcomeMessage: boolean;
 }
+export type AlertCategory = "negative" | "neutral" | "positive";
 export interface RemoraidTheme {
   complete: true;
   transitionDurations: { short: number; medium: number; long: number };
@@ -33,9 +34,7 @@ export interface RemoraidTheme {
   };
   scrollAreaProps: ScrollAreaProps;
   alertProps: {
-    negative: AlertProps;
-    neutral: AlertProps;
-    positive: AlertProps;
+    [C in AlertCategory]: AlertProps;
   };
   containerSize: MantineSize | number;
   iconProps: {
