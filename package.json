@@ -1,6 +1,6 @@
 {
   "name": "remoraid",
-  "version": "1.1.43",
+  "version": "1.1.44",
   "author": "Konrad Goldammer",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
     "@types/bun": "^1.1.10",
     "@types/css-modules": "^1.0.5",
     "@types/react": "^19.1.2",
-    "bun-plugin-dts": "^0.3.0",
+    "bun-dts": "^0.1.22",
     "next": "^15.3.1",
     "react": "^19.1.0",
     "react-cookie": "^8.0.1"
@@ -31,22 +31,24 @@
     "@jsonforms/vanilla-renderers": "^3.5.1"
   },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js",
+      "require": "./dist/core/index.cjs"
     },
-    "./ssc": {
-      "types": "./dist/ssc.d.ts",
-      "import": "./dist/ssc.js",
-      "require": "./dist/ssc.cjs"
+    "./core/styles.css": {
+      "default": "./dist/core/styles.css"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.cjs"
     },
     "./jsonforms": {
-      "types": "./dist/jsonforms.d.ts",
-      "import": "./dist/jsonforms.js",
-      "require": "./dist/jsonforms.cjs"
-    },
-    "./styles": "./dist/styles.css"
+      "types": "./dist/jsonforms/index.d.ts",
+      "import": "./dist/jsonforms/index.js",
+      "require": "./dist/jsonforms/index.cjs"
+    }
   },
   "bugs": "https://github.com/konradag/remoraid/issues",
   "description": "A React components library built on top of Mantine",
@@ -63,6 +65,5 @@
     "build": "bun run build.ts",
     "prepublishOnly": "bun run build"
   },
-  "type": "module",
-  "types": "./dist/index.d.ts"
+  "type": "module"
 }

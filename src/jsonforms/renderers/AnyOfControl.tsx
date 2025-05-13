@@ -3,20 +3,12 @@ import {
   useJsonForms,
   withJsonFormsControlProps,
 } from "@jsonforms/react";
-import { JsonSchema } from "@jsonforms/core";
+import { ControlProps, OwnPropsOfControl } from "@jsonforms/core";
 import { Input, Paper, Select } from "@mantine/core";
-import { useFormOptions } from "@/components/FormOptionsProvider";
+import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
+import { ComponentType } from "react";
 
-interface AnyOfProps {
-  data: { [index: string]: any } | undefined;
-  handleChange(path: string, value: any): void;
-  schema: JsonSchema;
-  path: string;
-  label?: string;
-  required?: boolean;
-}
-
-const AnyOfControl = (props: AnyOfProps) => {
+function PlainAnyOfControl(props: ControlProps) {
   const { data, schema, label, required, handleChange, path } = props;
   const {
     formOptions: { withDescriptions },
@@ -55,7 +47,6 @@ const AnyOfControl = (props: AnyOfProps) => {
   } else if (typeof data === "boolean") {
     type = "boolean";
   }
-  console.log(label, data, type);
 
   const typeProperties = schema.anyOf
     ? schema.anyOf.find((a) => a.type === type) || {}
@@ -115,6 +106,7 @@ const AnyOfControl = (props: AnyOfProps) => {
       </Input.Wrapper>
     </>
   );
-};
-
-export default withJsonFormsControlProps(AnyOfControl);
+}
+const AnyOfControl: ComponentType<OwnPropsOfControl> =
+  withJsonFormsControlProps(PlainAnyOfControl);
+export default AnyOfControl;

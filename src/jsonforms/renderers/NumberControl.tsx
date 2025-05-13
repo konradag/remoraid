@@ -1,25 +1,17 @@
-import { useFormOptions } from "@/components/FormOptionsProvider";
-import { JsonSchema } from "@jsonforms/core";
+import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
+import { ControlProps, OwnPropsOfControl } from "@jsonforms/core";
 import { withJsonFormsControlProps } from "@jsonforms/react";
 import { NumberInput } from "@mantine/core";
+import { ComponentType } from "react";
 
-interface NumberControlProps {
-  data: any;
-  handleChange(path: string, value: any): void;
-  path: string;
-  label: string;
-  schema: JsonSchema;
-  required?: boolean;
-}
-
-const NumberControl = ({
+function PlainNumberControl({
   data,
   handleChange,
   path,
   label,
   required,
   schema,
-}: NumberControlProps) => {
+}: ControlProps) {
   const {
     formOptions: { withDescriptions },
   } = useFormOptions();
@@ -40,6 +32,8 @@ const NumberControl = ({
       />
     </>
   );
-};
+}
 
-export default withJsonFormsControlProps(NumberControl);
+export const NumberControl: ComponentType<OwnPropsOfControl> =
+  withJsonFormsControlProps(PlainNumberControl);
+export default NumberControl;

@@ -1,25 +1,17 @@
-import { useFormOptions } from "@/components/FormOptionsProvider";
-import { JsonSchema } from "@jsonforms/core";
+import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
+import { ControlProps, OwnPropsOfControl } from "@jsonforms/core";
 import { withJsonFormsControlProps } from "@jsonforms/react";
 import { DatePickerInput } from "@mantine/dates";
+import { ComponentType } from "react";
 
-interface TimestampControlProps {
-  data: any;
-  handleChange(path: string, value: any): void;
-  path: string;
-  label: string;
-  schema: JsonSchema;
-  required?: boolean;
-}
-
-const TimestampControl = ({
+function PlainTimestampControl({
   data,
   handleChange,
   path,
   label,
   required,
   schema,
-}: TimestampControlProps) => {
+}: ControlProps) {
   const {
     formOptions: { withDescriptions },
   } = useFormOptions();
@@ -40,6 +32,8 @@ const TimestampControl = ({
       />
     </>
   );
-};
+}
 
-export default withJsonFormsControlProps(TimestampControl);
+const TimestampControl: ComponentType<OwnPropsOfControl> =
+  withJsonFormsControlProps(PlainTimestampControl);
+export default TimestampControl;

@@ -1,25 +1,17 @@
-import { useFormOptions } from "@/components/FormOptionsProvider";
-import { JsonSchema } from "@jsonforms/core";
+import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
+import { ControlProps, OwnPropsOfControl } from "@jsonforms/core";
 import { withJsonFormsControlProps } from "@jsonforms/react";
 import { TextInput } from "@mantine/core";
+import { ComponentType } from "react";
 
-interface TextControlProps {
-  data: string | undefined;
-  handleChange(path: string, value: any): void;
-  path: string;
-  label: string;
-  schema: JsonSchema;
-  required?: boolean;
-}
-
-const TextControl = ({
+function PlainTextControl({
   data,
   handleChange,
   path,
   label,
   required,
   schema,
-}: TextControlProps) => {
+}: ControlProps) {
   const {
     formOptions: { withDescriptions },
   } = useFormOptions();
@@ -39,6 +31,8 @@ const TextControl = ({
       />
     </>
   );
-};
+}
 
-export default withJsonFormsControlProps(TextControl);
+const TextControl: ComponentType<OwnPropsOfControl> =
+  withJsonFormsControlProps(PlainTextControl);
+export default TextControl;

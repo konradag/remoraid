@@ -1,4 +1,4 @@
-import { JsonSchema } from "@jsonforms/core";
+import { ControlProps, JsonSchema, OwnPropsOfControl } from "@jsonforms/core";
 import {
   JsonForms,
   useJsonForms,
@@ -15,20 +15,11 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-import { useState } from "react";
-import { useFormOptions } from "@/components/FormOptionsProvider";
-import { useRemoraidTheme } from "@/components/RemoraidProvider/ThemeProvider";
+import { ComponentType, ReactNode, useState } from "react";
+import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
+import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 
-interface ArrayControlProps {
-  data: any[] | undefined;
-  handleChange(path: string, value: any): void;
-  path: string;
-  label: string;
-  schema: JsonSchema;
-  required?: boolean;
-}
-
-const ArrayControl = (props: ArrayControlProps) => {
+function PlainArrayControl(props: ControlProps): ReactNode {
   const mantineTheme = useMantineTheme();
   const theme = useRemoraidTheme();
   const { label, schema, data, handleChange, path, required } = props;
@@ -56,9 +47,9 @@ const ArrayControl = (props: ArrayControlProps) => {
         withAsterisk={required}
       >
         <Paper
-          withBorder={data !== undefined && data.length > 0}
+          withBorder={Array.isArray(data) && data.length > 0}
           shadow="0"
-          p={data !== undefined && data.length > 0 ? "sm" : 0}
+          p={Array.isArray(data) && data.length > 0 ? "sm" : 0}
           mt={
             withDescriptions &&
             schema.description &&
@@ -68,7 +59,7 @@ const ArrayControl = (props: ArrayControlProps) => {
           }
         >
           <Stack align="stretch" justify="flex-start" gap="sm">
-            {data !== undefined ? (
+            {Array.isArray(data) ? (
               data.map((item, i) => {
                 return (
                   <Flex
@@ -157,6 +148,8 @@ const ArrayControl = (props: ArrayControlProps) => {
       </Input.Wrapper>
     </>
   );
-};
+}
 
-export default withJsonFormsControlProps(ArrayControl);
+const ArrayControl: ComponentType<OwnPropsOfControl> =
+  withJsonFormsControlProps(PlainArrayControl);
+export default ArrayControl;

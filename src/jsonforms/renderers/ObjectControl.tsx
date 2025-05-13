@@ -1,22 +1,14 @@
-import { JsonSchema } from "@jsonforms/core";
 import {
   JsonForms,
   useJsonForms,
   withJsonFormsControlProps,
 } from "@jsonforms/react";
 import { Input, Paper } from "@mantine/core";
-import { useFormOptions } from "@/components/FormOptionsProvider";
+import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
+import { ControlProps, OwnPropsOfControl } from "@jsonforms/core";
+import { ComponentType } from "react";
 
-interface ObjectControlProps {
-  data: { [index: string]: any } | undefined;
-  handleChange(path: string, value: any): void;
-  schema: JsonSchema;
-  path: string;
-  label?: string;
-  required?: boolean;
-}
-
-const ObjectControl = (props: ObjectControlProps) => {
+function PlainObjectControl(props: ControlProps) {
   const { label, schema, data, handleChange, path, required } = props;
   const {
     formOptions: { withDescriptions },
@@ -59,6 +51,8 @@ const ObjectControl = (props: ObjectControlProps) => {
       </Input.Wrapper>
     </>
   );
-};
+}
 
-export default withJsonFormsControlProps(ObjectControl);
+const ObjectControl: ComponentType<OwnPropsOfControl> =
+  withJsonFormsControlProps(PlainObjectControl);
+export default ObjectControl;
