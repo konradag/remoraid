@@ -27,6 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   # Run tests
   test:
+    if: github.repository == 'konradag/remoraid-internal'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,6 +44,7 @@ jobs:
           bun test
   # Publish private package to GitHub Packages
   publish-gpr:
+    if: github.repository == 'konradag/remoraid-internal'
     needs: test
     runs-on: ubuntu-latest
     permissions:
