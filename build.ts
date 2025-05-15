@@ -3,7 +3,7 @@ import { dts } from "bun-dts";
 import { cp } from "fs/promises";
 import packageJson from "./package.json";
 
-const packages: string[] = ["core", "server", "jsonforms"];
+const packages: string[] = ["core", "server", "jsonforms", "modals"];
 type Package = (typeof packages)[number];
 
 const sharedBuildConfig: (
@@ -26,6 +26,10 @@ const buildConfigs: { [P in Package]: BuildConfig } = {
   jsonforms: {
     ...sharedBuildConfig("jsonforms", true),
     entrypoints: ["./src/jsonforms/index.ts"],
+  },
+  modals: {
+    ...sharedBuildConfig("modals", true),
+    entrypoints: ["./src/modals/index.ts"],
   },
 };
 

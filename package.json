@@ -1,6 +1,6 @@
 {
   "name": "remoraid",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "Konrad Goldammer",
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "@mantine/core": "^7.17.4",
     "@mantine/hooks": "^7.17.4",
     "@mantine/dates": "7.17.4",
+    "@mantine/modals": "7.17.4",
     "@tabler/icons-react": "^3.31.0",
     "@jsonforms/core": "^3.5.1",
     "@jsonforms/react": "^3.5.1",
@@ -48,6 +49,11 @@
       "types": "./dist/jsonforms/index.d.ts",
       "import": "./dist/jsonforms/index.js",
       "require": "./dist/jsonforms/index.cjs"
+    },
+    "./modals": {
+      "types": "./dist/modals/index.d.ts",
+      "import": "./dist/modals/index.js",
+      "require": "./dist/modals/index.cjs"
     }
   },
   "bugs": "https://github.com/konradag/remoraid/issues",
