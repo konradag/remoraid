@@ -3,7 +3,7 @@ import { PropsWithChildren, ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 export interface EnvironmentShellProps {
-  vars: string[];
+  vars: (string | undefined)[];
   message?: string;
   m?: MantineSize | number;
   mt?: MantineSize | number;
@@ -20,7 +20,7 @@ export default function EnvironmentShell({
   const theme = useRemoraidTheme();
 
   // Helpers
-  const missingVars = vars.filter((v) => !process.env[v]);
+  const missingVars = vars.filter((v) => v === undefined);
 
   if (missingVars.length !== 0) {
     return (
