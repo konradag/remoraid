@@ -3,7 +3,7 @@ import { PropsWithChildren, ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 export interface EnvironmentShellProps {
-  vars: (string | undefined)[];
+  environment: string | Record<string, string | undefined>;
   message?: string;
   m?: MantineSize | number;
   mt?: MantineSize | number;
@@ -11,7 +11,7 @@ export interface EnvironmentShellProps {
 
 export default function EnvironmentShell({
   children,
-  vars,
+  environment,
   message,
   m,
   mt,
@@ -20,14 +20,21 @@ export default function EnvironmentShell({
   const theme = useRemoraidTheme();
 
   // Helpers
-  const missingVars = vars.filter((v) => v === undefined);
+  let undefinedKeys: string[];
+  if (typeof environment === "string") {
+    undefinedKeys = process.env[environment] === undefined ? [environment] : [];
+  } else {
+    undefinedKeys = Object.keys(environment).filter(
+      (key) => environment[key] === undefined
+    );
+  }
 
-  if (missingVars.length !== 0) {
+  if (undefinedKeys.length !== 0) {
     return (
       <Alert
         {...theme.alertProps.neutral}
         title={`Please Specify Environment Variable${
-          missingVars.length > 1 ? "s" : ""
+          undefinedKeys.length > 1 ? "s" : ""
         }`}
         m={m}
         mt={mt}
@@ -35,7 +42,7 @@ export default function EnvironmentShell({
         {message ??
           `
         Components could not be rendered because the following environment
-        variables are not specified: ${missingVars.join(", ")}.
+        variables are not specified: ${undefinedKeys.join(", ")}.
       `}
       </Alert>
     );
