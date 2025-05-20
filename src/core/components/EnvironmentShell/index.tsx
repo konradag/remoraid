@@ -1,12 +1,17 @@
-import { Alert, MantineSize } from "@mantine/core";
+import { Alert, ContainerProps, MantineSize } from "@mantine/core";
 import { PropsWithChildren, ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import PageContainer from "../Page/PageContainer";
 
 export interface EnvironmentShellProps {
-  environment: string | Record<string, string | undefined>;
+  environment: Record<string, string | undefined>;
   message?: string;
   m?: MantineSize | number;
   mt?: MantineSize | number;
+  withContainer?: boolean;
+  componentsProps?: {
+    container?: ContainerProps;
+  };
 }
 
 export default function EnvironmentShell({
@@ -15,37 +20,39 @@ export default function EnvironmentShell({
   message,
   m,
   mt,
+  withContainer,
+  componentsProps,
 }: PropsWithChildren<EnvironmentShellProps>): ReactNode {
   // Style
   const theme = useRemoraidTheme();
 
   // Helpers
-  let undefinedKeys: string[];
-  if (typeof environment === "string") {
-    undefinedKeys = process.env[environment] === undefined ? [environment] : [];
-  } else {
-    undefinedKeys = Object.keys(environment).filter(
-      (key) => environment[key] === undefined
-    );
-  }
+  const undefinedKeys = Object.keys(environment).filter(
+    (key) => environment[key] === undefined
+  );
+  const alertTitle = `Please Specify Environment Variable${
+    undefinedKeys.length > 1 ? "s" : ""
+  }`;
+  const alertMessage = `Components could not be rendered because the following environment variables are not specified: ${undefinedKeys.join(
+    ", "
+  )}.`;
+  const alert = (
+    <Alert {...theme.alertProps.neutral} title={alertTitle} m={m} mt={mt}>
+      {message ?? alertMessage}
+    </Alert>
+  );
 
-  if (undefinedKeys.length !== 0) {
+  if (undefinedKeys.length === 0) {
+    return <>{children}</>;
+  }
+  if (withContainer) {
     return (
-      <Alert
-        {...theme.alertProps.neutral}
-        title={`Please Specify Environment Variable${
-          undefinedKeys.length > 1 ? "s" : ""
-        }`}
-        m={m}
-        mt={mt}
+      <PageContainer
+        componentsProps={{ container: componentsProps?.container }}
       >
-        {message ??
-          `
-        Components could not be rendered because the following environment
-        variables are not specified: ${undefinedKeys.join(", ")}.
-      `}
-      </Alert>
+        {alert}
+      </PageContainer>
     );
   }
-  return <>{children}</>;
+  return alert;
 }

@@ -1,14 +1,14 @@
-import { Container, ContainerProps, MantineSize } from "@mantine/core";
+import { ContainerProps, MantineSize } from "@mantine/core";
 import React, {
   PropsWithChildren,
   ReactNode,
   useContext,
   useEffect,
 } from "react";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { usePathname } from "next/navigation";
 import { PageConfiguration } from "@/core/lib/types";
 import { useWidgets } from "../RemoraidProvider/WidgetsProvider";
+import PageContainer from "./PageContainer";
 
 const pageContext = React.createContext<PageConfiguration | null>(null);
 
@@ -33,9 +33,6 @@ export default function Page({
   const pathname = usePathname();
   const { isPageRegistered, registerPage } = useWidgets();
 
-  // Style
-  const theme = useRemoraidTheme();
-
   // Helpers
   const pageId = config?.pageId ?? pathname;
 
@@ -50,13 +47,12 @@ export default function Page({
 
   return (
     <pageContext.Provider value={{ name: name ?? pathname, pageId, ...config }}>
-      <Container
-        size={theme.containerSize}
-        pt={pt ?? "md"}
-        {...componentsProps?.container}
+      <PageContainer
+        pt={pt}
+        componentsProps={{ container: componentsProps?.container }}
       >
         {children}
-      </Container>
+      </PageContainer>
     </pageContext.Provider>
   );
 }

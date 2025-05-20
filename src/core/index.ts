@@ -20,5 +20,6 @@ export { default as ResponsiveButton } from "./components/ResponsiveButton";
 export { default as WidgetWrapper } from "./components/Widget/WidgetWrapper";
 export { default as Widget } from "./components/Widget";
 export { default as Page } from "./components/Page";
+export { default as PageContainer } from "./components/Page/PageContainer";
 export { default as NotFoundPage } from "./components/Page/NotFoundPage";
 export { default as EnvironmentShell } from "./components/EnvironmentShell";
