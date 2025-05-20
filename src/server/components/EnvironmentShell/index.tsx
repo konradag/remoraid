@@ -5,27 +5,29 @@ export interface ServerEnvironmentShellProps extends EnvironmentShellProps {}
 
 export default function EnvironmentShell({
   children,
-  vars,
+  environment,
   message,
 }: PropsWithChildren<ServerEnvironmentShellProps>): ReactNode {
   // Helpers
-  const missingVars = vars.filter((v) => !process.env[v]);
+  const undefinedKeys = Object.keys(environment).filter(
+    (key) => environment[key] === undefined
+  );
 
-  if (missingVars.length !== 0) {
-    return (
-      <div style={{ padding: 5 }}>
-        <h1 style={{ fontWeight: 700 }}>
-          Environment variable{missingVars.length > 1 ? "s" : ""} missing:
-        </h1>
-        <ul style={{ margin: 5 }}>
-          {missingVars.map((v, i) => (
-            <li key={i}>{v}</li>
-          ))}
-        </ul>
-        <p>Please specify in your &apos;.env&apos; file.</p>
-        {message !== undefined && <p>message</p>}
-      </div>
-    );
+  if (undefinedKeys.length === 0) {
+    return <>{children}</>;
   }
-  return <>{children}</>;
+  return (
+    <div style={{ padding: 5 }}>
+      <h1 style={{ fontWeight: 700 }}>
+        Environment variable{undefinedKeys.length > 1 ? "s" : ""} missing:
+      </h1>
+      <ul style={{ margin: 5 }}>
+        {undefinedKeys.map((v, i) => (
+          <li key={i}>{v}</li>
+        ))}
+      </ul>
+      <p>Please specify in your &apos;.env&apos; file.</p>
+      {message !== undefined && <p>message</p>}
+    </div>
+  );
 }
