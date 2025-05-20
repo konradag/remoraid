@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
 import { ContextModalProps } from "@mantine/modals";
 import { JsonInput, JsonInputProps } from "@mantine/core";
+import { useRemoraidTheme } from "@/core";
 
 export interface JSONModalProps {
-  content: string;
+  content: any;
   componentsProps?: {
     jsonInput?: JsonInputProps;
   };
@@ -12,11 +13,19 @@ export interface JSONModalProps {
 export default function JSONModal({
   innerProps,
 }: ContextModalProps<JSONModalProps>): ReactNode {
+  const theme = useRemoraidTheme();
+
+  //Helpers
+  const stringValue =
+    typeof innerProps.content === "string"
+      ? innerProps.content
+      : JSON.stringify(innerProps.content, null, theme.jsonStringifySpace);
+
   return (
     <>
       <JsonInput
         variant="filled"
-        value={innerProps.content}
+        value={stringValue}
         validationError="Invalid JSON"
         formatOnBlur
         autosize
