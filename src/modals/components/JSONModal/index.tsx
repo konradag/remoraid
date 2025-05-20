@@ -16,7 +16,6 @@ export default function JSONModal({
     <>
       <JsonInput
         variant="filled"
-        pt="md"
         value={innerProps.content}
         validationError="Invalid JSON"
         formatOnBlur
