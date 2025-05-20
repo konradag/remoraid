@@ -119,6 +119,7 @@ export const createRemoraidTheme: (
       medium: defaultMediumIconProps,
       tiny: { size: 14, stroke: 3 },
     },
+    jsonStringifySpace: 2,
     transparentBackground,
     primaryColor,
     spacingPx,

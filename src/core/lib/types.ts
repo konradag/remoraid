@@ -41,6 +41,7 @@ export interface RemoraidTheme {
     tiny: IconProps;
     medium: IconProps;
   };
+  jsonStringifySpace: string | number;
   transparentBackground?: string;
   primaryColor?: string;
   spacingPx?: { [S in MantineSize]: number };
