@@ -5,7 +5,7 @@ import { usePage } from "../Page";
 import { ReactNode } from "react";
 import { useWidgets } from "../RemoraidProvider/WidgetsProvider";
 
-interface CloseButtonProps {
+export interface CloseButtonProps {
   widgetId: string;
 }
 

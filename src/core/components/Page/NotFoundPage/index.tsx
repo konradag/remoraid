@@ -4,7 +4,7 @@ import { Alert } from "@mantine/core";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { usePathname } from "next/navigation";
 
-interface NotFoundPageProps {
+export interface NotFoundPageProps {
   message?: string;
   componentsProps?: {
     page?: PageProps;

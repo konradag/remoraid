@@ -22,7 +22,7 @@ const formOptionsContext = React.createContext<FormOptionsContext>({
 export const useFormOptions = (): FormOptionsContext =>
   useContext(formOptionsContext);
 
-interface FormOptionsProviderProps {
+export interface FormOptionsProviderProps {
   initialValue?: Partial<FormOptions>;
 }
 

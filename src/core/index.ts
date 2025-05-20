@@ -1,25 +1,64 @@
-export { default as RemoraidProvider } from "./components/RemoraidProvider";
-export { default as AppShell } from "./components/AppShell";
+export {
+  default as RemoraidProvider,
+  RemoraidProviderProps,
+} from "./components/RemoraidProvider";
+export { default as AppShell, AppShellProps } from "./components/AppShell";
 export {
   userExperienceCookieName,
   defaultUserExperience,
   defaultNavbarSettings,
   useRemoraidUserExperience,
+  UserExperienceProviderProps,
 } from "./components/RemoraidProvider/UserExperienceProvider";
 export {
   createRemoraidTheme,
   useRemoraidTheme,
+  ThemeProviderProps,
 } from "./components/RemoraidProvider/ThemeProvider";
-export { useWidgets } from "./components/RemoraidProvider/WidgetsProvider";
-export { default as WidgetSelectionHeader } from "./components/WidgetSelectionHeader";
-export { default as CloseButton } from "./components/CloseButton";
-export { default as BadgeGroup } from "./components/BadgeGroup";
-export { default as BadgeMinimal } from "./components/BadgeMinimal";
-export { default as AlertMinimal } from "./components/AlertMinimal";
-export { default as ResponsiveButton } from "./components/ResponsiveButton";
-export { default as WidgetWrapper } from "./components/Widget/WidgetWrapper";
-export { default as Widget } from "./components/Widget";
-export { default as Page } from "./components/Page";
-export { default as PageContainer } from "./components/Page/PageContainer";
-export { default as NotFoundPage } from "./components/Page/NotFoundPage";
-export { default as EnvironmentShell } from "./components/EnvironmentShell";
+export {
+  useWidgets,
+  WidgetsProviderProps,
+} from "./components/RemoraidProvider/WidgetsProvider";
+export {
+  default as WidgetSelectionHeader,
+  WidgetSelectionHeaderProps,
+} from "./components/WidgetSelectionHeader";
+export {
+  default as CloseButton,
+  CloseButtonProps,
+} from "./components/CloseButton";
+export {
+  default as BadgeGroup,
+  BadgeGroupProps,
+} from "./components/BadgeGroup";
+export {
+  default as BadgeMinimal,
+  BadgeMinimalProps,
+} from "./components/BadgeMinimal";
+export {
+  default as AlertMinimal,
+  AlertMinimalProps,
+} from "./components/AlertMinimal";
+export {
+  default as ResponsiveButton,
+  ResponsiveButtonProps,
+} from "./components/ResponsiveButton";
+export {
+  default as WidgetWrapper,
+  WidgetWrapperProps,
+} from "./components/Widget/WidgetWrapper";
+export { default as Widget, WidgetProps } from "./components/Widget";
+export { default as Page, PageProps } from "./components/Page";
+export {
+  default as PageContainer,
+  PageContainerProps,
+} from "./components/Page/PageContainer";
+export {
+  default as NotFoundPage,
+  NotFoundPageProps,
+} from "./components/Page/NotFoundPage";
+export {
+  default as EnvironmentShell,
+  EnvironmentShellProps,
+} from "./components/EnvironmentShell";
+export * from "./lib/types";

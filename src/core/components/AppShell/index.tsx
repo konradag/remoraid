@@ -22,7 +22,7 @@ import { co } from "@/core/lib/utils";
 import { useRemoraidUserExperience } from "../RemoraidProvider/UserExperienceProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
-interface AppShellProps {
+export interface AppShellProps {
   logo: AppShellLogo;
   navbar: NavbarProps;
   user?: { name: string } | null; // null when logged out

@@ -1,2 +1,3 @@
-export { default as JSONModal } from "./components/JSONModal";
+export { default as JSONModal, JSONModalProps } from "./components/JSONModal";
 export { remoraidModals } from "./lib/utils";
+export * from "./lib/types";

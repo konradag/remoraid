@@ -30,7 +30,7 @@ interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
   badgeGroup?: Partial<BadgeGroupProps>;
 }
 
-interface WidgetProps {
+export interface WidgetProps {
   id: string;
   title: string;
   config?: Partial<Omit<WidgetConfiguration, "widgetId">>;

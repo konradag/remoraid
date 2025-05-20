@@ -101,7 +101,7 @@ function NavbarLink({
   );
 }
 
-interface NavbarMinimalProps extends NavbarProps {
+export interface NavbarMinimalProps extends NavbarProps {
   logo: AppShellLogo;
   user?: { name: string } | null;
 }

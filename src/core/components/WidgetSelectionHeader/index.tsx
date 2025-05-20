@@ -12,7 +12,7 @@ import { usePage } from "../Page";
 import { IconCheck } from "@tabler/icons-react";
 import { ReactNode } from "react";
 
-interface WidgetSelectionHeaderProps {
+export interface WidgetSelectionHeaderProps {
   title?: string;
   disabledWidgets?: string[];
   mt?: MantineSize | number;

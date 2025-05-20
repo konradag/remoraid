@@ -1,7 +1,7 @@
 import { EnvironmentShellProps } from "@/core/components/EnvironmentShell";
 import { PropsWithChildren, ReactNode } from "react";
 
-interface ServerEnvironmentShellProps extends EnvironmentShellProps {}
+export interface ServerEnvironmentShellProps extends EnvironmentShellProps {}
 
 export default function EnvironmentShell({
   children,

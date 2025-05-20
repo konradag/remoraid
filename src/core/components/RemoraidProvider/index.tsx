@@ -12,7 +12,7 @@ import {
 } from "@/core/lib/types";
 import { CookiesProvider, ReactCookieProps } from "react-cookie";
 
-interface RemoraidProviderProps {
+export interface RemoraidProviderProps {
   theme?: RemoraidTheme | RemoraidThemeCallback | PartialRemoraidTheme;
   initialUserExperience?: Partial<UserExperience>;
   componentsProps?: {
