@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { ContextModalProps } from "@mantine/modals";
 import { JsonInput, JsonInputProps } from "@mantine/core";
-import { useRemoraidTheme } from "@/core";
+import { useRemoraidTheme } from "remoraid/core";
 
 export interface JSONModalProps {
   content: any;
@@ -15,7 +15,7 @@ export default function JSONModal({
 }: ContextModalProps<JSONModalProps>): ReactNode {
   const theme = useRemoraidTheme();
 
-  //Helpers
+  // Helpers
   const stringValue =
     typeof innerProps.content === "string"
       ? innerProps.content

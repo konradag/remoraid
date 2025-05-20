@@ -11,7 +11,10 @@ const sharedBuildConfig: (
   withClientBanner?: boolean
 ) => Omit<BuildConfig, "entrypoints"> = (p, withClientBanner) => ({
   outdir: `./dist/${p ?? ""}`,
-  external: Object.keys(packageJson.peerDependencies || {}),
+  external: [
+    ...Object.keys(packageJson.peerDependencies || {}),
+    ...packages.filter((e) => e !== p).map((e) => `remoraid/${e}`),
+  ],
   ...(withClientBanner ? { banner: '"use client";' } : undefined),
 });
 const buildConfigs: { [P in Package]: BuildConfig } = {

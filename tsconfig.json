@@ -16,7 +16,11 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "remoraid/core": ["./src/core/index.ts"],
+      "remoraid/server": ["./src/server/index.ts"],
+      "remoraid/jsonforms": ["./src/jsonforms/index.ts"],
+      "remoraid/modals": ["./src/modals/index.ts"]
     },
     "jsx": "preserve"
   }

@@ -17,7 +17,7 @@ import {
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { ComponentType, ReactNode, useState } from "react";
 import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
-import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
+import { useRemoraidTheme } from "remoraid/core";
 
 function PlainArrayControl(props: ControlProps): ReactNode {
   const mantineTheme = useMantineTheme();

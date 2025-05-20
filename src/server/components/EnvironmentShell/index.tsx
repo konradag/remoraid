@@ -1,4 +1,4 @@
-import { EnvironmentShellProps } from "@/core/components/EnvironmentShell";
+import { EnvironmentShellProps } from "remoraid/core";
 import { PropsWithChildren, ReactNode } from "react";
 
 export interface ServerEnvironmentShellProps extends EnvironmentShellProps {}
