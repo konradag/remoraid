@@ -1,5 +1,7 @@
 import {
+  ActionIconVariant,
   AlertProps,
+  ButtonVariant,
   IndicatorProps,
   MantineBreakpoint,
   MantineColorScheme,
@@ -74,3 +76,10 @@ export interface PageConfiguration {
   registerPageDirectly?: boolean;
 }
 export type ResponsiveButtonSize = "small" | "medium";
+export interface RemoraidButtonProps {
+  label: string;
+  icon?: Icon;
+  onClick?: () => void;
+  loading?: boolean;
+  variant?: Extract<ButtonVariant, ActionIconVariant>;
+}

@@ -26,7 +26,7 @@ export {
 export {
   default as CloseButton,
   CloseButtonProps,
-} from "./components/CloseButton";
+} from "./components/Widget/WidgetWrapper/CloseButton";
 export {
   default as BadgeGroup,
   BadgeGroupProps,
@@ -43,6 +43,7 @@ export {
   default as ResponsiveButton,
   ResponsiveButtonProps,
 } from "./components/ResponsiveButton";
+export { default as Button, ButtonProps } from "./components/Button";
 export {
   default as WidgetWrapper,
   WidgetWrapperProps,

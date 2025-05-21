@@ -13,7 +13,6 @@ import WidgetWrapper, {
   WidgetWrapperProps,
 } from "./WidgetWrapper";
 import ResponsiveButton, {
-  isResponsiveButtonProps,
   ResponsiveButtonProps,
 } from "@/core/components/ResponsiveButton";
 import { BadgeMinimalProps } from "@/core/components/BadgeMinimal";
@@ -23,6 +22,7 @@ import AlertMinimal, {
   AlertMinimalProps,
   isAlertMinimalProps,
 } from "@/core/components/AlertMinimal";
+import { isRemoraidButtonProps } from "@/core/lib/utils";
 
 interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
   wrapper?: Partial<Omit<WidgetWrapperProps, "widgetId">>;
@@ -98,7 +98,7 @@ export default function Widget({
         <Group gap={buttonsGap} wrap="nowrap">
           {buttons !== undefined &&
             buttons.map((e, i) => {
-              if (isResponsiveButtonProps(e)) {
+              if (isRemoraidButtonProps(e)) {
                 return <ResponsiveButton {...e} key={i} />;
               }
               return e;

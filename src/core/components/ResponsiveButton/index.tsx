@@ -1,98 +1,62 @@
 import {
-  ActionIcon,
   ActionIconProps,
-  ActionIconVariant,
-  Button,
-  ButtonProps,
-  ButtonVariant,
+  ButtonProps as MantineButtonProps,
   MantineBreakpoint,
-  Tooltip,
   TooltipProps,
+  Box,
 } from "@mantine/core";
-import { Icon, IconClick, IconProps } from "@tabler/icons-react";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import { IconProps } from "@tabler/icons-react";
 import { ReactNode } from "react";
-import { ResponsiveButtonSize } from "@/core/lib/types";
+import { RemoraidButtonProps } from "@/core/lib/types";
 import { Common } from "@/core/lib/utils";
+import Button, { ButtonProps } from "../Button";
 
-export interface ResponsiveButtonProps {
-  label: string;
-  icon?: Icon;
-  onClick?: () => void;
+export interface ResponsiveButtonProps extends RemoraidButtonProps {
   breakpoint?: MantineBreakpoint;
-  loading?: boolean;
-  variant?: Extract<ButtonVariant, ActionIconVariant>;
-  fixedSize?: ResponsiveButtonSize;
   componentsProps?: {
-    tooltip?: Partial<TooltipProps>;
-    button?: Partial<Common<ButtonProps, ActionIconProps>>;
-    icon?: Partial<IconProps>;
     Button?: Partial<ButtonProps>;
-    ActionIcon?: Partial<ActionIconProps>;
+    button?: Omit<
+      Partial<Common<MantineButtonProps, ActionIconProps>>,
+      "variant"
+    >;
+    tooltip?: Partial<TooltipProps>;
+    icon?: Partial<IconProps>;
   };
 }
 
-export const isResponsiveButtonProps = (e: any): e is ResponsiveButtonProps => {
-  if (typeof e !== "object") {
-    return false;
-  }
-  if (!("label" in e)) {
-    return false;
-  }
-  return true;
-};
-
-export default function ResponsiveButton(
-  props: ResponsiveButtonProps
-): ReactNode {
-  const {
-    onClick,
-    label,
-    loading,
-    variant,
-    componentsProps,
-    breakpoint,
-    fixedSize,
-  } = props;
-  const theme = useRemoraidTheme();
-
-  // Helpers
-  const iconProps = { ...theme.iconProps.medium, ...componentsProps?.icon };
-  const icon = props.icon ? (
-    <props.icon {...iconProps} />
-  ) : (
-    <IconClick {...iconProps} />
-  );
-
+export default function ResponsiveButton({
+  breakpoint,
+  componentsProps,
+  ...remoraidButtonProps
+}: ResponsiveButtonProps): ReactNode {
   return (
     <>
-      <Tooltip label={label} {...componentsProps?.tooltip}>
-        <ActionIcon
-          variant={variant || "default"}
-          onClick={onClick}
-          loading={loading}
-          size="input-sm"
-          aria-label="Refresh"
-          {...componentsProps?.button}
-          {...componentsProps?.ActionIcon}
-          display={fixedSize && fixedSize !== "small" ? "none" : undefined}
-          hiddenFrom={fixedSize === "small" ? undefined : breakpoint || "md"}
-        >
-          {icon}
-        </ActionIcon>
-      </Tooltip>
-      <Button
-        onClick={onClick}
-        loading={loading}
-        variant={variant || "default"}
-        leftSection={props.icon ? icon : undefined}
-        {...componentsProps?.button}
-        {...componentsProps?.Button}
-        display={fixedSize && fixedSize !== "medium" ? "none" : undefined}
-        visibleFrom={fixedSize === "medium" ? undefined : breakpoint || "md"}
-      >
-        {label}
-      </Button>
+      <Box hiddenFrom={breakpoint ?? "md"}>
+        <Button
+          {...remoraidButtonProps}
+          collapsed={true}
+          {...componentsProps?.Button}
+          componentsProps={{
+            tooltip: componentsProps?.tooltip,
+            icon: componentsProps?.icon,
+            actionIcon: componentsProps?.button,
+            ...componentsProps?.Button?.componentsProps,
+          }}
+        />
+      </Box>
+      <Box visibleFrom={breakpoint ?? "md"}>
+        <Button
+          {...remoraidButtonProps}
+          collapsed={false}
+          {...componentsProps?.Button}
+          componentsProps={{
+            tooltip: componentsProps?.tooltip,
+            icon: componentsProps?.icon,
+            button: componentsProps?.button,
+            ...componentsProps?.Button?.componentsProps,
+          }}
+        />
+      </Box>
     </>
   );
 }

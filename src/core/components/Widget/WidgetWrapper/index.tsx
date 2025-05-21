@@ -1,4 +1,4 @@
-import CloseButton from "@/core/components/CloseButton";
+import CloseButton from "@/core/components/Widget/WidgetWrapper/CloseButton";
 import { usePage } from "@/core/components/Page";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { WidgetConfiguration } from "@/core/lib/types";

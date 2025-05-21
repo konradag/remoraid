@@ -1,9 +1,9 @@
 import { ActionIcon, Transition } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { usePage } from "../Page";
+import { useRemoraidTheme } from "../../../RemoraidProvider/ThemeProvider";
+import { usePage } from "../../../Page";
 import { ReactNode } from "react";
-import { useWidgets } from "../RemoraidProvider/WidgetsProvider";
+import { useWidgets } from "../../../RemoraidProvider/WidgetsProvider";
 
 export interface CloseButtonProps {
   widgetId: string;
