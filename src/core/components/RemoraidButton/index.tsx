@@ -6,6 +6,7 @@ import {
   ButtonProps,
   ButtonVariant,
   MantineBreakpoint,
+  MantineColor,
   MantineSize,
   Tooltip,
   TooltipProps,
@@ -21,6 +22,7 @@ export interface RemoraidButtonProps {
   breakpoint?: MantineBreakpoint;
   collapsed?: boolean;
   size?: MantineSize;
+  color?: MantineColor;
   icon?: Icon;
   onClick?: () => void;
   loading?: boolean;
@@ -30,7 +32,7 @@ export interface RemoraidButtonProps {
     icon?: Partial<IconProps>;
     button: Omit<
       Partial<Common<ButtonProps, ActionIconProps>>,
-      "variant" | "onClick" | "size" | "loading"
+      "variant" | "onClick" | "size" | "color" | "loading"
     >;
     Button?: Partial<ButtonProps>;
     ActionIcon?: Partial<ActionIconProps>;
@@ -53,6 +55,7 @@ export default function RemoraidButton({
   breakpoint,
   collapsed,
   size,
+  color,
   onClick,
   loading,
   variant,
@@ -73,10 +76,12 @@ export default function RemoraidButton({
     <>
       <Tooltip label={label} {...componentsProps?.tooltip}>
         <ActionIcon
+          aria-label={label}
           variant={variant ?? "default"}
           onClick={onClick}
           loading={loading}
-          size={size ? `input-${size}` : undefined}
+          size={size ? `input-${size}` : "input-sm"}
+          color={color}
           {...componentsProps?.button}
           {...componentsProps?.ActionIcon}
           hiddenFrom={responsive ? breakpoint ?? "md" : undefined}
@@ -95,6 +100,7 @@ export default function RemoraidButton({
         loading={loading}
         variant={variant ?? "default"}
         size={size}
+        color={color}
         leftSection={props.icon ? icon : undefined}
         {...componentsProps?.button}
         {...componentsProps?.Button}
