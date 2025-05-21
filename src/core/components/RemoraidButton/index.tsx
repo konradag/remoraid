@@ -79,7 +79,7 @@ export default function RemoraidButton({
           size={size ? `input-${size}` : undefined}
           {...componentsProps?.button}
           {...componentsProps?.ActionIcon}
-          hiddenFrom={breakpoint ?? "md"}
+          hiddenFrom={responsive ? breakpoint ?? "md" : undefined}
           display={
             responsive === false && collapsed !== true
               ? "none"
@@ -98,7 +98,7 @@ export default function RemoraidButton({
         leftSection={props.icon ? icon : undefined}
         {...componentsProps?.button}
         {...componentsProps?.Button}
-        visibleFrom={breakpoint ?? "md"}
+        visibleFrom={responsive ? breakpoint ?? "md" : undefined}
         display={
           responsive === false && collapsed
             ? "none"
