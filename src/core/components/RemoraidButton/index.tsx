@@ -27,7 +27,7 @@ export interface RemoraidButtonProps {
   onClick?: () => void;
   loading?: boolean;
   variant?: Extract<ButtonVariant, ActionIconVariant>;
-  componentsProps: {
+  componentsProps?: {
     tooltip?: Partial<TooltipProps>;
     icon?: Partial<IconProps>;
     button: Omit<
