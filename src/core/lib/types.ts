@@ -78,3 +78,4 @@ export interface PageConfiguration {
   name: string;
   registerPageDirectly?: boolean;
 }
+export type ResponsiveButtonSize = "small" | "medium";

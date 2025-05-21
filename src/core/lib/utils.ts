@@ -3,3 +3,4 @@ export const co = <T>(
   value: T,
   fallback: T
 ): T => (condition(value) ? value : fallback);
+export type Common<A, B> = Pick<A & B, keyof A & keyof B>;

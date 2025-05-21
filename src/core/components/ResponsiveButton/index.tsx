@@ -1,7 +1,9 @@
 import {
   ActionIcon,
+  ActionIconProps,
   ActionIconVariant,
   Button,
+  ButtonProps,
   ButtonVariant,
   MantineBreakpoint,
   Tooltip,
@@ -10,6 +12,8 @@ import {
 import { Icon, IconClick } from "@tabler/icons-react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { ReactNode } from "react";
+import { ResponsiveButtonSize } from "@/core/lib/types";
+import { Common } from "@/core/lib/utils";
 
 export interface ResponsiveButtonProps {
   label: string;
@@ -18,8 +22,12 @@ export interface ResponsiveButtonProps {
   breakpoint?: MantineBreakpoint;
   loading?: boolean;
   variant?: Extract<ButtonVariant, ActionIconVariant>;
+  fixedSize?: ResponsiveButtonSize;
   componentsProps?: {
     tooltip?: Partial<TooltipProps>;
+    button?: Partial<Common<ButtonProps, ActionIconProps>>;
+    Button?: Partial<ButtonProps>;
+    ActionIcon?: Partial<ActionIconProps>;
   };
 }
 
@@ -36,8 +44,15 @@ export const isResponsiveButtonProps = (e: any): e is ResponsiveButtonProps => {
 export default function ResponsiveButton(
   props: ResponsiveButtonProps
 ): ReactNode {
-  const { onClick, label, loading, variant, componentsProps, breakpoint } =
-    props;
+  const {
+    onClick,
+    label,
+    loading,
+    variant,
+    componentsProps,
+    breakpoint,
+    fixedSize,
+  } = props;
   const theme = useRemoraidTheme();
 
   // Helpers
@@ -56,7 +71,10 @@ export default function ResponsiveButton(
           loading={loading}
           size="input-sm"
           aria-label="Refresh"
-          hiddenFrom={breakpoint || "md"}
+          {...componentsProps?.button}
+          {...componentsProps?.ActionIcon}
+          hidden={fixedSize && fixedSize !== "small"}
+          hiddenFrom={fixedSize === "small" ? undefined : breakpoint || "md"}
         >
           {icon}
         </ActionIcon>
@@ -66,7 +84,10 @@ export default function ResponsiveButton(
         loading={loading}
         variant={variant || "default"}
         leftSection={props.icon ? icon : undefined}
-        visibleFrom={breakpoint || "md"}
+        {...componentsProps?.button}
+        {...componentsProps?.Button}
+        hidden={fixedSize && fixedSize !== "medium"}
+        visibleFrom={fixedSize === "medium" ? undefined : breakpoint || "md"}
       >
         {label}
       </Button>
