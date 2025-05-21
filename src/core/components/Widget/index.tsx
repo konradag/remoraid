@@ -12,9 +12,6 @@ import WidgetWrapper, {
   WidgetWrapperComponentsProps,
   WidgetWrapperProps,
 } from "./WidgetWrapper";
-import ResponsiveButton, {
-  ResponsiveButtonProps,
-} from "@/core/components/ResponsiveButton";
 import { BadgeMinimalProps } from "@/core/components/BadgeMinimal";
 import BadgeGroup, { BadgeGroupProps } from "@/core/components/BadgeGroup";
 import { WidgetConfiguration } from "@/core/lib/types";
@@ -22,7 +19,10 @@ import AlertMinimal, {
   AlertMinimalProps,
   isAlertMinimalProps,
 } from "@/core/components/AlertMinimal";
-import { isRemoraidButtonProps } from "@/core/lib/utils";
+import RemoraidButton, {
+  isRemoraidButtonProps,
+  RemoraidButtonProps,
+} from "../RemoraidButton";
 
 interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
   wrapper?: Partial<Omit<WidgetWrapperProps, "widgetId">>;
@@ -35,7 +35,7 @@ export interface WidgetProps {
   title: string;
   config?: Partial<Omit<WidgetConfiguration, "widgetId">>;
   badges?: (BadgeMinimalProps | ReactNode)[];
-  buttons?: (ResponsiveButtonProps | ReactNode)[];
+  buttons?: (RemoraidButtonProps | ReactNode)[];
   alerts?: (AlertMinimalProps | ReactNode)[];
   gaps?:
     | MantineSize
@@ -99,7 +99,7 @@ export default function Widget({
           {buttons !== undefined &&
             buttons.map((e, i) => {
               if (isRemoraidButtonProps(e)) {
-                return <ResponsiveButton {...e} key={i} />;
+                return <RemoraidButton {...e} key={i} />;
               }
               return e;
             })}

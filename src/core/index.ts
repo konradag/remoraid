@@ -40,10 +40,9 @@ export {
   AlertMinimalProps,
 } from "./components/AlertMinimal";
 export {
-  default as ResponsiveButton,
-  ResponsiveButtonProps,
-} from "./components/ResponsiveButton";
-export { default as Button, ButtonProps } from "./components/Button";
+  default as RemoraidButton,
+  RemoraidButtonProps,
+} from "./components/RemoraidButton";
 export {
   default as WidgetWrapper,
   WidgetWrapperProps,

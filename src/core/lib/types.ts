@@ -75,10 +75,3 @@ export interface PageConfiguration {
   name: string;
   registerPageDirectly?: boolean;
 }
-export interface RemoraidButtonProps {
-  label: string;
-  icon?: Icon;
-  onClick?: () => void;
-  loading?: boolean;
-  variant?: Extract<ButtonVariant, ActionIconVariant>;
-}
