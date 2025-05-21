@@ -34,27 +34,33 @@ export default function ResponsiveButton({
       <Box hiddenFrom={breakpoint ?? "md"}>
         <Button
           {...remoraidButtonProps}
-          collapsed={true}
           {...componentsProps?.Button}
           componentsProps={{
             tooltip: componentsProps?.tooltip,
             icon: componentsProps?.icon,
-            actionIcon: componentsProps?.button,
             ...componentsProps?.Button?.componentsProps,
+            actionIcon: {
+              ...componentsProps?.button,
+              ...componentsProps?.Button?.componentsProps?.actionIcon,
+            },
           }}
+          collapsed={true}
         />
       </Box>
       <Box visibleFrom={breakpoint ?? "md"}>
         <Button
           {...remoraidButtonProps}
-          collapsed={false}
           {...componentsProps?.Button}
           componentsProps={{
             tooltip: componentsProps?.tooltip,
             icon: componentsProps?.icon,
-            button: componentsProps?.button,
             ...componentsProps?.Button?.componentsProps,
+            button: {
+              ...componentsProps?.button,
+              ...componentsProps?.Button?.componentsProps?.button,
+            },
           }}
+          collapsed={false}
         />
       </Box>
     </>
