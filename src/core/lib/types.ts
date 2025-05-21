@@ -25,26 +25,21 @@ export interface UserExperience {
   showWelcomeMessage: boolean;
 }
 export type AlertCategory = "negative" | "neutral" | "positive";
+export type TransitionDuration = "short" | "medium" | "long";
+export type RemoraidBreakpoint = "buttonCollapse" | "badgeGroupCollapse";
+export type RemoraidIconSize = "tiny" | "medium";
 export interface RemoraidTheme {
   complete: true;
-  transitionDurations: { short: number; medium: number; long: number };
-  breakpoints: {
-    buttonCollapse: MantineBreakpoint;
-    badgeGroupCollapse: MantineBreakpoint;
-  };
+  transitionDurations: Record<TransitionDuration, number>;
+  breakpoints: Record<RemoraidBreakpoint, MantineBreakpoint>;
   scrollAreaProps: ScrollAreaProps;
-  alertProps: {
-    [C in AlertCategory]: AlertProps;
-  };
+  alertProps: Record<AlertCategory, AlertProps>;
   containerSize: MantineSize | number;
-  iconProps: {
-    tiny: IconProps;
-    medium: IconProps;
-  };
+  iconProps: Record<RemoraidIconSize, IconProps>;
   jsonStringifySpace: string | number;
   transparentBackground?: string;
   primaryColor?: string;
-  spacingPx?: { [S in MantineSize]: number };
+  spacingPx?: Record<MantineSize, number>;
 }
 export type RemoraidThemeCallback = (
   mantineTheme: MantineTheme,

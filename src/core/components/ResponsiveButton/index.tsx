@@ -9,7 +9,7 @@ import {
   Tooltip,
   TooltipProps,
 } from "@mantine/core";
-import { Icon, IconClick } from "@tabler/icons-react";
+import { Icon, IconClick, IconProps } from "@tabler/icons-react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { ReactNode } from "react";
 import { ResponsiveButtonSize } from "@/core/lib/types";
@@ -26,6 +26,7 @@ export interface ResponsiveButtonProps {
   componentsProps?: {
     tooltip?: Partial<TooltipProps>;
     button?: Partial<Common<ButtonProps, ActionIconProps>>;
+    icon?: Partial<IconProps>;
     Button?: Partial<ButtonProps>;
     ActionIcon?: Partial<ActionIconProps>;
   };
@@ -56,10 +57,11 @@ export default function ResponsiveButton(
   const theme = useRemoraidTheme();
 
   // Helpers
+  const iconProps = { ...theme.iconProps.medium, ...componentsProps?.icon };
   const icon = props.icon ? (
-    <props.icon {...theme.iconProps.medium} />
+    <props.icon {...iconProps} />
   ) : (
-    <IconClick {...theme.iconProps.medium} />
+    <IconClick {...iconProps} />
   );
 
   return (
@@ -73,7 +75,7 @@ export default function ResponsiveButton(
           aria-label="Refresh"
           {...componentsProps?.button}
           {...componentsProps?.ActionIcon}
-          hidden={fixedSize && fixedSize !== "small"}
+          display={fixedSize && fixedSize !== "small" ? "none" : undefined}
           hiddenFrom={fixedSize === "small" ? undefined : breakpoint || "md"}
         >
           {icon}
@@ -86,7 +88,7 @@ export default function ResponsiveButton(
         leftSection={props.icon ? icon : undefined}
         {...componentsProps?.button}
         {...componentsProps?.Button}
-        hidden={fixedSize && fixedSize !== "medium"}
+        display={fixedSize && fixedSize !== "medium" ? "none" : undefined}
         visibleFrom={fixedSize === "medium" ? undefined : breakpoint || "md"}
       >
         {label}
