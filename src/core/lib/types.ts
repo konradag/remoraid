@@ -1,7 +1,5 @@
 import {
-  ActionIconVariant,
   AlertProps,
-  ButtonVariant,
   IndicatorProps,
   MantineBreakpoint,
   MantineColorScheme,
@@ -21,10 +19,20 @@ export interface NavbarSettings {
   py: MantineSize | number;
   iconSize?: string | number;
 }
-export interface UserExperience {
+export type UserExperience = Record<string, any>;
+export interface CoreUserExperience extends UserExperience {
   navbarVariant: NavbarVariant;
   navbarSettings: NavbarSettings;
   showWelcomeMessage: boolean;
+}
+export type UserExperienceProviderProps<T extends UserExperience> = {
+  initialValue?: Partial<T>;
+  cookieName?: string;
+};
+export interface UserExperienceContext<T extends UserExperience> {
+  userExperience: T;
+  updateUserExperience: (p: T | ((prev: T) => T)) => void;
+  processedCookie: boolean;
 }
 export type AlertCategory = "negative" | "neutral" | "positive";
 export type TransitionDuration = "short" | "medium" | "long";

@@ -19,7 +19,7 @@ import {
   NavbarVariant,
 } from "@/core/lib/types";
 import { co } from "@/core/lib/utils";
-import { useRemoraidUserExperience } from "../RemoraidProvider/UserExperienceProvider";
+import { useRemoraidUserExperience } from "../RemoraidProvider/CoreUserExperienceProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 export interface AppShellProps {

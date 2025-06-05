@@ -21,7 +21,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { AppShellLogo, NavbarProps, NavbarSettings } from "@/core/lib/types";
-import { useRemoraidUserExperience } from "@/core/components/RemoraidProvider/UserExperienceProvider";
+import { useRemoraidUserExperience } from "@/core/components/RemoraidProvider/CoreUserExperienceProvider";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 
 interface NavbarLinkProps {
