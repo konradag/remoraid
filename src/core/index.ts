@@ -6,6 +6,7 @@ export { default as AppShell, AppShellProps } from "./components/AppShell";
 export {
   default as UserExperienceProviderWrapper,
   UserExperienceProviderWrapperProps,
+  createUserExperienceContext,
 } from "./components/UserExperienceProviderWrapper";
 export {
   defaultUserExperienceCookieName,
