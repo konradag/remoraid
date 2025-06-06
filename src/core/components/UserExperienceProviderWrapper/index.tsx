@@ -16,6 +16,7 @@ export const createUserExperienceContext = <T extends UserExperience>(
     userExperience: defaultUserExperience,
     updateUserExperience: () => {},
     processedCookie: false,
+    initialUserExperience: defaultUserExperience,
   });
 
 export interface UserExperienceProviderWrapperProps<T extends UserExperience> {
@@ -38,14 +39,19 @@ export default function UserExperienceProviderWrapper<
 }: PropsWithChildren<UserExperienceProviderWrapperProps<T>>): ReactNode {
   const [cookies, setCookie] = useCookies();
 
-  // State
-  const [userExperience, setUserExperience] = useState<T>({
+  // Helpers 1
+  const initialUserExperience: T = {
     ...defaultUserExperience,
     ...initialValue,
-  });
+  };
+
+  // State
+  const [userExperience, setUserExperience] = useState<T>(
+    initialUserExperience
+  );
   const [processedCookie, setProcessedCookie] = useState<boolean>(false);
 
-  // Helpers
+  // Helpers 2
   const updateUserExperience = (
     p: UserExperience | ((prev: UserExperience) => UserExperience)
   ) => {
@@ -68,7 +74,12 @@ export default function UserExperienceProviderWrapper<
 
   return (
     <context.Provider
-      value={{ userExperience, updateUserExperience, processedCookie }}
+      value={{
+        userExperience,
+        updateUserExperience,
+        processedCookie,
+        initialUserExperience,
+      }}
     >
       {children}
     </context.Provider>

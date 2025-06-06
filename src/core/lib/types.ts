@@ -35,6 +35,7 @@ export interface UserExperienceContext<T extends UserExperience> {
   userExperience: T;
   updateUserExperience: (p: T | ((prev: T) => T)) => void;
   processedCookie: boolean;
+  initialUserExperience: T;
 }
 export enum AlertCategory {
   Negative = "negative",
