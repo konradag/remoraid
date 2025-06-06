@@ -11,7 +11,9 @@ import { Icon, IconProps } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
 import { ReactNode } from "react";
 
-export type NavbarVariant = "minimal";
+export enum NavbarVariant {
+  Minimal = "minimal",
+}
 export interface NavbarSettings {
   hiddenPages: string[];
   linkSize: string;
@@ -34,10 +36,24 @@ export interface UserExperienceContext<T extends UserExperience> {
   updateUserExperience: (p: T | ((prev: T) => T)) => void;
   processedCookie: boolean;
 }
-export type AlertCategory = "negative" | "neutral" | "positive";
-export type TransitionDuration = "short" | "medium" | "long";
-export type RemoraidBreakpoint = "buttonCollapse" | "badgeGroupCollapse";
-export type RemoraidIconSize = "tiny" | "medium";
+export enum AlertCategory {
+  Negative = "negative",
+  Neutral = "neutral",
+  Positive = "positive",
+}
+export enum TransitionDuration {
+  Short = "short",
+  Medium = "medium",
+  Long = "long",
+}
+export enum RemoraidBreakpoint {
+  ButtonCollapse = "buttonCollapse",
+  BadgeGroupCollapse = "badgeGroupCollapse",
+}
+export enum RemoraidIconSize {
+  Tiny = "tiny",
+  Medium = "medium",
+}
 export interface RemoraidTheme {
   complete: true;
   transitionDurations: Record<TransitionDuration, number>;

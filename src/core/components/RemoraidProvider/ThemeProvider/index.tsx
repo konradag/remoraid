@@ -1,7 +1,11 @@
 import {
+  AlertCategory,
   PartialRemoraidTheme,
+  RemoraidBreakpoint,
+  RemoraidIconSize,
   RemoraidTheme,
   RemoraidThemeCallback,
+  TransitionDuration,
 } from "@/core/lib/types";
 import { co } from "@/core/lib/utils";
 import {
@@ -78,13 +82,13 @@ export const createRemoraidTheme: (
   return {
     complete: true,
     transitionDurations: {
-      short: 200,
-      medium: 350,
-      long: 500,
+      [TransitionDuration.Short]: 200,
+      [TransitionDuration.Medium]: 350,
+      [TransitionDuration.Long]: 500,
     },
     breakpoints: {
-      buttonCollapse: "md",
-      badgeGroupCollapse: "md",
+      [RemoraidBreakpoint.ButtonCollapse]: "md",
+      [RemoraidBreakpoint.BadgeGroupCollapse]: "md",
     },
     scrollAreaProps: {
       scrollbarSize: 8,
@@ -93,21 +97,21 @@ export const createRemoraidTheme: (
     },
     containerSize: 1300,
     alertProps: {
-      negative: {
+      [AlertCategory.Negative]: {
         icon: <IconAlertCircle {...defaultMediumIconProps} />,
         variant: "light",
         color: "red",
         title: "Attention!",
         // bg: transparentBackground,
       },
-      neutral: {
+      [AlertCategory.Neutral]: {
         icon: <IconInfoCircle {...defaultMediumIconProps} />,
         variant: "light",
         color: mantineTheme?.primaryColor,
         title: "Information",
         // bg: transparentBackground,
       },
-      positive: {
+      [AlertCategory.Positive]: {
         icon: <IconCircleCheck {...defaultMediumIconProps} />,
         variant: "light",
         color: "green",
@@ -116,8 +120,8 @@ export const createRemoraidTheme: (
       },
     },
     iconProps: {
-      medium: defaultMediumIconProps,
-      tiny: { size: 14, stroke: 3 },
+      [RemoraidIconSize.Medium]: defaultMediumIconProps,
+      [RemoraidIconSize.Tiny]: { size: 14, stroke: 3 },
     },
     jsonStringifySpace: 2,
     transparentBackground,

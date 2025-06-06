@@ -11,12 +11,12 @@ import UserExperienceProvider, {
   createUserExperienceContext,
 } from "../../UserExperienceProviderWrapper";
 
-export const defaultNavbarSettings: { [V in NavbarVariant]: NavbarSettings } = {
-  minimal: navbarMinimalDefaultSettings,
+export const defaultNavbarSettings: Record<NavbarVariant, NavbarSettings> = {
+  [NavbarVariant.Minimal]: navbarMinimalDefaultSettings,
 };
 export const defaultUserExperience: CoreUserExperience = {
-  navbarVariant: "minimal",
-  navbarSettings: defaultNavbarSettings.minimal,
+  navbarVariant: NavbarVariant.Minimal,
+  navbarSettings: defaultNavbarSettings[NavbarVariant.Minimal],
   showWelcomeMessage: true,
 };
 export const defaultUserExperienceCookieName = "remoraid-core-user-experience";
