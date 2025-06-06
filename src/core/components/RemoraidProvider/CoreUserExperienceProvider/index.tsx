@@ -36,8 +36,11 @@ export default function CoreUserExperienceProvider({
   UserExperienceProviderProps<CoreUserExperience>
 >): ReactNode {
   // Helpers
-  const isValidUserExperience = (x: any): x is CoreUserExperience => {
+  const isValidUserExperience = (x: unknown): x is CoreUserExperience => {
     if (typeof x !== "object") {
+      return false;
+    }
+    if (x === null) {
       return false;
     }
     if (!("showWelcomeMessage" in x)) {
@@ -50,6 +53,9 @@ export default function CoreUserExperienceProvider({
       return false;
     }
     if (typeof x.navbarSettings !== "object") {
+      return false;
+    }
+    if (x.navbarSettings === null) {
       return false;
     }
     if (!("hiddenPages" in x.navbarSettings)) {

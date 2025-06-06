@@ -22,7 +22,7 @@ export interface UserExperienceProviderWrapperProps<T extends UserExperience> {
   context: Context<UserExperienceContext<T>>;
   cookieName: string;
   defaultUserExperience: T;
-  isValidUserExperience: (x: any) => x is T;
+  isValidUserExperience: (x: unknown) => x is T;
   initialValue?: Partial<T>;
 }
 
