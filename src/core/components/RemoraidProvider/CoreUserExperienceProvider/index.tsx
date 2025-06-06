@@ -7,7 +7,7 @@ import {
 } from "@/core/lib/types";
 import React, { PropsWithChildren, ReactNode, useContext } from "react";
 import { defaultSettings as navbarMinimalDefaultSettings } from "@/core/components/AppShell/NavbarMinimal";
-import UserExperienceProvider, {
+import UserExperienceProviderWrapper, {
   createUserExperienceContext,
 } from "../../UserExperienceProviderWrapper";
 
@@ -68,7 +68,7 @@ export default function CoreUserExperienceProvider({
   };
 
   return (
-    <UserExperienceProvider<CoreUserExperience>
+    <UserExperienceProviderWrapper<CoreUserExperience>
       context={coreUserExperienceContext}
       isValidUserExperience={isValidUserExperience}
       cookieName={cookieName ?? defaultUserExperienceCookieName}
@@ -76,6 +76,6 @@ export default function CoreUserExperienceProvider({
       initialValue={initialValue}
     >
       {children}
-    </UserExperienceProvider>
+    </UserExperienceProviderWrapper>
   );
 }
