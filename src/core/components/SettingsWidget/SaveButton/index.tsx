@@ -37,7 +37,7 @@ export default function SaveButton({
     />
   );
 
-  if (insideContainer) {
+  if (insideContainer !== false) {
     <Group justify="flex-end" mt="md" {...componentsProps?.container}>
       {button}
     </Group>;
