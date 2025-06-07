@@ -21,6 +21,7 @@ export default function SaveButton({
       label="Save Changes"
       icon={IconDeviceFloppy}
       onClick={onSaveChanges}
+      responsive={false}
       {...componentsProps?.button}
       componentsProps={{
         button: {

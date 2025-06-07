@@ -49,4 +49,4 @@ export interface SettingsTable extends React.FC<SettingsTableProps> {
   Row: typeof Row;
 }
 (SettingsTable as SettingsTable).Row = Row;
-export default SettingsTable;
+export default SettingsTable as SettingsTable;

@@ -68,4 +68,4 @@ export interface SettingsWidget extends React.FC<SettingsWidgetProps> {
   SaveButton: typeof SaveButton;
 }
 (SettingsWidget as SettingsWidget).SaveButton = SaveButton;
-export default SettingsWidget;
+export default SettingsWidget as SettingsWidget;
