@@ -30,7 +30,7 @@ export interface RemoraidButtonProps {
   componentsProps?: {
     tooltip?: Partial<TooltipProps>;
     icon?: Partial<IconProps>;
-    button: Omit<
+    button?: Omit<
       Partial<Common<ButtonProps, ActionIconProps>>,
       "variant" | "onClick" | "size" | "color" | "loading"
     >;

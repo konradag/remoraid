@@ -29,6 +29,7 @@ export default function SaveButton({
       responsive={false}
       {...componentsProps?.button}
       componentsProps={{
+        ...componentsProps?.button?.componentsProps,
         button: {
           disabled: settingsWidgetOptions.unsavedChanges === false,
           ...componentsProps?.button?.componentsProps?.button,
