@@ -38,9 +38,16 @@ export default function SaveButton({
   );
 
   if (insideContainer !== false) {
-    <Group justify="flex-end" mt="md" {...componentsProps?.container}>
-      {button}
-    </Group>;
+    return (
+      <Group
+        w="100%"
+        justify="flex-end"
+        mt="md"
+        {...componentsProps?.container}
+      >
+        {button}
+      </Group>
+    );
   }
   return button;
 }
