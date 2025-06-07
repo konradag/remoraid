@@ -1,4 +1,4 @@
-import CloseButton from "@/core/components/Widget/WidgetWrapper/CloseButton";
+import CloseButtonComponent from "@/core/components/Widget/WidgetWrapper/CloseButton";
 import { usePage } from "@/core/components/Page";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { WidgetConfiguration } from "@/core/lib/types";
@@ -79,7 +79,7 @@ function WidgetWrapper({
           }}
         >
           {withCloseButton !== false && (
-            <CloseButton widgetId={config.widgetId} />
+            <CloseButtonComponent widgetId={config.widgetId} />
           )}
           {children}
         </Paper>
@@ -90,7 +90,7 @@ function WidgetWrapper({
 
 export interface WidgetWrapper
   extends React.FC<PropsWithChildren<WidgetWrapperProps>> {
-  CloseButton: typeof CloseButton;
+  CloseButton: typeof CloseButtonComponent;
 }
-(WidgetWrapper as WidgetWrapper).CloseButton = CloseButton;
+(WidgetWrapper as WidgetWrapper).CloseButton = CloseButtonComponent;
 export default WidgetWrapper as WidgetWrapper;

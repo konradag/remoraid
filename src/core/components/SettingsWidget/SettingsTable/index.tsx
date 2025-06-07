@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext } from "react";
 import { useRemoraidTheme } from "../../RemoraidProvider/ThemeProvider";
 import { Table } from "@mantine/core";
 import { SettingsTableOptions } from "@/core/lib/types";
-import Row, { SettingsTableRowProps } from "./Row";
+import RowComponent, { SettingsTableRowProps } from "./Row";
 import { OnlyChildrenOf } from "@/core/lib/utils";
 
 export const defaultSettingsTableOptions = {
@@ -16,7 +16,7 @@ export const useSettingsTableOptions = (): SettingsTableOptions => {
 };
 
 export interface SettingsTableProps {
-  children: OnlyChildrenOf<typeof Row, SettingsTableRowProps>;
+  children: OnlyChildrenOf<typeof RowComponent, SettingsTableRowProps>;
   leftColumnWidth?: string | number;
 }
 
@@ -46,7 +46,7 @@ function SettingsTable({
 }
 
 export interface SettingsTable extends React.FC<SettingsTableProps> {
-  Row: typeof Row;
+  Row: typeof RowComponent;
 }
-(SettingsTable as SettingsTable).Row = Row;
+(SettingsTable as SettingsTable).Row = RowComponent;
 export default SettingsTable as SettingsTable;

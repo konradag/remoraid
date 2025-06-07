@@ -2,7 +2,7 @@ import { createContext, PropsWithChildren, ReactNode, useContext } from "react";
 import Widget, { WidgetProps } from "../Widget";
 import { IconRestore } from "@tabler/icons-react";
 import { SettingsWidgetContext } from "@/core/lib/types";
-import SaveButton from "./SaveButton";
+import SaveButtonComponent from "./SaveButton";
 
 export const defaultSettingsWidgetContext = {};
 const settingsWidgetContext = createContext<SettingsWidgetContext>(
@@ -66,7 +66,7 @@ function SettingsWidget({
 
 export interface SettingsWidget
   extends React.FC<PropsWithChildren<SettingsWidgetProps>> {
-  SaveButton: typeof SaveButton;
+  SaveButton: typeof SaveButtonComponent;
 }
-(SettingsWidget as SettingsWidget).SaveButton = SaveButton;
+(SettingsWidget as SettingsWidget).SaveButton = SaveButtonComponent;
 export default SettingsWidget as SettingsWidget;
