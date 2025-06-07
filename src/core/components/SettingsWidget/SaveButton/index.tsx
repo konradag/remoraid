@@ -6,7 +6,7 @@ import { useSettingsWidgetOptions } from "..";
 export interface SettingsWidgetSaveButtonProps {
   onSaveChanges: () => void;
   componentsProps?: {
-    button?: RemoraidButtonProps;
+    button?: Partial<RemoraidButtonProps>;
   };
 }
 
