@@ -52,7 +52,10 @@ export default function NavbarSettingsWidget({
           ...(additionalRows ?? []).map((row, i) =>
             cloneElement(row, { key: i })
           ),
-          <SettingsTable.Row label="Select which pages you want to display or hide">
+          <SettingsTable.Row
+            key="select-hidden-pages"
+            label="Select which pages you want to display or hide"
+          >
             <Chip.Group
               multiple
               value={app.navigablePages

@@ -92,5 +92,6 @@ export interface WidgetWrapper
   extends React.FC<PropsWithChildren<WidgetWrapperProps>> {
   CloseButton: typeof CloseButtonComponent;
 }
-(WidgetWrapper as WidgetWrapper).CloseButton = CloseButtonComponent;
-export default WidgetWrapper as WidgetWrapper;
+export default Object.assign(WidgetWrapper, {
+  CloseButton: CloseButtonComponent,
+}) as WidgetWrapper;

@@ -48,5 +48,6 @@ function SettingsTable({
 export interface SettingsTable extends React.FC<SettingsTableProps> {
   Row: typeof RowComponent;
 }
-(SettingsTable as SettingsTable).Row = RowComponent;
-export default SettingsTable as SettingsTable;
+export default Object.assign(SettingsTable, {
+  Row: RowComponent,
+}) as SettingsTable;
