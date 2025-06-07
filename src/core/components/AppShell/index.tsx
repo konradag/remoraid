@@ -28,7 +28,7 @@ import AppProvider from "./AppProvider";
 export interface AppShellProps {
   logo: AppShellLogo;
   navigablePages: RemoraidAppContext["navigablePages"];
-  navbar: NavbarProps;
+  navbar?: NavbarProps;
   user?: RemoraidUser;
 }
 
@@ -48,8 +48,10 @@ export default function AppShell({
   // Helpers
   const navbarVariant: NavbarVariant =
     navbar && navbar.variant ? navbar.variant : userExperience.navbarVariant;
-  const navbarSettings: NavbarSettings =
-    navbar && navbar.settings ? navbar.settings : userExperience.navbarSettings;
+  const navbarSettings: NavbarSettings = {
+    ...userExperience.navbarSettings,
+    ...navbar?.settings,
+  };
   const navbarLinkSizePx: number = co(
     (v) => !Number.isNaN(v),
     Number(px(navbarSettings.linkSize)),

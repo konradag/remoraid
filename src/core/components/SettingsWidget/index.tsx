@@ -40,6 +40,7 @@ function SettingsWidget({
                   label: "Restore Default Values",
                   icon: IconRestore,
                   onClick: onRestoreDefaultValues,
+                  componentsProps: { button: { disabled: custom === false } },
                 },
               ]
             : []),
