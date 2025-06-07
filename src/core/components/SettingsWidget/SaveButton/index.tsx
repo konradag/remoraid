@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import RemoraidButton, { RemoraidButtonProps } from "../../RemoraidButton";
 import { IconDeviceFloppy } from "@tabler/icons-react";
-import { useSettingsWidgetOptions } from "..";
+import { useSettingsWidgetContext } from "..";
 
 export interface SettingsWidgetSaveButtonProps {
   onSaveChanges: () => void;
@@ -14,7 +14,7 @@ export default function SaveButton({
   onSaveChanges,
   componentsProps,
 }: SettingsWidgetSaveButtonProps): ReactNode {
-  const settingsWidgetOptions = useSettingsWidgetOptions();
+  const settingsWidgetOptions = useSettingsWidgetContext();
 
   return (
     <RemoraidButton

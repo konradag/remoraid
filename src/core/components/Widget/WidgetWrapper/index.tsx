@@ -88,7 +88,8 @@ function WidgetWrapper({
   );
 }
 
-export interface WidgetWrapper extends React.FC<WidgetWrapperProps> {
+export interface WidgetWrapper
+  extends React.FC<PropsWithChildren<WidgetWrapperProps>> {
   CloseButton: typeof CloseButton;
 }
 (WidgetWrapper as WidgetWrapper).CloseButton = CloseButton;

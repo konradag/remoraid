@@ -1,15 +1,15 @@
 import { createContext, PropsWithChildren, ReactNode, useContext } from "react";
 import Widget, { WidgetProps } from "../Widget";
 import { IconRestore } from "@tabler/icons-react";
-import { SettingsWidgetOptions } from "@/core/lib/types";
+import { SettingsWidgetContext } from "@/core/lib/types";
 import SaveButton from "./SaveButton";
 
-export const defaultSettingsWidgetOptions = {};
-const settingsWidgetOptionsContext = createContext<SettingsWidgetOptions>(
-  defaultSettingsWidgetOptions
+export const defaultSettingsWidgetContext = {};
+const settingsWidgetContext = createContext<SettingsWidgetContext>(
+  defaultSettingsWidgetContext
 );
-export const useSettingsWidgetOptions = (): SettingsWidgetOptions => {
-  return useContext(settingsWidgetOptionsContext);
+export const useSettingsWidgetContext = (): SettingsWidgetContext => {
+  return useContext(settingsWidgetContext);
 };
 
 export interface SettingsWidgetProps {
@@ -27,7 +27,7 @@ function SettingsWidget({
   widgetProps,
 }: PropsWithChildren<SettingsWidgetProps>): ReactNode {
   return (
-    <settingsWidgetOptionsContext.Provider value={{ custom, unsavedChanges }}>
+    <settingsWidgetContext.Provider value={{ custom, unsavedChanges }}>
       <Widget
         title="Settings"
         id="settings"
@@ -60,11 +60,12 @@ function SettingsWidget({
       >
         {children}
       </Widget>
-    </settingsWidgetOptionsContext.Provider>
+    </settingsWidgetContext.Provider>
   );
 }
 
-export interface SettingsWidget extends React.FC<SettingsWidgetProps> {
+export interface SettingsWidget
+  extends React.FC<PropsWithChildren<SettingsWidgetProps>> {
   SaveButton: typeof SaveButton;
 }
 (SettingsWidget as SettingsWidget).SaveButton = SaveButton;

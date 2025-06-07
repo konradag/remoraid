@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import {
   Icon,
+  IconLink,
   IconLogin,
   IconLogout,
   IconMoon,
@@ -20,14 +21,20 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
-import { AppShellLogo, NavbarProps, NavbarSettings } from "@/core/lib/types";
+import {
+  AppShellLogo,
+  NavbarProps,
+  NavbarSettings,
+  RemoraidUser,
+} from "@/core/lib/types";
 import { useRemoraidUserExperience } from "@/core/components/RemoraidProvider/CoreUserExperienceProvider";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
+import { useRemoraidApp } from "../AppProvider";
 
 interface NavbarLinkProps {
-  icon: Icon;
   label: string;
   settings: NavbarSettings;
+  icon?: Icon;
   indicator?: (isHovering: boolean) => IndicatorProps;
   href?: string;
   active?: boolean;
@@ -35,7 +42,7 @@ interface NavbarLinkProps {
 }
 
 function NavbarLink({
-  icon: Icon,
+  icon,
   label,
   active,
   onClick,
@@ -52,6 +59,7 @@ function NavbarLink({
     size: settings.iconSize,
     stroke: 1.5,
   };
+  const Icon = icon ?? IconLink;
   if (!href) {
     return (
       <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
@@ -103,7 +111,7 @@ function NavbarLink({
 
 export interface NavbarMinimalProps extends NavbarProps {
   logo: AppShellLogo;
-  user?: { name: string } | null;
+  user?: RemoraidUser;
 }
 
 export const defaultSettings: NavbarSettings = {
@@ -117,7 +125,6 @@ export const defaultSettings: NavbarSettings = {
 export default function NavbarMinimal({
   logo,
   user,
-  links: linksProp,
   settings: settingsProp,
   linkIndicator,
   logoIndicator,
@@ -127,15 +134,18 @@ export default function NavbarMinimal({
   const pathname = usePathname();
   const theme = useRemoraidTheme();
   const { setColorScheme, colorScheme } = useMantineColorScheme();
+  const app = useRemoraidApp();
 
   // State
   const [isHoveringRoleIndicator, setIsHoveringRoleIndicator] =
     useState<boolean>(false);
 
   // Helpers
-  const settings: NavbarSettings =
-    settingsProp || userExperience.navbarSettings;
-  const links = linksProp
+  const settings: NavbarSettings = {
+    ...userExperience.navbarSettings,
+    ...settingsProp,
+  };
+  const links = app.navigablePages
     .filter((link) => !settings.hiddenPages.includes(link.href))
     .map((link) => (
       <NavbarLink

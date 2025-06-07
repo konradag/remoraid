@@ -11,6 +11,15 @@ import { Icon, IconProps } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
 import { ReactNode } from "react";
 
+export type RemoraidUser = { name: string } | null; // null when logged out
+export interface RemoraidAppContext {
+  navigablePages: {
+    label: string;
+    href: string;
+    icon?: Icon;
+  }[];
+  user?: RemoraidUser;
+}
 export enum NavbarVariant {
   Minimal = "minimal",
 }
@@ -76,14 +85,8 @@ export type PartialRemoraidTheme = Omit<Partial<RemoraidTheme>, "complete">;
 export type AppShellLogo = (
   props: Omit<ImageProps, "src" | "alt">
 ) => ReactNode;
-export interface NavbarLink {
-  icon: Icon;
-  label: string;
-  href: string;
-}
 export interface NavbarProps {
-  links: NavbarLink[];
-  settings?: NavbarSettings;
+  settings?: Partial<NavbarSettings>;
   variant?: NavbarVariant;
   linkIndicator?: (isHovering: boolean) => IndicatorProps;
   logoIndicator?: (isHovering: boolean) => IndicatorProps;
@@ -103,7 +106,7 @@ export interface PageConfiguration {
 export interface SettingsTableOptions {
   leftColumnWidth: string | number;
 }
-export interface SettingsWidgetOptions {
+export interface SettingsWidgetContext {
   unsavedChanges?: boolean;
   custom?: boolean;
 }

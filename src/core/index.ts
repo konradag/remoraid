@@ -4,6 +4,11 @@ export {
 } from "./components/RemoraidProvider";
 export { default as AppShell, AppShellProps } from "./components/AppShell";
 export {
+  default as AppProvider,
+  useRemoraidApp,
+  defaultAppContext,
+} from "./components/AppShell/AppProvider";
+export {
   default as UserExperienceProviderWrapper,
   UserExperienceProviderWrapperProps,
   createUserExperienceContext,
@@ -65,8 +70,8 @@ export {
 export {
   default as SettingsWidget,
   SettingsWidgetProps,
-  useSettingsWidgetOptions,
-  defaultSettingsWidgetOptions,
+  useSettingsWidgetContext as useSettingsWidgetOptions,
+  defaultSettingsWidgetContext as defaultSettingsWidgetOptions,
 } from "./components/SettingsWidget";
 export { SettingsWidgetSaveButtonProps } from "./components/SettingsWidget/SaveButton";
 export {
@@ -75,4 +80,9 @@ export {
   defaultSettingsTableOptions,
 } from "./components/SettingsWidget/SettingsTable";
 export { SettingsTableRowProps } from "./components/SettingsWidget/SettingsTable/Row";
+export {
+  default as NavbarSettingsWidget,
+  NavbarSettingsWidgetProps,
+  defaultNavbarSettingsWidgetId,
+} from "./components/NavbarSettingsWidget";
 export * from "./lib/types";
