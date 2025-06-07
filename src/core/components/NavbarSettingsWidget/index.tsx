@@ -91,8 +91,7 @@ export default function NavbarSettingsWidget({
                       key={i}
                       icon={
                         <p.icon
-                          width="100%"
-                          height="100%"
+                          {...theme.iconProps.tiny}
                           color={theme.primaryColor}
                         />
                       }
