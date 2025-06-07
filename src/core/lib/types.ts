@@ -100,3 +100,10 @@ export interface PageConfiguration {
   name: string;
   registerPageDirectly?: boolean;
 }
+export interface SettingsTableOptions {
+  leftColumnWidth: string | number;
+}
+export interface SettingsWidgetOptions {
+  unsavedChanges?: boolean;
+  custom?: boolean;
+}

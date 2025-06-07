@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, ReactNode } from "react";
-import Page, { PageProps } from "..";
+import Page, { PageProps } from "../Page";
 import { Alert } from "@mantine/core";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { usePathname } from "next/navigation";

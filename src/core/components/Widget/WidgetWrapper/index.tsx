@@ -24,7 +24,7 @@ export interface WidgetWrapperProps {
   componentsProps?: WidgetWrapperComponentsProps;
 }
 
-export default function WidgetWrapper({
+function WidgetWrapper({
   children,
   config,
   mt,
@@ -87,3 +87,9 @@ export default function WidgetWrapper({
     </Transition>
   );
 }
+
+export interface WidgetWrapper extends React.FC<WidgetWrapperProps> {
+  CloseButton: typeof CloseButton;
+}
+(WidgetWrapper as WidgetWrapper).CloseButton = CloseButton;
+export default WidgetWrapper;

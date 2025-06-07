@@ -27,10 +27,7 @@ export {
   default as WidgetSelectionHeader,
   WidgetSelectionHeaderProps,
 } from "./components/WidgetSelectionHeader";
-export {
-  default as CloseButton,
-  CloseButtonProps,
-} from "./components/Widget/WidgetWrapper/CloseButton";
+export { CloseButtonProps } from "./components/Widget/WidgetWrapper/CloseButton";
 export {
   default as BadgeGroup,
   BadgeGroupProps,
@@ -60,9 +57,22 @@ export {
 export {
   default as NotFoundPage,
   NotFoundPageProps,
-} from "./components/Page/NotFoundPage";
+} from "./components/NotFoundPage";
 export {
   default as EnvironmentShell,
   EnvironmentShellProps,
 } from "./components/EnvironmentShell";
+export {
+  default as SettingsWidget,
+  SettingsWidgetProps,
+  useSettingsWidgetOptions,
+  defaultSettingsWidgetOptions,
+} from "./components/SettingsWidget";
+export { SettingsWidgetSaveButtonProps } from "./components/SettingsWidget/SaveButton";
+export {
+  default as SettingsTable,
+  useSettingsTableOptions,
+  defaultSettingsTableOptions,
+} from "./components/SettingsWidget/SettingsTable";
+export { SettingsTableRowProps } from "./components/SettingsWidget/SettingsTable/Row";
 export * from "./lib/types";
