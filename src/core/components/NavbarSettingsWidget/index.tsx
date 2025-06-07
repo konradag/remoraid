@@ -45,12 +45,17 @@ export default function NavbarSettingsWidget({
           navbarSettings: defaultNavbarSettings[userExperience.navbarVariant],
         }));
       }}
-      custom={!isEqual(userExperience.navbarSettings, initialUserExperience)}
+      custom={
+        !isEqual(
+          userExperience.navbarSettings,
+          initialUserExperience.navbarSettings
+        )
+      }
     >
       <SettingsTable
         children={[
           ...(additionalRows ?? []).map((row, i) =>
-            cloneElement(row, { key: i })
+            row.key ? row : cloneElement(row, { key: i })
           ),
           <SettingsTable.Row
             key="select-hidden-pages"
