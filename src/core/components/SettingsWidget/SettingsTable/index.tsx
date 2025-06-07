@@ -6,7 +6,7 @@ import RowComponent, { SettingsTableRowProps } from "./Row";
 import { OnlyChildrenOf } from "@/core/lib/utils";
 
 export const defaultSettingsTableOptions = {
-  leftColumnWidth: "30%",
+  leftColumnWidth: "45%",
 };
 const settingsTableOptionsContext = createContext<SettingsTableOptions>(
   defaultSettingsTableOptions

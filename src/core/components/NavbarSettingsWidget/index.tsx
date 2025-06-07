@@ -1,5 +1,7 @@
 import { cloneElement, ReactElement, ReactNode } from "react";
-import SettingsTable from "../SettingsWidget/SettingsTable";
+import SettingsTable, {
+  SettingsTableProps,
+} from "../SettingsWidget/SettingsTable";
 import SettingsWidget from "../SettingsWidget";
 import { WidgetProps } from "../Widget";
 import {
@@ -21,11 +23,13 @@ export interface NavbarSettingsWidgetProps {
     typeof SettingsTable.Row
   >[];
   widgetProps?: Partial<WidgetProps>;
+  componentsProps?: { table: Partial<Omit<SettingsTableProps, "children">> };
 }
 
 export default function NavbarSettingsWidget({
   additionalRows,
   widgetProps,
+  componentsProps,
 }: NavbarSettingsWidgetProps): ReactNode {
   const { userExperience, updateUserExperience, initialUserExperience } =
     useRemoraidUserExperience();
@@ -54,9 +58,6 @@ export default function NavbarSettingsWidget({
     >
       <SettingsTable
         children={[
-          ...(additionalRows ?? []).map((row, i) =>
-            row.key ? row : cloneElement(row, { key: i })
-          ),
           <SettingsTable.Row
             key="select-hidden-pages"
             label="Select which pages you want to display or hide"
@@ -104,7 +105,11 @@ export default function NavbarSettingsWidget({
               </Group>
             </Chip.Group>
           </SettingsTable.Row>,
+          ...(additionalRows ?? []).map((row, i) =>
+            row.key ? row : cloneElement(row, { key: i })
+          ),
         ]}
+        {...componentsProps?.table}
       />
     </SettingsWidget>
   );
