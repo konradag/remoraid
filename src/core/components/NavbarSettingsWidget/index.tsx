@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from "react";
+import { cloneElement, ReactElement, ReactNode } from "react";
 import SettingsTable from "../SettingsWidget/SettingsTable";
 import SettingsWidget from "../SettingsWidget";
 import { WidgetProps } from "../Widget";
@@ -49,7 +49,9 @@ export default function NavbarSettingsWidget({
     >
       <SettingsTable
         children={[
-          ...(additionalRows ?? []),
+          ...(additionalRows ?? []).map((row, i) =>
+            cloneElement(row, { key: i })
+          ),
           <SettingsTable.Row label="Select which pages you want to display or hide">
             <Chip.Group
               multiple
@@ -64,7 +66,7 @@ export default function NavbarSettingsWidget({
                   ...prev,
                   navbarSettings: {
                     ...prev.navbarSettings,
-                    hiddenPagesNavbar: app.navigablePages
+                    hiddenPages: app.navigablePages
                       .filter((p) => !newValue.includes(p.href))
                       .map((p) => p.href),
                   },
