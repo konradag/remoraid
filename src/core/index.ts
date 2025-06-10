@@ -54,7 +54,7 @@ export {
   WidgetWrapperProps,
 } from "./components/Widget/WidgetWrapper";
 export { default as Widget, WidgetProps } from "./components/Widget";
-export { default as Page, PageProps } from "./components/Page";
+export { default as Page, PageProps, usePage } from "./components/Page";
 export {
   default as PageContainer,
   PageContainerProps,
@@ -91,4 +91,8 @@ export {
   useHydrationStatus,
   useHydratedMantineColorScheme,
 } from "./components/RemoraidProvider/HydrationStatusProvider";
+export {
+  default as ScrollableChipGroup,
+  ScrollbleChipGroupProps,
+} from "./components/ScrollableChipGroup";
 export * from "./lib/types";
