@@ -85,4 +85,10 @@ export {
   NavbarSettingsWidgetProps,
   defaultNavbarSettingsWidgetId,
 } from "./components/NavbarSettingsWidget";
+export {
+  default as HydrationStatusProvider,
+  HydrationStatusProviderProps,
+  useHydrationStatus,
+  useHydratedMantineColorScheme,
+} from "./components/RemoraidProvider/HydrationStatusProvider";
 export * from "./lib/types";

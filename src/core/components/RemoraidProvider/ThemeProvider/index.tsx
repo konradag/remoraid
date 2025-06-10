@@ -1,21 +1,18 @@
 import {
   AlertCategory,
-  PartialRemoraidTheme,
   RemoraidBreakpoint,
   RemoraidIconSize,
   RemoraidTheme,
   RemoraidThemeCallback,
+  RemoraidThemeDependencies,
   TransitionDuration,
 } from "@/core/lib/types";
 import { co } from "@/core/lib/utils";
 import {
-  MantineColorScheme,
   MantineColorShade,
   MantinePrimaryShade,
-  MantineTheme,
   px,
   rgba,
-  useMantineColorScheme,
   useMantineTheme,
 } from "@mantine/core";
 import {
@@ -29,6 +26,7 @@ import React, {
   useMemo,
   ReactNode,
 } from "react";
+import { useHydratedMantineColorScheme } from "../HydrationStatusProvider";
 
 const isMantinePrimaryShade = (
   primaryShade: MantinePrimaryShade | MantineColorShade
@@ -41,9 +39,9 @@ const isMantinePrimaryShade = (
 
 export const createRemoraidTheme: (
   customTheme?: Partial<RemoraidTheme>,
-  mantineTheme?: MantineTheme,
-  colorScheme?: MantineColorScheme
-) => RemoraidTheme = (customTheme, mantineTheme, colorScheme) => {
+  dependencies?: Partial<RemoraidThemeDependencies>
+) => RemoraidTheme = (customTheme, dependencies) => {
+  const { mantineTheme, colorScheme } = dependencies ?? {};
   const defaultMediumIconProps = { size: "1.125em" };
   let transparentBackground;
   let primaryColor;
@@ -80,70 +78,64 @@ export const createRemoraidTheme: (
     };
   }
   return {
-    complete: true,
+    containerSize: 1300,
+    jsonStringifySpace: 2,
+    transparentBackground,
+    primaryColor,
+    spacingPx,
+    ...customTheme,
     transitionDurations: {
       [TransitionDuration.Short]: 200,
       [TransitionDuration.Medium]: 350,
       [TransitionDuration.Long]: 500,
+      ...customTheme?.transitionDurations,
     },
     breakpoints: {
       [RemoraidBreakpoint.ButtonCollapse]: "md",
       [RemoraidBreakpoint.BadgeGroupCollapse]: "md",
+      ...customTheme?.breakpoints,
     },
     scrollAreaProps: {
       scrollbarSize: 8,
       scrollHideDelay: 20,
       type: "hover",
+      ...customTheme?.scrollAreaProps,
     },
-    containerSize: 1300,
     alertProps: {
       [AlertCategory.Negative]: {
         icon: <IconAlertCircle {...defaultMediumIconProps} />,
         variant: "light",
         color: "red",
         title: "Attention!",
-        // bg: transparentBackground,
+        ...customTheme?.alertProps?.negative,
       },
       [AlertCategory.Neutral]: {
         icon: <IconInfoCircle {...defaultMediumIconProps} />,
         variant: "light",
         color: mantineTheme?.primaryColor,
         title: "Information",
-        // bg: transparentBackground,
+        ...customTheme?.alertProps?.neutral,
       },
       [AlertCategory.Positive]: {
         icon: <IconCircleCheck {...defaultMediumIconProps} />,
         variant: "light",
         color: "green",
         title: "Success",
-        // bg: transparentBackground,
+        ...customTheme?.alertProps?.positive,
       },
     },
     iconProps: {
-      [RemoraidIconSize.Medium]: defaultMediumIconProps,
-      [RemoraidIconSize.Tiny]: { size: 14, stroke: 3 },
+      [RemoraidIconSize.Medium]: {
+        ...defaultMediumIconProps,
+        ...customTheme?.iconProps?.medium,
+      },
+      [RemoraidIconSize.Tiny]: {
+        size: 14,
+        stroke: 3,
+        ...customTheme?.iconProps?.tiny,
+      },
     },
-    jsonStringifySpace: 2,
-    transparentBackground,
-    primaryColor,
-    spacingPx,
-    ...customTheme,
   };
-};
-
-export const isRemoraidTheme = (
-  x?: RemoraidTheme | PartialRemoraidTheme | RemoraidThemeCallback
-): x is RemoraidTheme => {
-  if (!x) {
-    return false;
-  }
-  if (typeof x !== "object") {
-    return false;
-  }
-  if (!("complete" in x)) {
-    return false;
-  }
-  return true;
 };
 
 const themeContext = React.createContext<RemoraidTheme>(createRemoraidTheme());
@@ -152,29 +144,28 @@ export const useRemoraidTheme = (): RemoraidTheme => {
   return useContext(themeContext);
 };
 export interface ThemeProviderProps {
-  theme?: RemoraidTheme | RemoraidThemeCallback | PartialRemoraidTheme;
+  theme?: RemoraidTheme | RemoraidThemeCallback;
 }
 
 export default function ThemeProvider({
-  children,
   theme,
+  children,
 }: PropsWithChildren<ThemeProviderProps>): ReactNode {
   // Style
   const mantineTheme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const { colorScheme } = useHydratedMantineColorScheme();
 
   // Helpers
   const remoraidTheme = useMemo(() => {
-    let value: RemoraidTheme;
-    if (isRemoraidTheme(theme)) {
-      value = theme;
-    } else if (typeof theme === "function") {
-      value = theme(mantineTheme, colorScheme);
-    } else {
-      value = createRemoraidTheme(theme, mantineTheme, colorScheme);
-    }
-    return value;
-  }, [colorScheme]);
+    const dependencies: Partial<RemoraidThemeDependencies> = {
+      mantineTheme,
+      colorScheme,
+    };
+    return createRemoraidTheme(
+      typeof theme === "function" ? theme(dependencies) : theme,
+      dependencies
+    );
+  }, [colorScheme, theme]);
 
   return (
     <themeContext.Provider value={remoraidTheme}>

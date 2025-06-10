@@ -65,7 +65,6 @@ export enum RemoraidIconSize {
   Medium = "medium",
 }
 export interface RemoraidTheme {
-  complete: true;
   transitionDurations: Record<TransitionDuration, number>;
   breakpoints: Record<RemoraidBreakpoint, MantineBreakpoint>;
   scrollAreaProps: ScrollAreaProps;
@@ -77,11 +76,13 @@ export interface RemoraidTheme {
   primaryColor?: string;
   spacingPx?: Record<MantineSize, number>;
 }
+export interface RemoraidThemeDependencies {
+  mantineTheme: MantineTheme;
+  colorScheme: MantineColorScheme;
+}
 export type RemoraidThemeCallback = (
-  mantineTheme: MantineTheme,
-  colorScheme: MantineColorScheme
-) => RemoraidTheme;
-export type PartialRemoraidTheme = Omit<Partial<RemoraidTheme>, "complete">;
+  dependencies: Partial<RemoraidThemeDependencies>
+) => Partial<RemoraidTheme>;
 export type AppShellLogo = (
   props: Omit<ImageProps, "src" | "alt">
 ) => ReactNode;
@@ -109,4 +110,8 @@ export interface SettingsTableOptions {
 export interface SettingsWidgetContext {
   unsavedChanges?: boolean;
   custom?: boolean;
+}
+export interface HydrationStatus {
+  hasHydrated: boolean;
+  ensureHydration: <T>(v: T) => T | undefined;
 }

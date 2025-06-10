@@ -1,10 +1,11 @@
-import { Group, useMantineColorScheme, useMantineTheme } from "@mantine/core";
+import { Group, useMantineTheme } from "@mantine/core";
 import { IconPennant } from "@tabler/icons-react";
 import { ReactNode } from "react";
+import { useHydratedMantineColorScheme } from "../../RemoraidProvider/HydrationStatusProvider";
 
 export default function Footer(): ReactNode {
   const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const { colorScheme } = useHydratedMantineColorScheme();
   return (
     <Group justify="center" w="100%" py="md">
       <IconPennant

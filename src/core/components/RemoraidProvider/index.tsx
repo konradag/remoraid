@@ -3,22 +3,25 @@ import WidgetsProvider, { WidgetsProviderProps } from "./WidgetsProvider";
 import ThemeProvider, { ThemeProviderProps } from "./ThemeProvider";
 import {
   CoreUserExperience,
-  PartialRemoraidTheme,
-  RemoraidTheme,
-  RemoraidThemeCallback,
   UserExperienceProviderProps,
 } from "@/core/lib/types";
 import { CookiesProvider, ReactCookieProps } from "react-cookie";
 import CoreUserExperienceProvider from "./CoreUserExperienceProvider";
+import HydrationStatusProvider, {
+  HydrationStatusProviderProps,
+} from "./HydrationStatusProvider";
 
 export interface RemoraidProviderProps {
-  theme?: RemoraidTheme | RemoraidThemeCallback | PartialRemoraidTheme;
-  initialUserExperience?: Partial<CoreUserExperience>;
+  theme?: ThemeProviderProps["theme"];
+  initialUserExperience?: UserExperienceProviderProps<CoreUserExperience>["initialValue"];
   componentsProps?: {
-    ThemeProvider?: ThemeProviderProps;
-    CoreUserExperienceProvider?: UserExperienceProviderProps<CoreUserExperience>;
-    WidgetsProvider?: WidgetsProviderProps;
-    CookiesProvider?: ReactCookieProps;
+    ThemeProvider?: Partial<ThemeProviderProps>;
+    CoreUserExperienceProvider?: Partial<
+      UserExperienceProviderProps<CoreUserExperience>
+    >;
+    WidgetsProvider?: Partial<WidgetsProviderProps>;
+    CookiesProvider?: Partial<ReactCookieProps>;
+    HydrationStatusProviderProps?: Partial<HydrationStatusProviderProps>;
   };
 }
 
@@ -30,16 +33,20 @@ export default function RemoraidProvider({
 }: PropsWithChildren<RemoraidProviderProps>): ReactNode {
   return (
     <CookiesProvider {...componentsProps?.CookiesProvider}>
-      <ThemeProvider theme={theme} {...componentsProps?.ThemeProvider}>
-        <CoreUserExperienceProvider
-          initialValue={initialUserExperience}
-          {...componentsProps?.CoreUserExperienceProvider}
-        >
-          <WidgetsProvider {...componentsProps?.WidgetsProvider}>
-            {children}
-          </WidgetsProvider>
-        </CoreUserExperienceProvider>
-      </ThemeProvider>
+      <HydrationStatusProvider
+        {...componentsProps?.HydrationStatusProviderProps}
+      >
+        <ThemeProvider theme={theme} {...componentsProps?.ThemeProvider}>
+          <CoreUserExperienceProvider
+            initialValue={initialUserExperience}
+            {...componentsProps?.CoreUserExperienceProvider}
+          >
+            <WidgetsProvider {...componentsProps?.WidgetsProvider}>
+              {children}
+            </WidgetsProvider>
+          </CoreUserExperienceProvider>
+        </ThemeProvider>
+      </HydrationStatusProvider>
     </CookiesProvider>
   );
 }

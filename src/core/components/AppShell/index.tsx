@@ -4,7 +4,6 @@ import {
   rem,
   Group,
   useMantineTheme,
-  useMantineColorScheme,
   Paper,
   px,
 } from "@mantine/core";
@@ -24,6 +23,7 @@ import { co } from "@/core/lib/utils";
 import { useRemoraidUserExperience } from "../RemoraidProvider/CoreUserExperienceProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import AppProvider from "./AppProvider";
+import { useHydratedMantineColorScheme } from "../RemoraidProvider/HydrationStatusProvider";
 
 export interface AppShellProps {
   logo: AppShellLogo;
@@ -42,7 +42,7 @@ export default function AppShell({
   const { userExperience } = useRemoraidUserExperience();
   const mantineTheme = useMantineTheme();
   const theme = useRemoraidTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const { colorScheme } = useHydratedMantineColorScheme();
   const [opened, { toggle }] = useDisclosure();
 
   // Helpers

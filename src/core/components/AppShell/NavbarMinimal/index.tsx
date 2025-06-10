@@ -3,7 +3,6 @@ import {
   UnstyledButton,
   Stack,
   rem,
-  useMantineColorScheme,
   Flex,
   Paper,
   Divider,
@@ -30,6 +29,7 @@ import {
 import { useRemoraidUserExperience } from "@/core/components/RemoraidProvider/CoreUserExperienceProvider";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { useRemoraidApp } from "../AppProvider";
+import { useHydratedMantineColorScheme } from "../../RemoraidProvider/HydrationStatusProvider";
 
 interface NavbarLinkProps {
   label: string;
@@ -133,7 +133,7 @@ export default function NavbarMinimal({
   const { userExperience } = useRemoraidUserExperience();
   const pathname = usePathname();
   const theme = useRemoraidTheme();
-  const { setColorScheme, colorScheme } = useMantineColorScheme();
+  const { setColorScheme, colorScheme } = useHydratedMantineColorScheme();
   const app = useRemoraidApp();
 
   // State
@@ -217,11 +217,10 @@ export default function NavbarMinimal({
           <NavbarLink
             icon={colorScheme === "dark" ? IconSun : IconMoon}
             onClick={() => {
-              if (colorScheme === "dark") {
-                setColorScheme("light");
-              } else {
-                setColorScheme("dark");
+              if (!colorScheme || !setColorScheme) {
+                return;
               }
+              setColorScheme(colorScheme === "dark" ? "light" : "dark");
             }}
             label="Toggle Color Scheme"
             settings={settings}
