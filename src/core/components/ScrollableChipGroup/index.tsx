@@ -34,11 +34,7 @@ export default function ScrollableChipGroup({
   const theme = useRemoraidTheme();
 
   return (
-    <ScrollArea
-      flex={1}
-      {...theme.scrollAreaProps}
-      {...componentsProps?.scrollArea}
-    >
+    <ScrollArea {...theme.scrollAreaProps} {...componentsProps?.scrollArea}>
       <Chip.Group
         value={value}
         onChange={onChange}

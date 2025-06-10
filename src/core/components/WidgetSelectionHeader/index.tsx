@@ -42,6 +42,7 @@ export default function WidgetSelectionHeader({
           onChange={(value: string[]) => {
             updateWidgetSelectionBulk(page.pageId, value);
           }}
+          componentsProps={{ scrollArea: { flex: 1 } }}
         >
           {Object.keys(widgets[page.pageId]).map((widgetId) => (
             <Chip
