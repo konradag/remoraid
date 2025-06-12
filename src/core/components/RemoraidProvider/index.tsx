@@ -10,6 +10,7 @@ import CoreUserExperienceProvider from "./CoreUserExperienceProvider";
 import HydrationStatusProvider, {
   HydrationStatusProviderProps,
 } from "./HydrationStatusProvider";
+import LayoutsProvider, { LayoutsProviderProps } from "./LayoutsProvider";
 
 export interface RemoraidProviderProps {
   theme?: ThemeProviderProps["theme"];
@@ -22,6 +23,7 @@ export interface RemoraidProviderProps {
     WidgetsProvider?: Partial<WidgetsProviderProps>;
     CookiesProvider?: Partial<ReactCookieProps>;
     HydrationStatusProviderProps?: Partial<HydrationStatusProviderProps>;
+    LayoutsProviderProps?: Partial<LayoutsProviderProps>;
   };
 }
 
@@ -42,7 +44,9 @@ export default function RemoraidProvider({
             {...componentsProps?.CoreUserExperienceProvider}
           >
             <WidgetsProvider {...componentsProps?.WidgetsProvider}>
-              {children}
+              <LayoutsProvider {...componentsProps?.LayoutsProviderProps}>
+                {children}
+              </LayoutsProvider>
             </WidgetsProvider>
           </CoreUserExperienceProvider>
         </ThemeProvider>

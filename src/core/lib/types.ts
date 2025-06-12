@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type RemoraidUser = { name: string } | null; // null when logged out
 export interface RemoraidAppContext {
@@ -115,3 +115,26 @@ export interface HydrationStatus {
   hasHydrated: boolean;
   ensureHydration: <T>(v: T) => T | undefined;
 }
+export enum LayoutType {
+  Frame = "frame",
+}
+export enum FrameLayoutSection {
+  Top = "top",
+  Bottom = "bottom",
+  Left = "left",
+  Right = "right",
+}
+export type Layout<T extends LayoutType> = T extends LayoutType.Frame
+  ? {
+      sections: Record<FrameLayoutSection, HTMLDivElement | null>;
+    }
+  : never;
+export interface LayoutsContext {
+  layouts: Record<string, Layout<LayoutType>>;
+  setLayouts: Dispatch<SetStateAction<Record<string, Layout<LayoutType>>>>;
+}
+export type FrameLayoutContext = {
+  layoutId: string | null; // null, if component not in frame layout
+  layout: Layout<LayoutType.Frame>;
+  setLayout: Dispatch<SetStateAction<Layout<LayoutType.Frame>>>;
+};
