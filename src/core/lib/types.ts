@@ -138,3 +138,7 @@ export type FrameLayoutContext = {
   layout: Layout<LayoutType.Frame>;
   setLayout: Dispatch<SetStateAction<Layout<LayoutType.Frame>>>;
 };
+export enum FrameLayoutVariant {
+  Plain = "plain",
+  Sticky = "sticky",
+}

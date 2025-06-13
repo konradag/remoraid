@@ -3,6 +3,8 @@ import {
   BoxProps,
   Group,
   GroupProps,
+  ScrollArea,
+  ScrollAreaProps,
   Stack,
   StackProps,
 } from "@mantine/core";
@@ -20,10 +22,12 @@ import ElementComponent from "./Element";
 import {
   FrameLayoutContext,
   FrameLayoutSection,
+  FrameLayoutVariant,
   Layout,
   LayoutType,
 } from "@/core/lib/types";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
+import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 export const isFrameLayout = (
   layout: Layout<LayoutType>
@@ -61,10 +65,15 @@ export const useFrameLayout = (): FrameLayoutContext => {
   return useContext(layoutContext);
 };
 
-export interface FrameLayoutProps {
+export interface FrameLayoutProps<T extends FrameLayoutVariant> {
+  variant: T;
   layoutId: string;
   componentsProps?: {
-    childrenContainer?: Partial<BoxProps>;
+    childrenContainer?: T extends FrameLayoutVariant.Plain
+      ? Partial<BoxProps>
+      : T extends FrameLayoutVariant.Sticky
+      ? Partial<ScrollAreaProps>
+      : never;
     horizontalContainer?: Partial<GroupProps>;
     verticalContainer?: Partial<StackProps>;
     sectionContainers?: {
@@ -76,11 +85,13 @@ export interface FrameLayoutProps {
   };
 }
 
-function FrameLayout({
+function FrameLayout<T extends FrameLayoutVariant = FrameLayoutVariant.Sticky>({
+  variant,
   layoutId,
   componentsProps,
   children,
-}: PropsWithChildren<FrameLayoutProps>): ReactNode {
+}: PropsWithChildren<FrameLayoutProps<T>>): ReactNode {
+  const theme = useRemoraidTheme();
   const { layouts, setLayouts } = useLayouts();
 
   // Helpers
@@ -131,16 +142,29 @@ function FrameLayout({
     },
     [setLayout]
   );
+  let contentSection: ReactNode = children;
+  const childrenContainerProps = {
+    flex: 1,
+    ...componentsProps?.childrenContainer,
+  };
+  if (variant === FrameLayoutVariant.Plain) {
+    contentSection = <Box {...childrenContainerProps}>{contentSection}</Box>;
+  } else if (variant === FrameLayoutVariant.Sticky) {
+    contentSection = (
+      <ScrollArea {...theme.scrollAreaProps} {...childrenContainerProps}>
+        {children}
+      </ScrollArea>
+    );
+  }
 
   return (
     <layoutContext.Provider value={{ layoutId, layout, setLayout }}>
-      <Group gap={0} {...componentsProps?.horizontalContainer} bg="blue">
+      <Group gap={0} {...componentsProps?.horizontalContainer}>
         <Group
           ref={leftSection}
           h="100%"
           gap={0}
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]}
-          bg="black"
         />
         <Stack
           h="100%"
@@ -152,16 +176,12 @@ function FrameLayout({
             ref={topSection}
             gap={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]}
-            bg="yellow"
           />
-          <Box flex={1} {...componentsProps?.childrenContainer} bg="white">
-            {children}
-          </Box>
+          {contentSection}
           <Stack
             ref={bottomSection}
             gap={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]}
-            bg="orange"
           />
         </Stack>
         <Group
@@ -169,7 +189,6 @@ function FrameLayout({
           ref={rightSection}
           h="100%"
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]}
-          bg="aqua"
         />
       </Group>
     </layoutContext.Provider>
@@ -177,7 +196,7 @@ function FrameLayout({
 }
 
 export interface FrameLayout
-  extends React.FC<PropsWithChildren<FrameLayoutProps>> {
+  extends React.FC<PropsWithChildren<FrameLayoutProps<FrameLayoutVariant>>> {
   Element: typeof ElementComponent;
 }
 export default Object.assign(FrameLayout, {
