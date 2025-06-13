@@ -1,6 +1,5 @@
 import { PropsWithChildren, ReactNode } from "react";
-import { createPortal } from "react-dom";
-import { Box, BoxProps } from "@mantine/core";
+import { Box, BoxProps, Portal } from "@mantine/core";
 import { FrameLayoutSection, Layout, LayoutType } from "@/core/lib/types";
 import { useLayouts } from "../../RemoraidProvider/LayoutsProvider";
 import { isFrameLayout, useFrameLayout } from "..";
@@ -35,8 +34,10 @@ export default function Element({
   if (layout.sections[section] === null) {
     return null;
   }
-  return createPortal(
-    <Box {...componentsProps?.container}>{children}</Box>,
-    layout.sections[section]
+
+  return (
+    <Portal target={layout.sections[section]}>
+      <Box {...componentsProps?.container}>{children}</Box>
+    </Portal>
   );
 }
