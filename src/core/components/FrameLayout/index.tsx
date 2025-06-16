@@ -85,7 +85,7 @@ export interface FrameLayoutProps<T extends FrameLayoutVariant> {
   };
 }
 
-function FrameLayout<T extends FrameLayoutVariant = FrameLayoutVariant.Sticky>({
+function FrameLayout<T extends FrameLayoutVariant>({
   variant,
   layoutId,
   componentsProps,
@@ -195,8 +195,10 @@ function FrameLayout<T extends FrameLayoutVariant = FrameLayoutVariant.Sticky>({
   );
 }
 
-export interface FrameLayout
-  extends React.FC<PropsWithChildren<FrameLayoutProps<FrameLayoutVariant>>> {
+export interface FrameLayout {
+  <T extends FrameLayoutVariant>(
+    props: PropsWithChildren<FrameLayoutProps<T>>
+  ): ReactNode;
   Element: typeof ElementComponent;
 }
 export default Object.assign(FrameLayout, {
