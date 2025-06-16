@@ -105,6 +105,7 @@ export {
   FrameLayoutProps,
   useFrameLayout,
   defaultFrameLayoutContext,
+  DefaultFrameLayoutVariant,
   isFrameLayout,
 } from "./components/FrameLayout";
 export { FrameLayoutElementProps } from "./components/FrameLayout/Element";

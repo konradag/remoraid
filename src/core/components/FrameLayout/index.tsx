@@ -28,6 +28,7 @@ import {
 } from "@/core/lib/types";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import { Optional } from "@/core/lib/utils";
 
 export const isFrameLayout = (
   layout: Layout<LayoutType>
@@ -43,6 +44,9 @@ export const isFrameLayout = (
   }
   return true;
 };
+
+export type DefaultFrameLayoutVariant = FrameLayoutVariant.Sticky;
+const defaultFrameLayoutVariant = FrameLayoutVariant.Sticky;
 
 export const defaultFrameLayoutContext: FrameLayoutContext = {
   layoutId: null,
@@ -65,7 +69,9 @@ export const useFrameLayout = (): FrameLayoutContext => {
   return useContext(layoutContext);
 };
 
-export interface FrameLayoutProps<T extends FrameLayoutVariant> {
+export interface FrameLayoutPropsWithExplicitVariant<
+  T extends FrameLayoutVariant
+> {
   variant: T;
   layoutId: string;
   componentsProps?: {
@@ -85,8 +91,14 @@ export interface FrameLayoutProps<T extends FrameLayoutVariant> {
   };
 }
 
-function FrameLayout<T extends FrameLayoutVariant>({
-  variant,
+export type FrameLayoutProps<
+  T extends FrameLayoutVariant = DefaultFrameLayoutVariant
+> = T extends DefaultFrameLayoutVariant
+  ? Optional<FrameLayoutPropsWithExplicitVariant<T>, "variant">
+  : FrameLayoutPropsWithExplicitVariant<T>;
+
+function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
+  variant = defaultFrameLayoutVariant,
   layoutId,
   componentsProps,
   children,
@@ -196,7 +208,7 @@ function FrameLayout<T extends FrameLayoutVariant>({
 }
 
 export interface FrameLayout {
-  <T extends FrameLayoutVariant>(
+  <T extends FrameLayoutVariant = DefaultFrameLayoutVariant>(
     props: PropsWithChildren<FrameLayoutProps<T>>
   ): ReactNode;
   Element: typeof ElementComponent;
