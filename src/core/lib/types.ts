@@ -1,6 +1,5 @@
 import {
   AlertProps,
-  IndicatorProps,
   MantineBreakpoint,
   MantineColorScheme,
   MantineSize,
@@ -12,29 +11,37 @@ import { ImageProps } from "next/image";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type RemoraidUser = { name: string } | null; // null when logged out
-export interface RemoraidAppContext {
+export interface RemoraidAuthContext {
+  user: RemoraidUser;
+  onLogout?: () => void;
+}
+export type AppLogo = (props: Omit<ImageProps, "src" | "alt">) => ReactNode;
+export interface StaticRemoraidAppContext {
   navigablePages: {
     label: string;
     href: string;
     icon?: Icon;
   }[];
-  user?: RemoraidUser;
+  logo?: AppLogo;
+  auth?: RemoraidAuthContext;
 }
+export type CustomAppVariables = {
+  [K in Exclude<string, keyof StaticRemoraidAppContext>]: any;
+};
+export type RemoraidAppContext<V extends CustomAppVariables> =
+  StaticRemoraidAppContext & V;
+export type AppContextProps<V extends CustomAppVariables> =
+  StaticRemoraidAppContext & V;
 export enum NavbarVariant {
   Minimal = "minimal",
 }
-export interface NavbarSettings {
-  hiddenPages: string[];
-  linkSize: string;
-  px: MantineSize | number;
-  py: MantineSize | number;
-  iconSize?: string | number;
+export enum FooterVariant {
+  Minimal = "minimal",
 }
 export type UserExperience = Record<string, any>;
 export interface CoreUserExperience extends UserExperience {
-  navbarVariant: NavbarVariant;
-  navbarSettings: NavbarSettings;
   showWelcomeMessage: boolean;
+  navbar: { hiddenPages: string[] };
 }
 export type UserExperienceProviderProps<T extends UserExperience> = {
   initialValue?: Partial<T>;
@@ -83,16 +90,6 @@ export interface RemoraidThemeDependencies {
 export type RemoraidThemeCallback = (
   dependencies: Partial<RemoraidThemeDependencies>
 ) => Partial<RemoraidTheme>;
-export type AppShellLogo = (
-  props: Omit<ImageProps, "src" | "alt">
-) => ReactNode;
-export interface NavbarProps {
-  settings?: Partial<NavbarSettings>;
-  variant?: NavbarVariant;
-  linkIndicator?: (isHovering: boolean) => IndicatorProps;
-  logoIndicator?: (isHovering: boolean) => IndicatorProps;
-  onLogout?: () => void;
-}
 export interface WidgetConfiguration {
   widgetId: string;
   name: string;
@@ -123,10 +120,14 @@ export enum FrameLayoutSection {
   Bottom = "bottom",
   Left = "left",
   Right = "right",
+  Content = "content",
 }
 export type Layout<T extends LayoutType> = T extends LayoutType.Frame
   ? {
-      sections: Record<FrameLayoutSection, HTMLDivElement | null>;
+      sections: Record<
+        Exclude<FrameLayoutSection, FrameLayoutSection.Content>,
+        HTMLDivElement | null
+      >;
     }
   : never;
 export interface LayoutsContext {
@@ -142,3 +143,11 @@ export enum FrameLayoutVariant {
   Plain = "plain",
   Sticky = "sticky",
 }
+export type FrameLayoutNavbarPosition<T extends NavbarVariant> =
+  T extends NavbarVariant.Minimal
+    ? FrameLayoutSection.Left | FrameLayoutSection.Right
+    : FrameLayoutSection;
+export type FrameLayoutFooterPosition<T extends FooterVariant> =
+  T extends FooterVariant.Minimal
+    ? FrameLayoutSection.Content | FrameLayoutSection.Bottom
+    : FrameLayoutSection;

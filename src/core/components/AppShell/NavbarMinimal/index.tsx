@@ -2,12 +2,13 @@ import {
   Tooltip,
   UnstyledButton,
   Stack,
-  rem,
   Flex,
   Paper,
   Divider,
   Indicator,
   IndicatorProps,
+  PaperProps,
+  rem,
 } from "@mantine/core";
 import {
   Icon,
@@ -20,12 +21,6 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState } from "react";
-import {
-  AppShellLogo,
-  NavbarProps,
-  NavbarSettings,
-  RemoraidUser,
-} from "@/core/lib/types";
 import { useRemoraidUserExperience } from "@/core/components/RemoraidProvider/CoreUserExperienceProvider";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { useRemoraidApp } from "../AppProvider";
@@ -33,7 +28,8 @@ import { useHydratedMantineColorScheme } from "../../RemoraidProvider/HydrationS
 
 interface NavbarLinkProps {
   label: string;
-  settings: NavbarSettings;
+  linkSize: string;
+  iconSize: string;
   icon?: Icon;
   indicator?: (isHovering: boolean) => IndicatorProps;
   href?: string;
@@ -43,12 +39,13 @@ interface NavbarLinkProps {
 
 function NavbarLink({
   icon,
+  linkSize,
+  iconSize,
   label,
   active,
   onClick,
   href,
   indicator,
-  settings,
 }: NavbarLinkProps): ReactNode {
   // State
   const [isHoveringRoleIndicator, setIsHoveringRoleIndicator] =
@@ -56,7 +53,7 @@ function NavbarLink({
 
   // Helpers
   const iconProps = {
-    size: settings.iconSize,
+    size: iconSize,
     stroke: 1.5,
   };
   const Icon = icon ?? IconLink;
@@ -67,8 +64,8 @@ function NavbarLink({
           onClick={onClick}
           className="remoraid-navbar-minimal-link"
           data-active={active || undefined}
-          w={settings.linkSize}
-          h={settings.linkSize}
+          w={linkSize}
+          h={linkSize}
         >
           <Icon {...iconProps} />
         </UnstyledButton>
@@ -80,8 +77,8 @@ function NavbarLink({
       onClick={onClick}
       className="remoraid-navbar-minimal-link"
       data-active={active || undefined}
-      w={settings.linkSize}
-      h={settings.linkSize}
+      w={linkSize}
+      h={linkSize}
       component={Link}
       href={href}
     >
@@ -109,109 +106,112 @@ function NavbarLink({
   );
 }
 
-export interface NavbarMinimalProps extends NavbarProps {
-  logo: AppShellLogo;
-  user?: RemoraidUser;
+export interface NavbarMinimalProps {
+  linkSize?: string;
+  iconSize?: string;
+  linkIndicator?: (isHovering: boolean) => IndicatorProps;
+  logoIndicator?: (isHovering: boolean) => IndicatorProps;
+  componentsProps?: {
+    container?: Partial<PaperProps>;
+    link?: Partial<NavbarLinkProps>;
+  };
 }
 
-export const defaultSettings: NavbarSettings = {
-  hiddenPages: [],
-  linkSize: rem("50px"),
-  iconSize: "50%",
-  px: "sm",
-  py: "md",
-};
-
 export default function NavbarMinimal({
-  logo,
-  user,
-  settings: settingsProp,
+  linkSize = rem("50px"),
+  iconSize = "50%",
   linkIndicator,
   logoIndicator,
-  onLogout,
+  componentsProps,
 }: NavbarMinimalProps): ReactNode {
-  const { userExperience } = useRemoraidUserExperience();
   const pathname = usePathname();
   const theme = useRemoraidTheme();
   const { setColorScheme, colorScheme } = useHydratedMantineColorScheme();
-  const app = useRemoraidApp();
+  const { userExperience } = useRemoraidUserExperience();
+  const { navigablePages, logo, auth } = useRemoraidApp();
 
   // State
   const [isHoveringRoleIndicator, setIsHoveringRoleIndicator] =
     useState<boolean>(false);
 
   // Helpers
-  const settings: NavbarSettings = {
-    ...userExperience.navbarSettings,
-    ...settingsProp,
+  const linkProps = {
+    linkSize,
+    iconSize,
+    ...componentsProps?.link,
   };
-  const links = app.navigablePages
-    .filter((link) => !settings.hiddenPages.includes(link.href))
+  const links = navigablePages
+    .filter((link) => !userExperience.navbar.hiddenPages.includes(link.href))
     .map((link) => (
       <NavbarLink
         key={link.label}
         active={link.href === pathname}
         indicator={linkIndicator}
-        settings={settings}
         {...link}
+        {...linkProps}
       />
     ));
-  const logoImage = logo({
+  const logoProps = {
     style: {
       cursor: "pointer",
-      width: settings.linkSize,
-      height: settings.linkSize,
+      width: linkSize,
+      height: linkSize,
     },
-  });
+  };
 
   return (
     <Paper
       h="100%"
-      py={settings.py}
-      bg={theme.transparentBackground}
-      radius={0}
+      m="md"
+      py="md"
       shadow="md"
+      bg={theme.transparentBackground}
+      {...componentsProps?.container}
     >
-      <Flex direction="column" h="100%" align="center" px={settings.px}>
-        {logoIndicator === undefined ? (
-          logoImage
-        ) : (
-          <Indicator
-            withBorder
-            offset={2}
-            size={13}
-            onMouseEnter={() => setIsHoveringRoleIndicator(true)}
-            onMouseLeave={() => setIsHoveringRoleIndicator(false)}
-            {...logoIndicator(isHoveringRoleIndicator)}
-          >
-            {logoImage}
-          </Indicator>
+      <Flex direction="column" h="100%" align="center">
+        {logo !== undefined && (
+          <>
+            {logoIndicator === undefined ? (
+              logo(logoProps)
+            ) : (
+              <Indicator
+                withBorder
+                offset={2}
+                size={13}
+                onMouseEnter={() => setIsHoveringRoleIndicator(true)}
+                onMouseLeave={() => setIsHoveringRoleIndicator(false)}
+                {...logoIndicator(isHoveringRoleIndicator)}
+              >
+                {logo(logoProps)}
+              </Indicator>
+            )}
+            <Divider my={"md"} variant="dashed" w="100%" />
+          </>
         )}
-        <Divider my={"md"} variant="dashed" w="100%" />
         <Stack justify="flex-start" gap={0} flex={1}>
           {links}
         </Stack>
         <Stack justify="center" gap={0}>
-          {user !== undefined &&
-            (user === null ? (
+          {auth !== undefined &&
+            (auth.user === null ? (
               <NavbarLink
                 icon={IconLogin}
                 label="Login"
                 href="/login"
                 active={pathname === "/login"}
-                settings={settings}
+                {...linkProps}
               />
             ) : (
               <NavbarLink
                 icon={IconLogout}
                 label="Logout"
                 onClick={() => {
-                  if (onLogout) {
-                    onLogout();
+                  if (auth.onLogout) {
+                    auth.onLogout();
                   }
                 }}
                 href={"/login"}
-                settings={settings}
+                {...linkProps}
               />
             ))}
           <NavbarLink
@@ -223,7 +223,7 @@ export default function NavbarMinimal({
               setColorScheme(colorScheme === "dark" ? "light" : "dark");
             }}
             label="Toggle Color Scheme"
-            settings={settings}
+            {...linkProps}
           />
         </Stack>
       </Flex>

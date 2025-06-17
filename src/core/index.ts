@@ -2,11 +2,22 @@ export {
   default as RemoraidProvider,
   RemoraidProviderProps,
 } from "./components/RemoraidProvider";
-export { default as AppShell, AppShellProps } from "./components/AppShell";
+export {
+  default as AppShell,
+  defaultAppShellLayoutId,
+  AppShellProps,
+  AppShellNavbarVariant,
+  AppShellFooterVariant,
+  DefaultNavbarVariant,
+  DefaultFooterVariant,
+} from "./components/AppShell";
+export { NavbarMinimalProps } from "./components/AppShell/NavbarMinimal";
+export { FooterMinimalProps } from "./components/AppShell/FooterMinimal";
 export {
   default as AppProvider,
   useRemoraidApp,
   defaultAppContext,
+  AppProviderProps,
 } from "./components/AppShell/AppProvider";
 export {
   default as UserExperienceProviderWrapper,
@@ -16,7 +27,6 @@ export {
 export {
   defaultUserExperienceCookieName,
   defaultUserExperience,
-  defaultNavbarSettings,
   useRemoraidUserExperience,
 } from "./components/RemoraidProvider/CoreUserExperienceProvider";
 export {

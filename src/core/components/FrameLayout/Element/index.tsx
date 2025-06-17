@@ -5,7 +5,7 @@ import { useLayouts } from "../../RemoraidProvider/LayoutsProvider";
 import { isFrameLayout, useFrameLayout } from "..";
 
 export interface FrameLayoutElementProps {
-  section: FrameLayoutSection;
+  section: Exclude<FrameLayoutSection, FrameLayoutSection.Content>;
   layoutId?: string;
   componentsProps?: {
     container?: Partial<BoxProps>;

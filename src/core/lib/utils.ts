@@ -10,3 +10,6 @@ export type OnlyChildrenOf<T extends (...args: any) => any, P = any> =
   | ReactElement<P, T>
   | ReactElement<P, T>[];
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type OptionalIfExtends<T, K extends keyof T, V1, V2> = [V1] extends [V2]
+  ? Optional<T, K>
+  : T;

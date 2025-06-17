@@ -1,110 +1,142 @@
-import {
-  AppShell as MantineAppShell,
-  Burger,
-  rem,
-  Group,
-  useMantineTheme,
-  Paper,
-  px,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import NavbarMinimal from "./NavbarMinimal";
-import Footer from "./Footer";
+import { BoxProps, Box } from "@mantine/core";
+import NavbarMinimal, { NavbarMinimalProps } from "./NavbarMinimal";
+import FooterMinimal, { FooterMinimalProps } from "./FooterMinimal";
 import { PropsWithChildren, ReactNode } from "react";
 import {
-  AppShellLogo,
-  NavbarProps,
-  NavbarSettings,
+  AppContextProps,
+  CustomAppVariables,
+  FooterVariant,
+  FrameLayoutFooterPosition,
+  FrameLayoutNavbarPosition,
+  FrameLayoutSection,
+  FrameLayoutVariant,
   NavbarVariant,
-  RemoraidAppContext,
-  RemoraidUser,
 } from "@/core/lib/types";
-import { co } from "@/core/lib/utils";
-import { useRemoraidUserExperience } from "../RemoraidProvider/CoreUserExperienceProvider";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import AppProvider from "./AppProvider";
-import { useHydratedMantineColorScheme } from "../RemoraidProvider/HydrationStatusProvider";
+import AppProvider, { AppProviderProps } from "./AppProvider";
+import { OptionalIfExtends } from "@/core/lib/utils";
+import FrameLayout, { FrameLayoutProps } from "../FrameLayout";
 
-export interface AppShellProps {
-  logo: AppShellLogo;
-  navigablePages: RemoraidAppContext["navigablePages"];
-  navbar?: NavbarProps;
-  user?: RemoraidUser;
+export const defaultAppShellLayoutId = "remoraidAppShell";
+
+export type AppShellNavbarVariant = NavbarVariant | null;
+export type AppShellFooterVariant = FooterVariant | null;
+
+export type DefaultNavbarVariant = null;
+export type DefaultFooterVariant = null;
+
+export interface ExplicitAppShellProps<
+  N extends AppShellNavbarVariant,
+  F extends AppShellFooterVariant,
+  V extends CustomAppVariables
+> {
+  navbarVariant: N;
+  footerVariant: F;
+  navbarPosition: N extends NavbarVariant
+    ? FrameLayoutNavbarPosition<N>
+    : never;
+  footerPosition: F extends FooterVariant
+    ? FrameLayoutFooterPosition<F>
+    : never;
+  appContext: AppContextProps<V>;
+  componentsProps?: {
+    navbar?: N extends NavbarVariant.Minimal
+      ? Partial<NavbarMinimalProps>
+      : never;
+    footer?: N extends FooterVariant.Minimal
+      ? Partial<FooterMinimalProps>
+      : never;
+    layout?: Partial<FrameLayoutProps<FrameLayoutVariant.Sticky>>;
+    childrenContainer?: Partial<BoxProps>;
+    AppProvider?: Partial<AppProviderProps>;
+  };
 }
 
-export default function AppShell({
-  children,
-  logo,
-  navbar,
-  user,
-  navigablePages,
-}: PropsWithChildren<AppShellProps>): ReactNode {
-  const { userExperience } = useRemoraidUserExperience();
-  const mantineTheme = useMantineTheme();
-  const theme = useRemoraidTheme();
-  const { colorScheme } = useHydratedMantineColorScheme();
-  const [opened, { toggle }] = useDisclosure();
+export type AppShellProps<
+  N extends AppShellNavbarVariant = DefaultNavbarVariant,
+  F extends AppShellFooterVariant = DefaultFooterVariant,
+  V extends CustomAppVariables = {}
+> = OptionalIfExtends<
+  OptionalIfExtends<
+    ExplicitAppShellProps<N, F, V>,
+    "footerVariant",
+    F,
+    DefaultFooterVariant
+  >,
+  "navbarVariant",
+  N,
+  DefaultNavbarVariant
+>;
+
+const defaultProps = {
+  navbarVariant: null as DefaultNavbarVariant,
+  footerVariant: null as DefaultFooterVariant,
+};
+
+function AppShell<
+  N extends AppShellNavbarVariant = DefaultNavbarVariant,
+  F extends AppShellFooterVariant = DefaultFooterVariant,
+  V extends CustomAppVariables = {}
+>(props: PropsWithChildren<AppShellProps<N, F, V>>): ReactNode {
+  const {
+    children,
+    navbarVariant,
+    footerVariant,
+    navbarPosition,
+    footerPosition,
+    appContext,
+    componentsProps,
+  } = {
+    ...defaultProps,
+    ...props,
+  };
 
   // Helpers
-  const navbarVariant: NavbarVariant =
-    navbar && navbar.variant ? navbar.variant : userExperience.navbarVariant;
-  const navbarSettings: NavbarSettings = {
-    ...userExperience.navbarSettings,
-    ...navbar?.settings,
-  };
-  const navbarLinkSizePx: number = co(
-    (v) => !Number.isNaN(v),
-    Number(px(navbarSettings.linkSize)),
-    0
-  );
-  const navbarPaddingPx =
-    typeof navbarSettings.px === "number"
-      ? navbarSettings.px
-      : theme.spacingPx
-      ? theme.spacingPx[navbarSettings.px]
-      : 0;
+  let navbar;
+  let footer;
+  if (navbarVariant === NavbarVariant.Minimal) {
+    navbar = <NavbarMinimal {...componentsProps?.navbar} />;
+  }
+  if (footerVariant === FooterVariant.Minimal) {
+    footer = <FooterMinimal {...componentsProps?.footer} />;
+  }
 
   return (
-    <AppProvider user={user} navigablePages={navigablePages}>
-      <MantineAppShell
-        header={{ height: 0 }}
-        navbar={{
-          width: rem(`${navbarLinkSizePx + 2 * navbarPaddingPx}px`),
-          breakpoint: "sm",
-          collapsed: { mobile: !opened },
-        }}
-        bg={
-          colorScheme === "dark"
-            ? mantineTheme.colors.dark[9]
-            : mantineTheme.colors.gray[0]
-        }
-      >
-        <MantineAppShell.Header withBorder={false}>
-          <Group
-            p="md"
-            bg={
-              colorScheme === "dark"
-                ? mantineTheme.colors.dark[8]
-                : mantineTheme.colors.gray[3]
-            }
-            hiddenFrom="sm"
-          >
-            <Burger opened={opened} onClick={toggle} h={20} size={18} />
-          </Group>
-        </MantineAppShell.Header>
-        <MantineAppShell.Navbar withBorder={false}>
-          {navbarVariant === NavbarVariant.Minimal && (
-            <NavbarMinimal logo={logo} user={user} {...navbar} />
+    <AppProvider appContext={appContext} {...componentsProps?.AppProvider}>
+      <FrameLayout layoutId={defaultAppShellLayoutId}>
+        {navbarPosition !== undefined &&
+          navbarPosition !== FrameLayoutSection.Content && (
+            <FrameLayout.Element section={navbarPosition}>
+              {navbar}
+            </FrameLayout.Element>
           )}
-        </MantineAppShell.Navbar>
-        <MantineAppShell.Main>
-          <>
-            <Paper radius={0} my="md" h={20} hiddenFrom="sm" />
-            {children}
-            <Footer />
-          </>
-        </MantineAppShell.Main>
-      </MantineAppShell>
+        {footerPosition !== undefined &&
+          footerPosition !== FrameLayoutSection.Content && (
+            <FrameLayout.Element section={footerPosition}>
+              {footer}
+            </FrameLayout.Element>
+          )}
+        {navbarPosition !== undefined &&
+          navbarPosition === FrameLayoutSection.Content && <>{navbar}</>}
+        <Box {...componentsProps?.childrenContainer}>{children}</Box>
+        {footerPosition !== undefined &&
+          footerPosition === FrameLayoutSection.Content && <>{footer}</>}
+      </FrameLayout>
     </AppProvider>
   );
 }
+
+export interface AppShell {
+  <
+    N extends AppShellNavbarVariant = DefaultNavbarVariant,
+    F extends AppShellFooterVariant = DefaultFooterVariant,
+    V extends CustomAppVariables = {}
+  >(
+    props: PropsWithChildren<AppShellProps<N, F, V>>
+  ): ReactNode;
+  NavbarMinimal: typeof NavbarMinimal;
+  FooterMinimal: typeof FooterMinimal;
+}
+export default Object.assign(AppShell, {
+  NavbarMinimal: NavbarMinimal,
+  FooterMinimal: FooterMinimal,
+}) as AppShell;

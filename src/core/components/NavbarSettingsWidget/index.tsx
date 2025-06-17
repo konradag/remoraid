@@ -4,10 +4,7 @@ import SettingsTable, {
 } from "../SettingsWidget/SettingsTable";
 import SettingsWidget from "../SettingsWidget";
 import { WidgetProps } from "../Widget";
-import {
-  defaultNavbarSettings,
-  useRemoraidUserExperience,
-} from "../RemoraidProvider/CoreUserExperienceProvider";
+import { useRemoraidUserExperience } from "../RemoraidProvider/CoreUserExperienceProvider";
 import { isEqual } from "lodash";
 import { SettingsTableRowProps } from "../SettingsWidget/SettingsTable/Row";
 import { Chip, Group } from "@mantine/core";
@@ -46,7 +43,7 @@ export default function NavbarSettingsWidget({
       onRestoreDefaultValues={() => {
         updateUserExperience((prev) => ({
           ...prev,
-          navbarSettings: defaultNavbarSettings[userExperience.navbarVariant],
+          navbar: initialUserExperience.navbar,
         }));
       }}
       custom={

@@ -1,24 +1,30 @@
 import { createContext, PropsWithChildren, ReactNode, useContext } from "react";
-import { RemoraidAppContext, RemoraidUser } from "@/core/lib/types";
+import {
+  AppContextProps,
+  CustomAppVariables,
+  RemoraidAppContext,
+} from "@/core/lib/types";
 
-export const defaultAppContext: RemoraidAppContext = { navigablePages: [] };
-const appContext = createContext<RemoraidAppContext>(defaultAppContext);
-export const useRemoraidApp = (): RemoraidAppContext => {
+export const defaultAppContext: RemoraidAppContext<CustomAppVariables> = {
+  navigablePages: [],
+};
+const appContext =
+  createContext<RemoraidAppContext<CustomAppVariables>>(defaultAppContext);
+
+export const useRemoraidApp = (): RemoraidAppContext<CustomAppVariables> => {
   return useContext(appContext);
 };
 
-export interface AppProviderProps {
-  navigablePages: RemoraidAppContext["navigablePages"];
-  user?: RemoraidUser;
+export interface AppProviderProps<V extends CustomAppVariables = {}> {
+  appContext: AppContextProps<V>;
 }
 
-export default function AppProvider({
+export default function AppProvider<V extends CustomAppVariables = {}>({
+  appContext: appContextProps,
   children,
-  navigablePages,
-  user,
-}: PropsWithChildren<AppProviderProps>): ReactNode {
+}: PropsWithChildren<AppProviderProps<V>>): ReactNode {
   return (
-    <appContext.Provider value={{ navigablePages, user }}>
+    <appContext.Provider value={{ ...appContextProps }}>
       {children}
     </appContext.Provider>
   );
