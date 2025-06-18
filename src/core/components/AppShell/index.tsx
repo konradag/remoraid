@@ -1,4 +1,4 @@
-import { BoxProps, Box, GroupProps } from "@mantine/core";
+import { BoxProps, Box } from "@mantine/core";
 import NavbarMinimal, { NavbarMinimalProps } from "./NavbarMinimal";
 import FooterMinimal, { FooterMinimalProps } from "./FooterMinimal";
 import { PropsWithChildren, ReactNode } from "react";
@@ -15,6 +15,7 @@ import {
 import AppProvider, { AppProviderProps } from "./AppProvider";
 import { OptionalIfExtends } from "@/core/lib/utils";
 import FrameLayout, { FrameLayoutProps } from "../FrameLayout";
+import { FrameLayoutElementProps } from "../FrameLayout/Element";
 
 export const defaultAppShellLayoutId = "remoraidAppShell";
 
@@ -47,6 +48,8 @@ export interface ExplicitAppShellProps<
       : never;
     layout?: Partial<FrameLayoutProps<FrameLayoutVariant.Sticky>>;
     childrenContainer?: Partial<BoxProps>;
+    navbarLayoutElement?: Omit<Partial<FrameLayoutElementProps>, "section">;
+    footerLayoutElement?: Omit<Partial<FrameLayoutElementProps>, "section">;
     AppProvider?: Partial<AppProviderProps>;
   };
 }
@@ -118,7 +121,15 @@ function AppShell<
           navbarPosition !== FrameLayoutSection.Content && (
             <FrameLayout.Element
               section={navbarPosition}
-              componentsProps={{ container: { ...navbarContainerProps } }}
+              {...componentsProps?.navbarLayoutElement}
+              componentsProps={{
+                ...componentsProps?.navbarLayoutElement?.componentsProps,
+                container: {
+                  ...navbarContainerProps,
+                  ...componentsProps?.navbarLayoutElement?.componentsProps
+                    ?.container,
+                },
+              }}
             >
               {navbar}
             </FrameLayout.Element>
@@ -127,7 +138,15 @@ function AppShell<
           footerPosition !== FrameLayoutSection.Content && (
             <FrameLayout.Element
               section={footerPosition}
-              componentsProps={{ container: { ...footerContainerProps } }}
+              {...componentsProps?.footerLayoutElement}
+              componentsProps={{
+                ...componentsProps?.footerLayoutElement?.componentsProps,
+                container: {
+                  ...footerContainerProps,
+                  ...componentsProps?.footerLayoutElement?.componentsProps
+                    ?.container,
+                },
+              }}
             >
               {footer}
             </FrameLayout.Element>
