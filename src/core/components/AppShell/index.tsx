@@ -102,7 +102,10 @@ function AppShell<
 
   return (
     <AppProvider appContext={appContext} {...componentsProps?.AppProvider}>
-      <FrameLayout layoutId={defaultAppShellLayoutId}>
+      <FrameLayout
+        layoutId={defaultAppShellLayoutId}
+        {...componentsProps?.layout}
+      >
         {navbarPosition !== undefined &&
           navbarPosition !== FrameLayoutSection.Content && (
             <FrameLayout.Element section={navbarPosition}>

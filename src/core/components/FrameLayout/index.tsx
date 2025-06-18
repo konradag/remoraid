@@ -171,11 +171,18 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
 
   return (
     <layoutContext.Provider value={{ layoutId, layout, setLayout }}>
-      <Group gap={0} {...componentsProps?.horizontalContainer}>
+      <Group
+        gap={0}
+        h="100%"
+        w="100%"
+        wrap="nowrap"
+        {...componentsProps?.horizontalContainer}
+      >
         <Group
           ref={leftSection}
           h="100%"
           gap={0}
+          wrap="nowrap"
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]}
         />
         <Stack
@@ -185,12 +192,14 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
           {...componentsProps?.verticalContainer}
         >
           <Stack
+            h="100%"
             ref={topSection}
             gap={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]}
           />
           {contentSection}
           <Stack
+            h="100%"
             ref={bottomSection}
             gap={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]}
@@ -200,6 +209,7 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
           gap={0}
           ref={rightSection}
           h="100%"
+          wrap="nowrap"
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]}
         />
       </Group>
