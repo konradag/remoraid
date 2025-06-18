@@ -46,12 +46,7 @@ export default function NavbarSettingsWidget({
           navbar: initialUserExperience.navbar,
         }));
       }}
-      custom={
-        !isEqual(
-          userExperience.navbarSettings,
-          initialUserExperience.navbarSettings
-        )
-      }
+      custom={!isEqual(userExperience.navbar, initialUserExperience.navbar)}
     >
       <SettingsTable
         children={[
@@ -63,15 +58,14 @@ export default function NavbarSettingsWidget({
               multiple
               value={app.navigablePages
                 .filter(
-                  (p) =>
-                    !userExperience.navbarSettings.hiddenPages.includes(p.href)
+                  (p) => !userExperience.navbar.hiddenPages.includes(p.href)
                 )
                 .map((p) => p.href)}
               onChange={(newValue) => {
                 updateUserExperience((prev) => ({
                   ...prev,
-                  navbarSettings: {
-                    ...prev.navbarSettings,
+                  navbar: {
+                    ...prev.navbar,
                     hiddenPages: app.navigablePages
                       .filter((p) => !newValue.includes(p.href))
                       .map((p) => p.href),
