@@ -162,7 +162,6 @@ export default function NavbarMinimal({
   return (
     <Paper
       h="100%"
-      m="md"
       p="md"
       shadow="md"
       bg={theme.transparentBackground}

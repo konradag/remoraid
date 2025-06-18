@@ -1,4 +1,4 @@
-import { BoxProps, Box } from "@mantine/core";
+import { BoxProps, Box, GroupProps } from "@mantine/core";
 import NavbarMinimal, { NavbarMinimalProps } from "./NavbarMinimal";
 import FooterMinimal, { FooterMinimalProps } from "./FooterMinimal";
 import { PropsWithChildren, ReactNode } from "react";
@@ -91,10 +91,18 @@ function AppShell<
   };
 
   // Helpers
-  let navbar;
-  let footer;
+  let navbar: ReactNode;
+  let footer: ReactNode;
+  let navbarContainerProps: Partial<BoxProps> = {};
+  let footerContainerProps: Partial<BoxProps> = {};
   if (navbarVariant === NavbarVariant.Minimal) {
     navbar = <NavbarMinimal {...componentsProps?.navbar} />;
+    navbarContainerProps.py = "md";
+    if (navbarPosition === FrameLayoutSection.Left) {
+      navbarContainerProps.pl = "md";
+    } else if (navbarPosition === FrameLayoutSection.Right) {
+      navbarContainerProps.pr = "md";
+    }
   }
   if (footerVariant === FooterVariant.Minimal) {
     footer = <FooterMinimal {...componentsProps?.footer} />;
@@ -108,13 +116,19 @@ function AppShell<
       >
         {navbarPosition !== undefined &&
           navbarPosition !== FrameLayoutSection.Content && (
-            <FrameLayout.Element section={navbarPosition}>
+            <FrameLayout.Element
+              section={navbarPosition}
+              componentsProps={{ container: { ...navbarContainerProps } }}
+            >
               {navbar}
             </FrameLayout.Element>
           )}
         {footerPosition !== undefined &&
           footerPosition !== FrameLayoutSection.Content && (
-            <FrameLayout.Element section={footerPosition}>
+            <FrameLayout.Element
+              section={footerPosition}
+              componentsProps={{ container: { ...footerContainerProps } }}
+            >
               {footer}
             </FrameLayout.Element>
           )}

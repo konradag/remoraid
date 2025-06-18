@@ -6,6 +6,7 @@ import { isFrameLayout, useFrameLayout } from "..";
 
 export interface FrameLayoutElementProps {
   section: Exclude<FrameLayoutSection, FrameLayoutSection.Content>;
+  includeContainer?: boolean;
   layoutId?: string;
   componentsProps?: {
     container?: Partial<BoxProps>;
@@ -14,6 +15,7 @@ export interface FrameLayoutElementProps {
 
 export default function Element({
   section,
+  includeContainer = true,
   layoutId,
   componentsProps,
   children,
@@ -34,10 +36,23 @@ export default function Element({
   if (layout.sections[section] === null) {
     return null;
   }
+  let containerProps: Partial<BoxProps> = {};
+  if (
+    section === FrameLayoutSection.Left ||
+    section === FrameLayoutSection.Right
+  ) {
+    containerProps.h = "100%";
+  }
 
   return (
     <Portal target={layout.sections[section]}>
-      <Box {...componentsProps?.container}>{children}</Box>
+      {includeContainer ? (
+        <Box {...containerProps} {...componentsProps?.container}>
+          {children}
+        </Box>
+      ) : (
+        children
+      )}
     </Portal>
   );
 }

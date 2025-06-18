@@ -195,6 +195,7 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
             h="100%"
             ref={topSection}
             gap={0}
+            flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]}
           />
           {contentSection}
@@ -202,6 +203,7 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
             h="100%"
             ref={bottomSection}
             gap={0}
+            flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]}
           />
         </Stack>
