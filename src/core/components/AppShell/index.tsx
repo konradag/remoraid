@@ -40,6 +40,7 @@ export interface ExplicitAppShellProps<
     : never;
   appContext: AppContextProps<V>;
   componentsProps?: {
+    container?: Partial<BoxProps>;
     navbar?: N extends NavbarVariant.Minimal
       ? Partial<NavbarMinimalProps>
       : never;
@@ -113,50 +114,52 @@ function AppShell<
 
   return (
     <AppProvider appContext={appContext} {...componentsProps?.AppProvider}>
-      <FrameLayout
-        layoutId={defaultAppShellLayoutId}
-        {...componentsProps?.layout}
-      >
-        {navbarPosition !== undefined &&
-          navbarPosition !== FrameLayoutSection.Content && (
-            <FrameLayout.Element
-              section={navbarPosition}
-              {...componentsProps?.navbarLayoutElement}
-              componentsProps={{
-                ...componentsProps?.navbarLayoutElement?.componentsProps,
-                container: {
-                  ...navbarContainerProps,
-                  ...componentsProps?.navbarLayoutElement?.componentsProps
-                    ?.container,
-                },
-              }}
-            >
-              {navbar}
-            </FrameLayout.Element>
-          )}
-        {footerPosition !== undefined &&
-          footerPosition !== FrameLayoutSection.Content && (
-            <FrameLayout.Element
-              section={footerPosition}
-              {...componentsProps?.footerLayoutElement}
-              componentsProps={{
-                ...componentsProps?.footerLayoutElement?.componentsProps,
-                container: {
-                  ...footerContainerProps,
-                  ...componentsProps?.footerLayoutElement?.componentsProps
-                    ?.container,
-                },
-              }}
-            >
-              {footer}
-            </FrameLayout.Element>
-          )}
-        {navbarPosition !== undefined &&
-          navbarPosition === FrameLayoutSection.Content && <>{navbar}</>}
-        <Box {...componentsProps?.childrenContainer}>{children}</Box>
-        {footerPosition !== undefined &&
-          footerPosition === FrameLayoutSection.Content && <>{footer}</>}
-      </FrameLayout>
+      <Box h="100vh" {...componentsProps?.container}>
+        <FrameLayout
+          layoutId={defaultAppShellLayoutId}
+          {...componentsProps?.layout}
+        >
+          {navbarPosition !== undefined &&
+            navbarPosition !== FrameLayoutSection.Content && (
+              <FrameLayout.Element
+                section={navbarPosition}
+                {...componentsProps?.navbarLayoutElement}
+                componentsProps={{
+                  ...componentsProps?.navbarLayoutElement?.componentsProps,
+                  container: {
+                    ...navbarContainerProps,
+                    ...componentsProps?.navbarLayoutElement?.componentsProps
+                      ?.container,
+                  },
+                }}
+              >
+                {navbar}
+              </FrameLayout.Element>
+            )}
+          {footerPosition !== undefined &&
+            footerPosition !== FrameLayoutSection.Content && (
+              <FrameLayout.Element
+                section={footerPosition}
+                {...componentsProps?.footerLayoutElement}
+                componentsProps={{
+                  ...componentsProps?.footerLayoutElement?.componentsProps,
+                  container: {
+                    ...footerContainerProps,
+                    ...componentsProps?.footerLayoutElement?.componentsProps
+                      ?.container,
+                  },
+                }}
+              >
+                {footer}
+              </FrameLayout.Element>
+            )}
+          {navbarPosition !== undefined &&
+            navbarPosition === FrameLayoutSection.Content && <>{navbar}</>}
+          <Box {...componentsProps?.childrenContainer}>{children}</Box>
+          {footerPosition !== undefined &&
+            footerPosition === FrameLayoutSection.Content && <>{footer}</>}
+        </FrameLayout>
+      </Box>
     </AppProvider>
   );
 }
