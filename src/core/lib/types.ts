@@ -38,13 +38,19 @@ export enum NavbarVariant {
 export enum FooterVariant {
   Minimal = "minimal",
 }
-export type UserExperience = Record<string, unknown>;
-export interface CoreUserExperience extends UserExperience {
+export type PrimitiveUserExperience = string | number | boolean;
+export type UserExperience =
+  | Record<string, any>
+  | PrimitiveUserExperience
+  | PrimitiveUserExperience[];
+export interface CoreUserExperience {
   showWelcomeMessage: boolean;
   navbar: { hiddenPages: string[] };
 }
 export type UserExperienceProviderProps<T extends UserExperience> = {
-  initialValue?: Partial<T>;
+  initialValue?: T extends PrimitiveUserExperience | PrimitiveUserExperience[]
+    ? T
+    : Partial<T>;
   cookieName?: string;
 };
 export interface UserExperienceContext<T extends UserExperience> {

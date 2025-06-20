@@ -119,4 +119,5 @@ export {
   isFrameLayout,
 } from "./components/FrameLayout";
 export { FrameLayoutElementProps } from "./components/FrameLayout/Element";
+export { co, isPrimitiveUserExperience } from "./lib/utils";
 export * from "./lib/types";

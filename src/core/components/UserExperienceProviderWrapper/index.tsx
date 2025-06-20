@@ -1,4 +1,9 @@
-import { UserExperience, UserExperienceContext } from "@/core/lib/types";
+import {
+  PrimitiveUserExperience,
+  UserExperience,
+  UserExperienceContext,
+} from "@/core/lib/types";
+import { isPrimitiveUserExperience } from "@/core/lib/utils";
 import React, {
   Context,
   createContext,
@@ -24,7 +29,9 @@ export interface UserExperienceProviderWrapperProps<T extends UserExperience> {
   cookieName: string;
   defaultUserExperience: T;
   isValidUserExperience: (x: unknown) => x is T;
-  initialValue?: Partial<T>;
+  initialValue?: T extends PrimitiveUserExperience | PrimitiveUserExperience[]
+    ? T
+    : Partial<T>;
 }
 
 export default function UserExperienceProviderWrapper<
@@ -40,10 +47,15 @@ export default function UserExperienceProviderWrapper<
   const [cookies, setCookie] = useCookies();
 
   // Helpers 1
-  const initialUserExperience: T = {
-    ...defaultUserExperience,
-    ...initialValue,
-  };
+  let initialUserExperience: T = defaultUserExperience;
+  if (initialValue && isPrimitiveUserExperience(initialValue)) {
+    initialUserExperience = initialValue as T;
+  } else if (
+    typeof initialValue === "object" &&
+    typeof initialUserExperience === "object"
+  ) {
+    initialUserExperience = { ...initialUserExperience, ...initialValue };
+  }
 
   // State
   const [userExperience, setUserExperience] = useState<T>(
