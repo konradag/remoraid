@@ -38,7 +38,7 @@ export enum NavbarVariant {
 export enum FooterVariant {
   Minimal = "minimal",
 }
-export type UserExperience = Record<string, any>;
+export type UserExperience = Record<string, unknown>;
 export interface CoreUserExperience extends UserExperience {
   showWelcomeMessage: boolean;
   navbar: { hiddenPages: string[] };

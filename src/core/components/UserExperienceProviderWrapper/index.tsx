@@ -52,9 +52,7 @@ export default function UserExperienceProviderWrapper<
   const [processedCookie, setProcessedCookie] = useState<boolean>(false);
 
   // Helpers 2
-  const updateUserExperience = (
-    p: UserExperience | ((prev: UserExperience) => UserExperience)
-  ) => {
+  const updateUserExperience = (p: T | ((prev: T) => T)) => {
     const updatedUserExperience =
       typeof p === "function" ? p(userExperience) : p;
     setCookie(cookieName, updatedUserExperience, { path: "/" });
