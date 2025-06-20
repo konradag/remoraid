@@ -30,7 +30,7 @@ export interface UserExperienceProviderWrapperProps<T extends UserExperience> {
   defaultUserExperience: T;
   isValidUserExperience: (x: unknown) => x is T;
   initialValue?: T extends PrimitiveUserExperience | PrimitiveUserExperience[]
-    ? T
+    ? never
     : Partial<T>;
 }
 
@@ -48,9 +48,7 @@ export default function UserExperienceProviderWrapper<
 
   // Helpers 1
   let initialUserExperience: T = defaultUserExperience;
-  if (initialValue && isPrimitiveUserExperience(initialValue)) {
-    initialUserExperience = initialValue as T;
-  } else if (
+  if (
     typeof initialValue === "object" &&
     typeof initialUserExperience === "object"
   ) {
