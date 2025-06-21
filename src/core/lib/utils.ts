@@ -1,5 +1,4 @@
 import { ReactElement } from "react";
-import { PrimitiveUserExperience, UserExperience } from "./types";
 
 export const co = <T>(
   condition: (value: T) => boolean,
