@@ -5,11 +5,15 @@ export {
 export {
   default as AppShell,
   defaultAppShellLayoutId,
+  defaultAppShellNavbarPositions,
+  defaultAppShellFooterPositions,
   AppShellProps,
   AppShellNavbarVariant,
   AppShellFooterVariant,
   DefaultNavbarVariant,
   DefaultFooterVariant,
+  AppShellNavbarPosition,
+  AppShellFooterPosition,
 } from "./components/AppShell";
 export { NavbarMinimalProps } from "./components/AppShell/NavbarMinimal";
 export { FooterMinimalProps } from "./components/AppShell/FooterMinimal";

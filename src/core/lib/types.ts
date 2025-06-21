@@ -149,11 +149,3 @@ export enum FrameLayoutVariant {
   Plain = "plain",
   Sticky = "sticky",
 }
-export type FrameLayoutNavbarPosition<T extends NavbarVariant> =
-  T extends NavbarVariant.Minimal
-    ? FrameLayoutSection.Left | FrameLayoutSection.Right
-    : FrameLayoutSection;
-export type FrameLayoutFooterPosition<T extends FooterVariant> =
-  T extends FooterVariant.Minimal
-    ? FrameLayoutSection.Content | FrameLayoutSection.Bottom
-    : FrameLayoutSection;

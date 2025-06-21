@@ -6,8 +6,6 @@ import {
   AppContextProps,
   CustomAppVariables,
   FooterVariant,
-  FrameLayoutFooterPosition,
-  FrameLayoutNavbarPosition,
   FrameLayoutSection,
   FrameLayoutVariant,
   NavbarVariant,
@@ -25,6 +23,26 @@ export type AppShellFooterVariant = FooterVariant | null;
 export type DefaultNavbarVariant = null;
 export type DefaultFooterVariant = null;
 
+export type AppShellNavbarPosition<N extends AppShellNavbarVariant> =
+  N extends NavbarVariant.Minimal
+    ? FrameLayoutSection.Left | FrameLayoutSection.Right
+    : N extends null
+    ? never
+    : FrameLayoutSection;
+export type AppShellFooterPosition<F extends AppShellFooterVariant> =
+  F extends FooterVariant.Minimal
+    ? FrameLayoutSection.Content | FrameLayoutSection.Bottom
+    : F extends null
+    ? never
+    : FrameLayoutSection;
+
+export const defaultAppShellNavbarPositions: {
+  [N in Exclude<AppShellNavbarVariant, null>]: AppShellNavbarPosition<N>;
+} = { [NavbarVariant.Minimal]: FrameLayoutSection.Left };
+export const defaultAppShellFooterPositions: {
+  [F in Exclude<AppShellFooterVariant, null>]: AppShellFooterPosition<F>;
+} = { [FooterVariant.Minimal]: FrameLayoutSection.Content };
+
 export interface ExplicitAppShellProps<
   N extends AppShellNavbarVariant,
   F extends AppShellFooterVariant,
@@ -32,13 +50,9 @@ export interface ExplicitAppShellProps<
 > {
   navbarVariant: N;
   footerVariant: F;
-  navbarPosition: N extends NavbarVariant
-    ? FrameLayoutNavbarPosition<N>
-    : never;
-  footerPosition: F extends FooterVariant
-    ? FrameLayoutFooterPosition<F>
-    : never;
   appContext: AppContextProps<V>;
+  navbarPosition?: AppShellNavbarPosition<N>;
+  footerPosition?: AppShellFooterPosition<F>;
   componentsProps?: {
     container?: Partial<BoxProps>;
     navbar?: N extends NavbarVariant.Minimal
@@ -71,11 +85,6 @@ export type AppShellProps<
   DefaultNavbarVariant
 >;
 
-const defaultProps = {
-  navbarVariant: null as DefaultNavbarVariant,
-  footerVariant: null as DefaultFooterVariant,
-};
-
 function AppShell<
   N extends AppShellNavbarVariant = DefaultNavbarVariant,
   F extends AppShellFooterVariant = DefaultFooterVariant,
@@ -85,14 +94,20 @@ function AppShell<
     children,
     navbarVariant,
     footerVariant,
-    navbarPosition,
-    footerPosition,
     appContext,
     componentsProps,
   } = {
-    ...defaultProps,
+    navbarVariant: null as DefaultNavbarVariant,
+    footerVariant: null as DefaultFooterVariant,
     ...props,
   };
+  let { navbarPosition, footerPosition } = props;
+  if (navbarVariant !== null && navbarPosition === undefined) {
+    navbarPosition = defaultAppShellNavbarPositions[navbarVariant];
+  }
+  if (footerVariant !== null && footerPosition === undefined) {
+    footerPosition = defaultAppShellFooterPositions[footerVariant];
+  }
 
   // Helpers
   let navbar: ReactNode;
