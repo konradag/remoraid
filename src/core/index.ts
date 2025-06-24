@@ -122,6 +122,11 @@ export {
   DefaultFrameLayoutVariant,
   isFrameLayout,
 } from "./components/FrameLayout";
+export {
+  default as ContextClusterProvider,
+  ContextClusterProviderProps,
+  createContextCluster,
+} from "./components/ContextClusterProvider";
 export { FrameLayoutElementProps } from "./components/FrameLayout/Element";
 export { co } from "./lib/utils";
 export * from "./lib/types";

@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import React, { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type RemoraidUser = { name: string } | null; // null when logged out
 export interface RemoraidAuthContext {
@@ -148,4 +148,11 @@ export type FrameLayoutContext = {
 export enum FrameLayoutVariant {
   Plain = "plain",
   Sticky = "sticky",
+}
+export interface ContextCluster<Context, ID extends string = string> {
+  contexts: Partial<Record<ID, React.Context<Context>>>;
+  defaultValues: Partial<Record<ID, Context>>;
+  generalDefaultValue: Context;
+  createContext: (id: ID, defaultValue?: Context) => React.Context<Context>;
+  useContext: (id: ID) => Context;
 }
