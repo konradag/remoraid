@@ -10,12 +10,7 @@ import {
   Stack,
   StackProps,
 } from "@mantine/core";
-import {
-  ComponentProps,
-  isValidElement,
-  PropsWithChildren,
-  ReactNode,
-} from "react";
+import { ComponentProps, PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, {
   WidgetWrapperComponentsProps,
   WidgetWrapperProps,
@@ -25,7 +20,11 @@ import BadgeGroup, { BadgeGroupProps } from "@/core/components/BadgeGroup";
 import { WidgetConfiguration } from "@/core/lib/types";
 import AlertMinimal from "@/core/components/AlertMinimal";
 import RemoraidButton from "../RemoraidButton";
-import { ElementOfType, isValidElementOfType } from "@/core/lib/utils";
+import {
+  asElementOrPropsOfType,
+  ElementOfType,
+  isValidElementOfType,
+} from "@/core/lib/utils";
 
 interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
   wrapper?: Partial<Omit<WidgetWrapperProps, "widgetId">>;
@@ -69,14 +68,37 @@ export default function Widget({
   id,
   config,
   title,
-  badges,
-  buttons,
-  alerts,
+  badges: badgesProp,
+  buttons: buttonsProp,
+  alerts: alertsProp,
   gaps,
   loading,
   mt,
   componentsProps,
 }: PropsWithChildren<WidgetProps>): ReactNode {
+  // Type safety
+  const buttons = buttonsProp?.map((button) =>
+    asElementOrPropsOfType(
+      RemoraidButton,
+      button,
+      "Check the 'buttons' property of this widget.`"
+    )
+  );
+  const alerts = alertsProp?.map((alert) =>
+    asElementOrPropsOfType(
+      AlertMinimal,
+      alert,
+      "Check the 'alerts' property of this widget.`"
+    )
+  );
+  const badges = badgesProp?.map((badge) =>
+    asElementOrPropsOfType(
+      BadgeMinimal,
+      badge,
+      "Check the 'badges' property of this widget.`"
+    )
+  );
+
   // Helpers
   const badgesGap = (typeof gaps === "object" ? gaps.badges : gaps) ?? "xs";
   const buttonsGap = (typeof gaps === "object" ? gaps.buttons : gaps) ?? "xs";
@@ -114,16 +136,6 @@ export default function Widget({
             buttons.map((button, i) => {
               if (isValidElementOfType(RemoraidButton, button)) {
                 return button;
-              } else if (isValidElement(button)) {
-                throw new TypeError(
-                  `Expected React element of type ${
-                    RemoraidButton.name
-                  }, but received type: ${
-                    typeof button.type === "string"
-                      ? button.type
-                      : button.type?.name ?? "unknown"
-                  }. Check the 'buttons' property of this widget.`
-                );
               }
               return <RemoraidButton {...button} key={i} />;
             })}
@@ -139,16 +151,6 @@ export default function Widget({
         {alerts?.map((alert, i) => {
           if (isValidElementOfType(AlertMinimal, alert)) {
             return alert;
-          } else if (isValidElement(alert)) {
-            throw new TypeError(
-              `Expected React element of type ${
-                AlertMinimal.name
-              }, but received type: ${
-                typeof alert.type === "string"
-                  ? alert.type
-                  : alert.type?.name ?? "unknown"
-              }. Check the 'alerts' property of this widget.`
-            );
           }
           return <AlertMinimal {...alert} key={i} />;
         })}

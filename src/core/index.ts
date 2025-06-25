@@ -137,5 +137,10 @@ export {
   ChildrenOfType,
   PropsWithChildrenOfType,
   isValidElementOfType,
+  ElementOrPropsOfType,
+  getElementTypeName,
+  asElementOfType,
+  asChildrenOfType,
+  asElementOrPropsOfType,
 } from "./lib/utils";
 export * from "./lib/types";

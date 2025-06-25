@@ -10,7 +10,11 @@ import {
 import React, { ComponentProps, isValidElement, ReactNode } from "react";
 import BadgeMinimal, { BadgeMinimalProps } from "../BadgeMinimal";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { ElementOfType, isValidElementOfType } from "@/core/lib/utils";
+import {
+  asElementOrPropsOfType,
+  ElementOfType,
+  isValidElementOfType,
+} from "@/core/lib/utils";
 
 export interface BadgeGroupProps {
   badges: (
@@ -26,13 +30,21 @@ export interface BadgeGroupProps {
 }
 
 export default function BadgeGroup({
-  badges,
+  badges: badgesProp,
   gap,
   breakpoint,
   componentsProps,
 }: BadgeGroupProps): ReactNode {
-  // Style
   const theme = useRemoraidTheme();
+
+  // Type safety
+  const badges = badgesProp.map((badge) =>
+    asElementOrPropsOfType(
+      BadgeMinimal,
+      badge,
+      "Check 'badges' property of this component."
+    )
+  );
 
   // Helpers
   const numVisibleBadges = badges.filter((badge) =>

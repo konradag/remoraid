@@ -3,7 +3,7 @@ import { useRemoraidTheme } from "../../RemoraidProvider/ThemeProvider";
 import { Table } from "@mantine/core";
 import { SettingsTableOptions } from "@/core/lib/types";
 import RowComponent from "./Row";
-import { PropsWithChildrenOfType } from "@/core/lib/utils";
+import { asChildrenOfType, PropsWithChildrenOfType } from "@/core/lib/utils";
 
 export const defaultSettingsTableOptions = {
   leftColumnWidth: "38.2%",
@@ -21,12 +21,15 @@ export interface SettingsTableProps {
 
 function SettingsTable({
   leftColumnWidth,
-  children,
+  children: childrenProp,
 }: PropsWithChildrenOfType<
   typeof RowComponent,
   SettingsTableProps
 >): ReactNode {
   const theme = useRemoraidTheme();
+
+  // Type safety
+  const children = asChildrenOfType(RowComponent, childrenProp);
 
   return (
     <settingsTableOptionsContext.Provider
