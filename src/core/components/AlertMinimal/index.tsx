@@ -23,18 +23,7 @@ export interface AlertMinimalProps {
   };
 }
 
-export const isAlertMinimalProps = (e: any): e is AlertMinimalProps => {
-  if (typeof e !== "object") {
-    return false;
-  }
-  if (!("category" in e)) {
-    return false;
-  }
-  return true;
-};
-
 export default function AlertMinimal({
-  children,
   title,
   category,
   text,
@@ -43,6 +32,7 @@ export default function AlertMinimal({
   mt,
   mb,
   componentsProps,
+  children,
 }: PropsWithChildren<AlertMinimalProps>): ReactNode {
   // Style
   const theme = useRemoraidTheme();

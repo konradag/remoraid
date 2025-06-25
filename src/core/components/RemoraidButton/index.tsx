@@ -39,16 +39,6 @@ export interface RemoraidButtonProps {
   };
 }
 
-export const isRemoraidButtonProps = (e: any): e is RemoraidButtonProps => {
-  if (typeof e !== "object") {
-    return false;
-  }
-  if (!("label" in e)) {
-    return false;
-  }
-  return true;
-};
-
 export default function RemoraidButton({
   label,
   responsive,

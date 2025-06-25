@@ -1,7 +1,6 @@
 import {
   Chip,
   ChipGroupProps,
-  ChipProps,
   Flex,
   FlexProps,
   MantineSize,
@@ -10,7 +9,7 @@ import {
 } from "@mantine/core";
 import { ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { OnlyChildrenOf } from "@/core/lib/utils";
+import { PropsWithChildrenOfType } from "@/core/lib/utils";
 
 export interface ScrollbleChipGroupProps {
   value: string[];
@@ -21,7 +20,6 @@ export interface ScrollbleChipGroupProps {
     scrollArea?: Partial<ScrollAreaProps>;
     container?: Partial<FlexProps>;
   };
-  children?: OnlyChildrenOf<typeof Chip, ChipProps>;
 }
 
 export default function ScrollableChipGroup({
@@ -30,7 +28,7 @@ export default function ScrollableChipGroup({
   gap,
   componentsProps,
   children,
-}: ScrollbleChipGroupProps): ReactNode {
+}: PropsWithChildrenOfType<typeof Chip, ScrollbleChipGroupProps>): ReactNode {
   const theme = useRemoraidTheme();
 
   return (

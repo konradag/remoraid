@@ -128,5 +128,14 @@ export {
   createContextCluster,
 } from "./components/ContextClusterProvider";
 export { FrameLayoutElementProps } from "./components/FrameLayout/Element";
-export { co } from "./lib/utils";
+export {
+  co,
+  Common,
+  Optional,
+  OptionalIfExtends,
+  ElementOfType,
+  ChildrenOfType,
+  PropsWithChildrenOfType,
+  isValidElementOfType,
+} from "./lib/utils";
 export * from "./lib/types";

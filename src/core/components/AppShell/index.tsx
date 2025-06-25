@@ -1,7 +1,7 @@
 import { BoxProps, Box } from "@mantine/core";
 import NavbarMinimal, { NavbarMinimalProps } from "./NavbarMinimal";
 import FooterMinimal, { FooterMinimalProps } from "./FooterMinimal";
-import { PropsWithChildren, ReactNode } from "react";
+import { ComponentProps, PropsWithChildren, ReactNode } from "react";
 import {
   AppContextProps,
   CustomAppVariables,
@@ -185,7 +185,7 @@ export interface AppShell {
     F extends AppShellFooterVariant = DefaultFooterVariant,
     V extends CustomAppVariables = {}
   >(
-    props: PropsWithChildren<AppShellProps<N, F, V>>
+    props: ComponentProps<typeof AppShell<N, F, V>>
   ): ReactNode;
   NavbarMinimal: typeof NavbarMinimal;
   FooterMinimal: typeof FooterMinimal;

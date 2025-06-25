@@ -20,16 +20,6 @@ export interface BadgeMinimalProps {
   };
 }
 
-export const isBadgeMinimalProps = (e: any): e is BadgeMinimalProps => {
-  if (typeof e !== "object") {
-    return false;
-  }
-  if (!("label" in e)) {
-    return false;
-  }
-  return true;
-};
-
 export default function BadgeMinimal(props: BadgeMinimalProps): ReactNode {
   const { label, tooltip, mounted, componentsProps } = props;
 

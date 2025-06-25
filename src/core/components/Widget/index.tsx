@@ -10,22 +10,17 @@ import {
   Stack,
   StackProps,
 } from "@mantine/core";
-import { PropsWithChildren, ReactNode } from "react";
+import { ComponentProps, PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, {
   WidgetWrapperComponentsProps,
   WidgetWrapperProps,
 } from "./WidgetWrapper";
-import { BadgeMinimalProps } from "@/core/components/BadgeMinimal";
+import BadgeMinimal from "@/core/components/BadgeMinimal";
 import BadgeGroup, { BadgeGroupProps } from "@/core/components/BadgeGroup";
 import { WidgetConfiguration } from "@/core/lib/types";
-import AlertMinimal, {
-  AlertMinimalProps,
-  isAlertMinimalProps,
-} from "@/core/components/AlertMinimal";
-import RemoraidButton, {
-  isRemoraidButtonProps,
-  RemoraidButtonProps,
-} from "../RemoraidButton";
+import AlertMinimal from "@/core/components/AlertMinimal";
+import RemoraidButton from "../RemoraidButton";
+import { ElementOfType, isValidElementOfType } from "@/core/lib/utils";
 
 interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
   wrapper?: Partial<Omit<WidgetWrapperProps, "widgetId">>;
@@ -39,9 +34,18 @@ export interface WidgetProps {
   id: string;
   title: string;
   config?: Partial<Omit<WidgetConfiguration, "widgetId">>;
-  badges?: (BadgeMinimalProps | ReactNode)[];
-  buttons?: (RemoraidButtonProps | ReactNode)[];
-  alerts?: (AlertMinimalProps | ReactNode)[];
+  badges?: (
+    | ComponentProps<typeof BadgeMinimal>
+    | ElementOfType<typeof BadgeMinimal>
+  )[];
+  buttons?: (
+    | ComponentProps<typeof RemoraidButton>
+    | ElementOfType<typeof RemoraidButton>
+  )[];
+  alerts?: (
+    | ComponentProps<typeof AlertMinimal>
+    | ElementOfType<typeof AlertMinimal>
+  )[];
   gaps?:
     | MantineSize
     | number
@@ -102,11 +106,11 @@ export default function Widget({
         </Group>
         <Group gap={buttonsGap} wrap="nowrap">
           {buttons !== undefined &&
-            buttons.map((e, i) => {
-              if (isRemoraidButtonProps(e)) {
-                return <RemoraidButton {...e} key={i} />;
+            buttons.map((button, i) => {
+              if (isValidElementOfType(RemoraidButton, button)) {
+                return button;
               }
-              return e;
+              return <RemoraidButton {...button} key={i} />;
             })}
         </Group>
       </Group>
@@ -118,10 +122,10 @@ export default function Widget({
         {...componentsProps?.alertsContainer}
       >
         {alerts?.map((a, i) => {
-          if (isAlertMinimalProps(a)) {
-            return <AlertMinimal {...a} key={i} />;
+          if (isValidElementOfType(AlertMinimal, a)) {
+            return a;
           }
-          return a;
+          return <AlertMinimal {...a} key={i} />;
         })}
       </Stack>
       {loading ? (

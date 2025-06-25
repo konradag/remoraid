@@ -9,6 +9,7 @@ import {
   StackProps,
 } from "@mantine/core";
 import {
+  ComponentProps,
   createContext,
   Dispatch,
   PropsWithChildren,
@@ -221,7 +222,7 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
 
 export interface FrameLayout {
   <T extends FrameLayoutVariant = DefaultFrameLayoutVariant>(
-    props: PropsWithChildren<FrameLayoutProps<T>>
+    props: ComponentProps<typeof FrameLayout<T>>
   ): ReactNode;
   Element: typeof ElementComponent;
 }

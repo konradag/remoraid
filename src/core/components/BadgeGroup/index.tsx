@@ -8,14 +8,12 @@ import {
   TooltipProps,
 } from "@mantine/core";
 import React, { ReactNode } from "react";
-import BadgeMinimal, {
-  BadgeMinimalProps,
-  isBadgeMinimalProps,
-} from "../BadgeMinimal";
+import BadgeMinimal, { BadgeMinimalProps } from "../BadgeMinimal";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import { ElementOfType, isValidElementOfType } from "@/core/lib/utils";
 
 export interface BadgeGroupProps {
-  badges: (BadgeMinimalProps | ReactNode)[];
+  badges: (BadgeMinimalProps | ElementOfType<typeof BadgeMinimal>)[];
   gap?: MantineSize | number;
   breakpoint?: MantineBreakpoint;
   componentsProps?: {
@@ -34,8 +32,10 @@ export default function BadgeGroup({
   const theme = useRemoraidTheme();
 
   // Helpers
-  const numVisibleBadges = badges.filter((e) =>
-    isBadgeMinimalProps(e) ? e.mounted !== false : true
+  const numVisibleBadges = badges.filter((badge) =>
+    isValidElementOfType(BadgeMinimal, badge)
+      ? badge.props.mounted
+      : badge.mounted !== false
   ).length;
 
   return (
@@ -45,11 +45,11 @@ export default function BadgeGroup({
         wrap="nowrap"
         visibleFrom={breakpoint ?? theme.breakpoints.badgeGroupCollapse}
       >
-        {badges.map((e, i) => {
-          if (isBadgeMinimalProps(e)) {
-            return <BadgeMinimal {...e} key={i} />;
+        {badges.map((badge, i) => {
+          if (isValidElementOfType(BadgeMinimal, badge)) {
+            return badge;
           }
-          return e;
+          return <BadgeMinimal {...badge} key={i} />;
         })}
       </Group>
       <Tooltip
