@@ -6,6 +6,9 @@ import {
   Loader,
   Title,
   LoaderProps,
+  DividerProps,
+  Stack,
+  StackProps,
 } from "@mantine/core";
 import { PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, {
@@ -28,6 +31,8 @@ interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
   wrapper?: Partial<Omit<WidgetWrapperProps, "widgetId">>;
   loader?: Partial<LoaderProps>;
   badgeGroup?: Partial<BadgeGroupProps>;
+  divider?: Partial<DividerProps>;
+  alertsContainer?: Partial<StackProps>;
 }
 
 export interface WidgetProps {
@@ -105,14 +110,20 @@ export default function Widget({
             })}
         </Group>
       </Group>
-      <Divider my="md" />
-      {alerts !== undefined &&
-        alerts.map((a, i) => {
+      <Divider my="md" {...componentsProps?.divider} />
+      <Stack
+        align="stretch"
+        gap={alertsGap}
+        mb={alerts && alerts.length > 0 ? "md" : 0}
+        {...componentsProps?.alertsContainer}
+      >
+        {alerts?.map((a, i) => {
           if (isAlertMinimalProps(a)) {
-            return <AlertMinimal {...a} mb={alertsGap} key={i} />;
+            return <AlertMinimal {...a} key={i} />;
           }
           return a;
         })}
+      </Stack>
       {loading ? (
         <Center>
           <Loader {...componentsProps?.loader} />
