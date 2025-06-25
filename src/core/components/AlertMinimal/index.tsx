@@ -14,7 +14,7 @@ export interface AlertMinimalProps {
   title?: string;
   text?: string;
   onClose?: () => void;
-  mounted?: boolean;
+  mounted?: TransitionProps["mounted"];
   mt?: MantineSize | number;
   mb?: MantineSize | number;
   componentsProps?: {
@@ -28,7 +28,7 @@ export default function AlertMinimal({
   category,
   text,
   onClose,
-  mounted,
+  mounted = true,
   mt,
   mb,
   componentsProps,

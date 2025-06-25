@@ -12,7 +12,7 @@ import { ReactNode } from "react";
 export interface BadgeMinimalProps {
   label: string;
   tooltip?: string;
-  mounted?: boolean;
+  mounted?: TransitionProps["mounted"];
   componentsProps?: {
     badge?: BadgeProps;
     transition?: Partial<Omit<TransitionProps, "mounted">>;
@@ -20,15 +20,17 @@ export interface BadgeMinimalProps {
   };
 }
 
-export default function BadgeMinimal(props: BadgeMinimalProps): ReactNode {
-  const { label, tooltip, mounted, componentsProps } = props;
-
-  // Style
+export default function BadgeMinimal({
+  label,
+  tooltip,
+  mounted = true,
+  componentsProps,
+}: BadgeMinimalProps): ReactNode {
   const theme = useRemoraidTheme();
 
   return (
     <Transition
-      mounted={mounted !== false}
+      mounted={mounted}
       transition="fade"
       duration={theme.transitionDurations.short}
       timingFunction="ease"
