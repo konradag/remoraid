@@ -23,9 +23,11 @@ export const createContextCluster = <Context, StaticID extends string = never>(
   };
   const useContext = (<ID extends string>(id: ID) => {
     if (isStaticId(id)) {
-      return contexts[id] ?? generalDefaultValue;
+      return contexts[id]
+        ? React.useContext(contexts[id])
+        : generalDefaultValue;
     }
-    return contexts[id] ?? null;
+    return contexts[id] ? React.useContext(contexts[id]) : null;
   }) as <ID extends string>(
     id: ID
   ) => ID extends StaticID ? Context : Context | null;
