@@ -149,10 +149,12 @@ export enum FrameLayoutVariant {
   Plain = "plain",
   Sticky = "sticky",
 }
-export interface ContextCluster<Context> {
+export interface ContextCluster<Context, StaticID extends string = never> {
   contexts: Record<string, React.Context<Context>>;
   defaultValues: Record<string, Context>;
   generalDefaultValue: Context;
   createContext: (id: string, defaultValue?: Context) => React.Context<Context>;
-  useContext: (id: string) => Context | null;
+  useContext: <ID extends string>(
+    id: ID
+  ) => ID extends StaticID ? Context : Context | null;
 }
