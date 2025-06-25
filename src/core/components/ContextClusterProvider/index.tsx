@@ -2,11 +2,11 @@ import { ContextCluster } from "@/core/lib/types";
 import React, { PropsWithChildren, ReactNode } from "react";
 
 export const createContextCluster = <Context, StaticID extends string = never>(
-  staticIds: StaticID[],
-  generalDefaultValue: Context
+  generalDefaultValue: Context,
+  staticIds?: StaticID[]
 ): ContextCluster<Context, StaticID> => {
   const isStaticId = (id: string): id is StaticID => {
-    if (staticIds.find((staticId) => staticId === id)) {
+    if (staticIds?.find((staticId) => staticId === id)) {
       return true;
     }
     return false;
