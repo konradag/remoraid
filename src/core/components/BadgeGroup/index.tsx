@@ -7,13 +7,16 @@ import {
   Tooltip,
   TooltipProps,
 } from "@mantine/core";
-import React, { ReactNode } from "react";
+import React, { ComponentProps, isValidElement, ReactNode } from "react";
 import BadgeMinimal, { BadgeMinimalProps } from "../BadgeMinimal";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { ElementOfType, isValidElementOfType } from "@/core/lib/utils";
 
 export interface BadgeGroupProps {
-  badges: (BadgeMinimalProps | ElementOfType<typeof BadgeMinimal>)[];
+  badges: (
+    | ComponentProps<typeof BadgeMinimal>
+    | ElementOfType<typeof BadgeMinimal>
+  )[];
   gap?: MantineSize | number;
   breakpoint?: MantineBreakpoint;
   componentsProps?: {
@@ -48,6 +51,16 @@ export default function BadgeGroup({
         {badges.map((badge, i) => {
           if (isValidElementOfType(BadgeMinimal, badge)) {
             return badge;
+          } else if (isValidElement(badge)) {
+            throw new TypeError(
+              `Expected React element of type ${
+                BadgeMinimal.name
+              }, but received type: ${
+                typeof badge.type === "string"
+                  ? badge.type
+                  : badge.type?.name ?? "unknown"
+              }. Check the 'badges' property of this widget.`
+            );
           }
           return <BadgeMinimal {...badge} key={i} />;
         })}

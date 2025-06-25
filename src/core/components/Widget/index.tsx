@@ -10,7 +10,12 @@ import {
   Stack,
   StackProps,
 } from "@mantine/core";
-import { ComponentProps, PropsWithChildren, ReactNode } from "react";
+import {
+  ComponentProps,
+  isValidElement,
+  PropsWithChildren,
+  ReactNode,
+} from "react";
 import WidgetWrapper, {
   WidgetWrapperComponentsProps,
   WidgetWrapperProps,
@@ -109,6 +114,16 @@ export default function Widget({
             buttons.map((button, i) => {
               if (isValidElementOfType(RemoraidButton, button)) {
                 return button;
+              } else if (isValidElement(button)) {
+                throw new TypeError(
+                  `Expected React element of type ${
+                    RemoraidButton.name
+                  }, but received type: ${
+                    typeof button.type === "string"
+                      ? button.type
+                      : button.type?.name ?? "unknown"
+                  }. Check the 'buttons' property of this widget.`
+                );
               }
               return <RemoraidButton {...button} key={i} />;
             })}
@@ -121,11 +136,21 @@ export default function Widget({
         mb={alerts && alerts.length > 0 ? "md" : 0}
         {...componentsProps?.alertsContainer}
       >
-        {alerts?.map((a, i) => {
-          if (isValidElementOfType(AlertMinimal, a)) {
-            return a;
+        {alerts?.map((alert, i) => {
+          if (isValidElementOfType(AlertMinimal, alert)) {
+            return alert;
+          } else if (isValidElement(alert)) {
+            throw new TypeError(
+              `Expected React element of type ${
+                AlertMinimal.name
+              }, but received type: ${
+                typeof alert.type === "string"
+                  ? alert.type
+                  : alert.type?.name ?? "unknown"
+              }. Check the 'alerts' property of this widget.`
+            );
           }
-          return <AlertMinimal {...a} key={i} />;
+          return <AlertMinimal {...alert} key={i} />;
         })}
       </Stack>
       {loading ? (
