@@ -81,21 +81,21 @@ export default function Widget({
     asElementOrPropsOfType(
       RemoraidButton,
       button,
-      "Check the 'buttons' property of this widget.`"
+      "Check the 'buttons' property of this widget."
     )
   );
   const alerts = alertsProp?.map((alert) =>
     asElementOrPropsOfType(
       AlertMinimal,
       alert,
-      "Check the 'alerts' property of this widget.`"
+      "Check the 'alerts' property of this widget."
     )
   );
   const badges = badgesProp?.map((badge) =>
     asElementOrPropsOfType(
       BadgeMinimal,
       badge,
-      "Check the 'badges' property of this widget.`"
+      "Check the 'badges' property of this widget."
     )
   );
 

@@ -29,7 +29,11 @@ function SettingsTable({
   const theme = useRemoraidTheme();
 
   // Type safety
-  const children = asChildrenOfType(RowComponent, childrenProp);
+  const children = asChildrenOfType(
+    RowComponent,
+    childrenProp,
+    "Check children passed to 'SettingsTable' component."
+  );
 
   return (
     <settingsTableOptionsContext.Provider

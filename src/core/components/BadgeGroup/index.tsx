@@ -42,7 +42,7 @@ export default function BadgeGroup({
     asElementOrPropsOfType(
       BadgeMinimal,
       badge,
-      "Check 'badges' property of this component."
+      "Check 'badges' property passed to 'BadgeGroup'."
     )
   );
 

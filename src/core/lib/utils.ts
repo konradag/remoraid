@@ -60,9 +60,9 @@ export const asElementOfType = <T extends ElementType>(
       type
     )}, but received type: ${getElementTypeName(element.type)}.${
       additionalErrorMessage !== undefined && additionalErrorMessage.length > 0
-        ? " "
+        ? ` ${additionalErrorMessage}`
         : ""
-    }${additionalErrorMessage}`
+    }`
   );
 };
 export const asChildrenOfType = <T extends ElementType>(
@@ -74,7 +74,9 @@ export const asChildrenOfType = <T extends ElementType>(
     return children;
   }
   if (Array.isArray(children)) {
-    return children.map((child) => asChildrenOfType(type, child));
+    return children.map((child) =>
+      asChildrenOfType(type, child, additionalErrorMessage)
+    );
   }
   return asElementOfType(
     type,
