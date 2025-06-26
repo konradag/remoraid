@@ -13,7 +13,10 @@ import {
 import AppProvider, { AppProviderProps } from "./AppProvider";
 import { OptionalIfExtends } from "@/core/lib/utils";
 import FrameLayout, { FrameLayoutProps } from "../FrameLayout";
-import { FrameLayoutElementProps } from "../FrameLayout/Element";
+import {
+  FrameLayoutElementProps,
+  isFrameLayoutElementSection,
+} from "../FrameLayout/Element";
 
 export const defaultAppShellLayoutId = "remoraidAppShell";
 
@@ -43,7 +46,7 @@ export const defaultAppShellFooterPositions: {
   [F in Exclude<AppShellFooterVariant, null>]: AppShellFooterPosition<F>;
 } = { [FooterVariant.Minimal]: FrameLayoutSection.Content };
 
-export interface ExplicitAppShellProps<
+interface ExplicitAppShellProps<
   N extends AppShellNavbarVariant,
   F extends AppShellFooterVariant,
   V extends CustomAppVariables
@@ -89,25 +92,30 @@ function AppShell<
   N extends AppShellNavbarVariant = DefaultNavbarVariant,
   F extends AppShellFooterVariant = DefaultFooterVariant,
   V extends CustomAppVariables = {}
->(props: PropsWithChildren<AppShellProps<N, F, V>>): ReactNode {
-  const {
-    children,
-    navbarVariant,
-    footerVariant,
-    appContext,
-    componentsProps,
-  } = {
-    navbarVariant: null as DefaultNavbarVariant,
-    footerVariant: null as DefaultFooterVariant,
-    ...props,
-  };
-  let { navbarPosition, footerPosition } = props;
-  if (navbarVariant !== null && navbarPosition === undefined) {
-    navbarPosition = defaultAppShellNavbarPositions[navbarVariant];
-  }
-  if (footerVariant !== null && footerPosition === undefined) {
-    footerPosition = defaultAppShellFooterPositions[footerVariant];
-  }
+>({
+  navbarVariant: navbarVariantProp,
+  footerVariant: footerVariantProp,
+  navbarPosition: navbarPositionProp,
+  footerPosition: footerPositionProp,
+  appContext,
+  componentsProps,
+  children,
+}: PropsWithChildren<AppShellProps<N, F, V>>): ReactNode {
+  // Props default values
+  const navbarVariant: AppShellNavbarVariant =
+    navbarVariantProp ?? (null satisfies DefaultNavbarVariant);
+  const footerVariant: AppShellFooterVariant =
+    footerVariantProp ?? (null satisfies DefaultFooterVariant);
+  const navbarPosition: FrameLayoutSection | null =
+    navbarPositionProp ??
+    (navbarVariant === null
+      ? null
+      : defaultAppShellNavbarPositions[navbarVariant]);
+  const footerPosition: FrameLayoutSection | null =
+    footerPositionProp ??
+    (footerVariant === null
+      ? null
+      : defaultAppShellFooterPositions[footerVariant]);
 
   // Helpers
   let navbar: ReactNode;
@@ -134,8 +142,8 @@ function AppShell<
           layoutId={defaultAppShellLayoutId}
           {...componentsProps?.layout}
         >
-          {navbarPosition !== undefined &&
-            navbarPosition !== FrameLayoutSection.Content && (
+          {navbarPosition !== null &&
+            (isFrameLayoutElementSection(navbarPosition) ? (
               <FrameLayout.Element
                 section={navbarPosition}
                 {...componentsProps?.navbarLayoutElement}
@@ -150,9 +158,12 @@ function AppShell<
               >
                 {navbar}
               </FrameLayout.Element>
-            )}
-          {footerPosition !== undefined &&
-            footerPosition !== FrameLayoutSection.Content && (
+            ) : (
+              <>{navbar}</>
+            ))}
+          <Box {...componentsProps?.childrenContainer}>{children}</Box>
+          {footerPosition !== null &&
+            (isFrameLayoutElementSection(footerPosition) ? (
               <FrameLayout.Element
                 section={footerPosition}
                 {...componentsProps?.footerLayoutElement}
@@ -167,12 +178,9 @@ function AppShell<
               >
                 {footer}
               </FrameLayout.Element>
-            )}
-          {navbarPosition !== undefined &&
-            navbarPosition === FrameLayoutSection.Content && <>{navbar}</>}
-          <Box {...componentsProps?.childrenContainer}>{children}</Box>
-          {footerPosition !== undefined &&
-            footerPosition === FrameLayoutSection.Content && <>{footer}</>}
+            ) : (
+              <>{footer}</>
+            ))}
         </FrameLayout>
       </Box>
     </AppProvider>

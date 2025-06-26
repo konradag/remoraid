@@ -14,18 +14,22 @@ import {
   TransitionProps,
 } from "@mantine/core";
 import { Icon, IconClick, IconProps } from "@tabler/icons-react";
-import { ReactNode } from "react";
+import { createElement, ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { Common } from "@/core/lib/utils";
+import { Common, OptionalIfExtends } from "@/core/lib/utils";
+import { RemoraidIconSize } from "@/core/lib/types";
 
-export interface RemoraidButtonProps {
+export type RemoraidButtonDefaultResponsivity = true;
+
+interface ExplicitRemoraidButtonProps<Responsive extends boolean> {
+  responsive: Responsive;
   label: string;
-  responsive?: boolean;
-  breakpoint?: MantineBreakpoint;
-  collapsed?: boolean;
   size?: MantineSize;
   color?: MantineColor;
+  breakpoint?: Responsive extends true ? MantineBreakpoint : never;
+  collapsed?: Responsive extends false ? boolean : never;
   icon?: Icon;
+  iconSize?: RemoraidIconSize;
   onClick?: () => void;
   loading?: boolean;
   variant?: Extract<ButtonVariant, ActionIconVariant>;
@@ -43,29 +47,45 @@ export interface RemoraidButtonProps {
   };
 }
 
-export default function RemoraidButton({
+export type RemoraidButtonProps<
+  Responsive extends boolean = RemoraidButtonDefaultResponsivity
+> = OptionalIfExtends<
+  ExplicitRemoraidButtonProps<Responsive>,
+  "responsive",
+  Responsive,
+  true
+>;
+
+export default function RemoraidButton<
+  Responsive extends boolean = RemoraidButtonDefaultResponsivity
+>({
   label,
-  responsive,
-  breakpoint,
-  collapsed,
+  responsive: ResponsiveProp,
+  breakpoint: breakpointProp,
+  collapsed: collapsedProp,
   size,
   color,
   onClick,
   loading,
   variant = "default",
   mounted = true,
+  icon: iconProp,
+  iconSize = RemoraidIconSize.Medium,
   componentsProps,
-  ...props
-}: RemoraidButtonProps): ReactNode {
+}: RemoraidButtonProps<Responsive>): ReactNode {
+  // Props default values
+  const responsive: boolean =
+    ResponsiveProp ?? (true satisfies RemoraidButtonDefaultResponsivity);
+  const breakpoint: MantineBreakpoint = breakpointProp ?? "md";
+  const collapsed: boolean = collapsedProp ?? false;
+  const icon: Icon = iconProp ?? IconClick;
+
+  // Contexts
   const theme = useRemoraidTheme();
 
   // Helpers
-  const iconProps = { ...theme.iconProps.medium, ...componentsProps?.icon };
-  const icon = props.icon ? (
-    <props.icon {...iconProps} />
-  ) : (
-    <IconClick {...iconProps} />
-  );
+  const iconProps = { ...theme.iconProps[iconSize], ...componentsProps?.icon };
+  const iconElement = createElement(icon, iconProps);
 
   return (
     <Transition
@@ -87,9 +107,9 @@ export default function RemoraidButton({
               color={color}
               {...componentsProps?.button}
               {...componentsProps?.ActionIcon}
-              hiddenFrom={responsive === false ? undefined : breakpoint ?? "md"}
+              hiddenFrom={!responsive ? undefined : breakpoint}
               display={
-                responsive === false && collapsed !== true
+                !responsive && !collapsed
                   ? "none"
                   : componentsProps?.ActionIcon?.display ??
                     componentsProps?.button?.display
@@ -100,21 +120,21 @@ export default function RemoraidButton({
                   componentsProps?.button?.style),
               }}
             >
-              {icon}
+              {iconElement}
             </ActionIcon>
           </Tooltip>
           <Button
             onClick={onClick}
             loading={loading}
-            variant={variant ?? "default"}
+            variant={variant}
             size={size}
             color={color}
-            leftSection={props.icon ? icon : undefined}
+            leftSection={iconProp ? iconElement : undefined}
             {...componentsProps?.button}
             {...componentsProps?.Button}
-            visibleFrom={responsive === false ? undefined : breakpoint ?? "md"}
+            visibleFrom={!responsive ? undefined : breakpoint}
             display={
-              responsive === false && collapsed
+              !responsive && collapsed
                 ? "none"
                 : componentsProps?.Button?.display ??
                   componentsProps?.button?.display

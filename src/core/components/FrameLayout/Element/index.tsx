@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { ComponentProps, PropsWithChildren, ReactNode } from "react";
 import { Box, BoxProps, Portal } from "@mantine/core";
 import { FrameLayoutSection, Layout, LayoutType } from "@/core/lib/types";
 import { useLayouts } from "../../RemoraidProvider/LayoutsProvider";
@@ -56,3 +56,17 @@ export default function Element({
     </Portal>
   );
 }
+
+export const isFrameLayoutElementSection = (
+  position: unknown
+): position is ComponentProps<typeof Element>["section"] => {
+  if (
+    position === FrameLayoutSection.Bottom ||
+    position === FrameLayoutSection.Top ||
+    position === FrameLayoutSection.Left ||
+    position === FrameLayoutSection.Right
+  ) {
+    return true;
+  }
+  return false;
+};

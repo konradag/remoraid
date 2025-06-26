@@ -62,6 +62,7 @@ export {
 export {
   default as RemoraidButton,
   RemoraidButtonProps,
+  RemoraidButtonDefaultResponsivity,
 } from "./components/RemoraidButton";
 export {
   default as WidgetWrapper,
@@ -127,7 +128,10 @@ export {
   ContextClusterProviderProps,
   createContextCluster,
 } from "./components/ContextClusterProvider";
-export { FrameLayoutElementProps } from "./components/FrameLayout/Element";
+export {
+  FrameLayoutElementProps,
+  isFrameLayoutElementSection,
+} from "./components/FrameLayout/Element";
 export {
   co,
   Common,
