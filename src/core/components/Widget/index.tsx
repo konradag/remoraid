@@ -19,7 +19,7 @@ import BadgeMinimal from "@/core/components/BadgeMinimal";
 import BadgeGroup, { BadgeGroupProps } from "@/core/components/BadgeGroup";
 import { WidgetConfiguration } from "@/core/lib/types";
 import AlertMinimal from "@/core/components/AlertMinimal";
-import RemoraidButton from "../RemoraidButton";
+import RemoraidButton, { RemoraidButtonProps } from "../RemoraidButton";
 import {
   asElementOrPropsOfType,
   ElementOfType,
@@ -43,8 +43,12 @@ export interface WidgetProps {
     | ElementOfType<typeof BadgeMinimal>
   )[];
   buttons?: (
-    | ComponentProps<typeof RemoraidButton>
-    | ElementOfType<typeof RemoraidButton>
+    | RemoraidButtonProps<true>
+    | RemoraidButtonProps<false>
+    | ElementOfType<
+        typeof RemoraidButton,
+        RemoraidButtonProps<true> | RemoraidButtonProps<false>
+      >
   )[];
   alerts?: (
     | ComponentProps<typeof AlertMinimal>
@@ -78,11 +82,10 @@ export default function Widget({
 }: PropsWithChildren<WidgetProps>): ReactNode {
   // Type safety
   const buttons = buttonsProp?.map((button) =>
-    asElementOrPropsOfType(
-      RemoraidButton,
-      button,
-      "Check the 'buttons' property of this widget."
-    )
+    asElementOrPropsOfType<
+      typeof RemoraidButton,
+      RemoraidButtonProps<true> | RemoraidButtonProps<false>
+    >(RemoraidButton, button, "Check the 'buttons' property of this widget.")
   );
   const alerts = alertsProp?.map((alert) =>
     asElementOrPropsOfType(

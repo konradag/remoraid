@@ -80,12 +80,12 @@ export type AppShellProps<
   OptionalIfExtends<
     ExplicitAppShellProps<N, F, V>,
     "footerVariant",
-    F,
-    DefaultFooterVariant
+    DefaultFooterVariant,
+    F
   >,
   "navbarVariant",
-  N,
-  DefaultNavbarVariant
+  DefaultNavbarVariant,
+  N
 >;
 
 function AppShell<

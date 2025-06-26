@@ -26,8 +26,8 @@ interface ExplicitRemoraidButtonProps<Responsive extends boolean> {
   label: string;
   size?: MantineSize;
   color?: MantineColor;
-  breakpoint?: Responsive extends true ? MantineBreakpoint : never;
-  collapsed?: Responsive extends false ? boolean : never;
+  breakpoint?: true extends Responsive ? MantineBreakpoint : never;
+  collapsed?: false extends Responsive ? boolean : never;
   icon?: Icon;
   iconSize?: RemoraidIconSize;
   onClick?: () => void;
@@ -52,8 +52,8 @@ export type RemoraidButtonProps<
 > = OptionalIfExtends<
   ExplicitRemoraidButtonProps<Responsive>,
   "responsive",
-  Responsive,
-  true
+  true,
+  Responsive
 >;
 
 export default function RemoraidButton<

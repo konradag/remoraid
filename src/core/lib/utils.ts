@@ -15,10 +15,10 @@ export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type OptionalIfExtends<T, K extends keyof T, V1, V2> = [V1] extends [V2]
   ? Optional<T, K>
   : T;
-export type ElementOfType<T extends ElementType> = ReactElement<
-  ComponentProps<T>,
-  T
->;
+export type ElementOfType<
+  T extends ElementType,
+  P = ComponentProps<T>
+> = ReactElement<P, T>;
 export type ChildrenOfType<T extends ElementType> =
   | ElementOfType<T>
   | undefined
@@ -27,9 +27,10 @@ export type ChildrenOfType<T extends ElementType> =
 export type PropsWithChildrenOfType<T extends ElementType, P = {}> = P & {
   children?: ChildrenOfType<T>;
 };
-export type ElementOrPropsOfType<T extends ElementType> =
-  | ElementOfType<T>
-  | ComponentProps<T>;
+export type ElementOrPropsOfType<
+  T extends ElementType,
+  P = ComponentProps<T>
+> = ElementOfType<T> | P;
 export const isValidElementOfType = <T extends ElementType>(
   type: T,
   value: unknown
@@ -84,11 +85,14 @@ export const asChildrenOfType = <T extends ElementType>(
     additionalErrorMessage
   );
 };
-export const asElementOrPropsOfType = <T extends ElementType>(
+export const asElementOrPropsOfType = <
+  T extends ElementType,
+  P = ComponentProps<T>
+>(
   type: T,
-  elementOrProps: ReactElement | ComponentProps<T>,
+  elementOrProps: ReactElement | P,
   additionalErrorMessage?: string
-): ElementOrPropsOfType<T> => {
+): ElementOrPropsOfType<T, P> => {
   if (isValidElement(elementOrProps)) {
     return asElementOfType(type, elementOrProps, additionalErrorMessage);
   }
