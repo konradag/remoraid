@@ -17,56 +17,25 @@ import {
   SetStateAction,
   useCallback,
   useContext,
-  useMemo,
 } from "react";
 import ElementComponent from "./Element";
 import {
-  FrameLayoutContext,
   FrameLayoutSection,
   FrameLayoutVariant,
-  Layout,
+  LayoutContext,
   LayoutType,
 } from "@/core/lib/types";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { Optional } from "@/core/lib/utils";
 
-export const isFrameLayout = (
-  layout: Layout<LayoutType>
-): layout is Layout<LayoutType.Frame> => {
-  if (typeof layout !== "object" || layout === null) {
-    return false;
-  }
-  if (!("sections" in layout)) {
-    return false;
-  }
-  if (typeof layout.sections !== "object" || layout.sections === null) {
-    return false;
-  }
-  return true;
-};
-
 export type DefaultFrameLayoutVariant = FrameLayoutVariant.Sticky;
-const defaultFrameLayoutVariant = FrameLayoutVariant.Sticky;
 
-export const defaultFrameLayoutContext: FrameLayoutContext = {
-  layoutId: null,
-  layout: {
-    sections: {
-      [FrameLayoutSection.Top]: null,
-      [FrameLayoutSection.Bottom]: null,
-      [FrameLayoutSection.Left]: null,
-      [FrameLayoutSection.Right]: null,
-    },
-  },
-  setLayout: () => {},
-};
-
-const layoutContext = createContext<FrameLayoutContext>(
-  defaultFrameLayoutContext
+const layoutContext = createContext<LayoutContext<LayoutType.Frame> | null>(
+  null
 );
 
-export const useFrameLayout = (): FrameLayoutContext => {
+export const useFrameLayout = (): LayoutContext<LayoutType.Frame> | null => {
   return useContext(layoutContext);
 };
 
@@ -99,61 +68,69 @@ export type FrameLayoutProps<
   : FrameLayoutPropsWithExplicitVariant<T>;
 
 function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
-  variant = defaultFrameLayoutVariant,
+  variant: variantProp,
   layoutId,
   componentsProps,
   children,
 }: PropsWithChildren<FrameLayoutProps<T>>): ReactNode {
+  // Props default values
+  const variant =
+    variantProp ??
+    (FrameLayoutVariant.Sticky satisfies DefaultFrameLayoutVariant);
+
+  // Contexts
   const theme = useRemoraidTheme();
   const { layouts, setLayouts } = useLayouts();
 
   // Helpers
   const layout = layouts[layoutId];
-  const setLayout: Dispatch<SetStateAction<Layout<LayoutType.Frame>>> =
-    useMemo(() => {
-      return (value) => {
-        setLayouts((prev) => ({
-          ...prev,
-          [layoutId]:
-            typeof value === "function" ? value(prev[layoutId]) : value,
-        }));
-      };
-    }, [layoutId, setLayouts]);
+  const setSections: Dispatch<
+    SetStateAction<LayoutContext<LayoutType.Frame>["sections"]>
+  > = (value) => {
+    setLayouts((prev) => ({
+      ...prev,
+      [layoutId]: {
+        type: LayoutType.Frame,
+        sections:
+          typeof value === "function" ? value(prev[layoutId].sections) : value,
+      },
+    }));
+  };
   const topSection = useCallback(
     (n: HTMLDivElement | null) => {
-      setLayout((prev) => ({
+      setSections((prev) => ({
         ...prev,
-        sections: { ...prev?.sections, [FrameLayoutSection.Top]: n },
+        sections: { ...prev, [FrameLayoutSection.Top]: n },
       }));
     },
-    [setLayout]
+    [setSections]
   );
   const bottomSection = useCallback(
     (n: HTMLDivElement | null) => {
-      setLayout((prev) => ({
+      setSections((prev) => ({
         ...prev,
-        sections: { ...prev?.sections, [FrameLayoutSection.Bottom]: n },
+        sections: { ...prev, [FrameLayoutSection.Bottom]: n },
       }));
     },
-    [setLayout]
+    [setSections]
   );
   const leftSection = useCallback(
     (n: HTMLDivElement | null) => {
-      setLayout((prev) => ({
+      setSections((prev) => ({
         ...prev,
-        sections: { ...prev?.sections, [FrameLayoutSection.Left]: n },
+        sections: { ...prev, [FrameLayoutSection.Left]: n },
       }));
     },
-    [setLayout]
+    [setSections]
   );
   const rightSection = useCallback(
     (n: HTMLDivElement | null) => {
-      setLayout((prev) => ({
+      setSections((prev) => ({
         ...prev,
-        sections: { ...prev?.sections, [FrameLayoutSection.Right]: n },
+        sections: { ...prev, [FrameLayoutSection.Right]: n },
       }));
     },
-    [setLayout]
+    [setSections]
   );
   let contentSection: ReactNode = children;
   const childrenContainerProps = {
@@ -171,7 +148,7 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
   }
 
   return (
-    <layoutContext.Provider value={{ layoutId, layout, setLayout }}>
+    <layoutContext.Provider value={{ ...layout, layoutId }}>
       <Group
         gap={0}
         h="100%"

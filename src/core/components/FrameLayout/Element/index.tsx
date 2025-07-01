@@ -1,8 +1,9 @@
 import { ComponentProps, PropsWithChildren, ReactNode } from "react";
 import { Box, BoxProps, Portal } from "@mantine/core";
-import { FrameLayoutSection, Layout, LayoutType } from "@/core/lib/types";
+import { FrameLayoutSection, LayoutType } from "@/core/lib/types";
 import { useLayouts } from "../../RemoraidProvider/LayoutsProvider";
-import { isFrameLayout, useFrameLayout } from "..";
+import { useFrameLayout } from "..";
+import { InvalidComponentUsageError } from "@/core/lib/errors";
 
 export interface FrameLayoutElementProps {
   section: Exclude<FrameLayoutSection, FrameLayoutSection.Content>;
@@ -22,16 +23,19 @@ export default function Element({
 }: PropsWithChildren<FrameLayoutElementProps>): ReactNode {
   const { layouts } = useLayouts();
   const closestLayout = useFrameLayout();
-  if (closestLayout.layoutId === null) {
-    return null;
+  if (!closestLayout) {
+    throw new InvalidComponentUsageError(
+      "FrameLayout.Element",
+      "must be used as child of 'FrameLayout'."
+    );
   }
 
   // Helpers
-  const layout: Layout<LayoutType> =
-    layouts[layoutId ?? closestLayout.layoutId];
-
-  if (!isFrameLayout(layout)) {
-    return null;
+  const layout = layouts[layoutId ?? closestLayout.layoutId];
+  if (layout.type !== LayoutType.Frame) {
+    throw new TypeError(
+      "Prop 'layoutId' in 'FrameLayout.Element' must refer to a valid 'FrameLayout' component. Leave 'layoutId' undefined, if you want to use the closest 'FrameLayout' as reference layout."
+    );
   }
   if (layout.sections[section] === null) {
     return null;

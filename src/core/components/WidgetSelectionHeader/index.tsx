@@ -28,7 +28,7 @@ export default function WidgetSelectionHeader({
   if (!page) {
     throw new InvalidComponentUsageError(
       "WidgetSelectionHeader",
-      "must be used as child of 'Page' component."
+      "must be used as child of 'Page'."
     );
   }
 

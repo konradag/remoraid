@@ -64,7 +64,7 @@ export interface WidgetContext {
   selected: boolean;
 }
 export interface WidgetsContext {
-  widgets: Partial<Record<string, Partial<Record<string, WidgetContext>>>>;
+  widgets: Record<string, Record<string, WidgetContext>>;
   activeWidget: string | null;
   updateActiveWidget: (widgetId: string | null) => void;
   registerWidget: (pageId: string, widget: WidgetConfiguration) => void;
@@ -150,23 +150,24 @@ export enum FrameLayoutSection {
   Right = "right",
   Content = "content",
 }
-export type Layout<T extends LayoutType> = T extends LayoutType.Frame
-  ? {
-      sections: Record<
-        Exclude<FrameLayoutSection, FrameLayoutSection.Content>,
-        HTMLDivElement | null
-      >;
-    }
-  : never;
-export interface LayoutsContext {
-  layouts: Record<string, Layout<LayoutType>>;
-  setLayouts: Dispatch<SetStateAction<Record<string, Layout<LayoutType>>>>;
+export interface LayoutContext<T extends LayoutType> {
+  type: T;
+  layoutId: string;
+  sections: Partial<
+    Record<
+      T extends LayoutType.Frame
+        ? Exclude<FrameLayoutSection, FrameLayoutSection.Content>
+        : string,
+      HTMLDivElement | null
+    >
+  >;
 }
-export type FrameLayoutContext = {
-  layoutId: string | null; // null, if component not in frame layout
-  layout: Layout<LayoutType.Frame>;
-  setLayout: Dispatch<SetStateAction<Layout<LayoutType.Frame>>>;
-};
+export interface LayoutsContext {
+  layouts: Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>;
+  setLayouts: Dispatch<
+    SetStateAction<Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>>
+  >;
+}
 export enum FrameLayoutVariant {
   Plain = "plain",
   Sticky = "sticky",

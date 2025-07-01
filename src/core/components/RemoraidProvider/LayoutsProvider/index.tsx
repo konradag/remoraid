@@ -1,4 +1,4 @@
-import { Layout, LayoutsContext, LayoutType } from "@/core/lib/types";
+import { LayoutContext, LayoutsContext, LayoutType } from "@/core/lib/types";
 import {
   createContext,
   PropsWithChildren,
@@ -7,9 +7,9 @@ import {
   useState,
 } from "react";
 
-export const defaultLayoutsContext = {
+export const defaultLayoutsContext: LayoutsContext = {
   layouts: {},
-  setLayouts: (): void => {},
+  setLayouts: () => {},
 };
 
 const layoutsContext = createContext<LayoutsContext>(defaultLayoutsContext);
@@ -24,9 +24,9 @@ export default function LayoutsProvider({
   children,
 }: PropsWithChildren<LayoutsProviderProps>): ReactNode {
   // State
-  const [layouts, setLayouts] = useState<{
-    [index: string]: Layout<LayoutType>;
-  }>({});
+  const [layouts, setLayouts] = useState<
+    Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>
+  >({});
 
   return (
     <layoutsContext.Provider value={{ layouts, setLayouts }}>
