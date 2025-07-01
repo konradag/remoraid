@@ -25,7 +25,7 @@ export default function LayoutsProvider({
 }: PropsWithChildren<LayoutsProviderProps>): ReactNode {
   // State
   const [layouts, setLayouts] = useState<
-    Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>
+    Partial<Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>>
   >({});
 
   return (

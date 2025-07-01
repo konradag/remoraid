@@ -17,6 +17,7 @@ import {
   SetStateAction,
   useCallback,
   useContext,
+  useMemo,
 } from "react";
 import ElementComponent from "./Element";
 import {
@@ -84,31 +85,37 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
 
   // Helpers
   const layout = layouts[layoutId];
-  const defaultSections: LayoutContext<LayoutType.Frame>["sections"] = {
-    [FrameLayoutSection.Bottom]: null,
-    [FrameLayoutSection.Top]: null,
-    [FrameLayoutSection.Left]: null,
-    [FrameLayoutSection.Right]: null,
-  };
-  const setSections: Dispatch<
-    SetStateAction<LayoutContext<LayoutType.Frame>["sections"]>
-  > = (value) => {
-    setLayouts((prev) => ({
-      ...prev,
-      [layoutId]: {
-        type: LayoutType.Frame,
-        sections:
-          typeof value === "function"
-            ? value(prev[layoutId]?.sections ?? defaultSections)
-            : value,
-      },
-    }));
-  };
+  const defaultSections = useMemo(
+    () => ({
+      [FrameLayoutSection.Bottom]: null,
+      [FrameLayoutSection.Top]: null,
+      [FrameLayoutSection.Left]: null,
+      [FrameLayoutSection.Right]: null,
+    }),
+    []
+  );
+  const setSections = useCallback<
+    Dispatch<SetStateAction<LayoutContext<LayoutType.Frame>["sections"]>>
+  >(
+    (value) => {
+      setLayouts((prev) => ({
+        ...prev,
+        [layoutId]: {
+          type: LayoutType.Frame,
+          sections:
+            typeof value === "function"
+              ? value(prev[layoutId]?.sections ?? defaultSections)
+              : value,
+        },
+      }));
+    },
+    [layoutId, setLayouts, defaultSections]
+  );
   const topSection = useCallback(
     (n: HTMLDivElement | null) => {
       setSections((prev) => ({
         ...prev,
-        sections: { ...prev, [FrameLayoutSection.Top]: n },
+        [FrameLayoutSection.Top]: n,
       }));
     },
     [setSections]
@@ -117,7 +124,7 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
     (n: HTMLDivElement | null) => {
       setSections((prev) => ({
         ...prev,
-        sections: { ...prev, [FrameLayoutSection.Bottom]: n },
+        [FrameLayoutSection.Bottom]: n,
       }));
     },
     [setSections]
@@ -126,7 +133,7 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
     (n: HTMLDivElement | null) => {
       setSections((prev) => ({
         ...prev,
-        sections: { ...prev, [FrameLayoutSection.Left]: n },
+        [FrameLayoutSection.Left]: n,
       }));
     },
     [setSections]
@@ -135,7 +142,7 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
     (n: HTMLDivElement | null) => {
       setSections((prev) => ({
         ...prev,
-        sections: { ...prev, [FrameLayoutSection.Right]: n },
+        [FrameLayoutSection.Right]: n,
       }));
     },
     [setSections]
@@ -154,16 +161,18 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
       </ScrollArea>
     );
   }
+  const layoutContextValue = useMemo(
+    () => ({
+      type: LayoutType.Frame,
+      sections: defaultSections,
+      ...layout,
+      layoutId,
+    }),
+    [layout?.sections, defaultSections, layoutId]
+  );
 
   return (
-    <layoutContext.Provider
-      value={{
-        type: LayoutType.Frame,
-        sections: defaultSections,
-        ...layout,
-        layoutId,
-      }}
-    >
+    <layoutContext.Provider value={layoutContextValue}>
       <Group
         gap={0}
         h="100%"
