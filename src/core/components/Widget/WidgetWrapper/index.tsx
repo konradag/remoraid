@@ -13,7 +13,7 @@ import { PropsWithChildren, ReactNode, useEffect } from "react";
 import { useWidgets } from "../../RemoraidProvider/WidgetsProvider";
 
 export interface WidgetWrapperComponentsProps {
-  container?: Partial<PaperProps>;
+  container?: Partial<Omit<PaperProps, "id">>;
   transition?: Partial<Omit<TransitionProps, "mounted">>;
 }
 
@@ -77,6 +77,7 @@ function WidgetWrapper({
           onMouseLeave={() => {
             updateActiveWidget(null);
           }}
+          id={config.widgetId}
         >
           {withCloseButton !== false && (
             <CloseButtonComponent widgetId={config.widgetId} />
