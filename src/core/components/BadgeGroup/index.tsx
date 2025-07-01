@@ -8,7 +8,7 @@ import {
   TooltipProps,
 } from "@mantine/core";
 import React, { ComponentProps, isValidElement, ReactNode } from "react";
-import BadgeMinimal, { BadgeMinimalProps } from "../BadgeMinimal";
+import BadgeMinimal from "../BadgeMinimal";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import {
   asElementOrPropsOfType,

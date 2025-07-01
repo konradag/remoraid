@@ -59,6 +59,29 @@ export interface UserExperienceContext<T extends UserExperience> {
   processedCookie: boolean;
   initialUserExperience: T;
 }
+export interface WidgetContext {
+  name: string;
+  selected: boolean;
+}
+export interface WidgetsContext {
+  widgets: Partial<Record<string, Partial<Record<string, WidgetContext>>>>;
+  activeWidget: string | null;
+  updateActiveWidget: (widgetId: string | null) => void;
+  registerWidget: (pageId: string, widget: WidgetConfiguration) => void;
+  registerPage: (pageId: string, initialWidgets: WidgetConfiguration[]) => void;
+  isWidgetRegistered: (pageId: string, widgetId: string) => boolean;
+  isPageRegistered: (pageId: string) => boolean;
+  updateWidgetSelection: (
+    pageId: string,
+    widgetId: string,
+    value: boolean
+  ) => void;
+  updateWidgetSelectionBulk: (
+    pageId: string,
+    selectedWidgetIds: string[]
+  ) => void;
+  isWidgetSelected: (pageId: string, widgetId: string) => boolean;
+}
 export enum AlertCategory {
   Negative = "negative",
   Neutral = "neutral",
@@ -98,8 +121,7 @@ export type RemoraidThemeCallback = (
 ) => Partial<RemoraidTheme>;
 export interface WidgetConfiguration {
   widgetId: string;
-  name: string;
-  initialValue?: boolean;
+  initialValues?: Partial<WidgetContext>;
   allowUnregisteredPageUsage?: boolean;
 }
 export interface PageConfiguration {

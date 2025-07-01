@@ -36,7 +36,7 @@ interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
 
 export interface WidgetProps {
   id: string;
-  title: string;
+  title?: string;
   config?: Partial<Omit<WidgetConfiguration, "widgetId">>;
   badges?: (
     | ComponentProps<typeof BadgeMinimal>
@@ -68,10 +68,9 @@ export interface WidgetProps {
 }
 
 export default function Widget({
-  children,
   id,
-  config,
   title,
+  config,
   badges: badgesProp,
   buttons: buttonsProp,
   alerts: alertsProp,
@@ -79,6 +78,7 @@ export default function Widget({
   loading,
   mt,
   componentsProps,
+  children,
 }: PropsWithChildren<WidgetProps>): ReactNode {
   // Type safety
   const buttons = buttonsProp?.map((button) =>
@@ -111,8 +111,11 @@ export default function Widget({
     <WidgetWrapper
       config={{
         widgetId: id,
-        name: title,
         ...config,
+        initialValues: {
+          name: title,
+          ...config?.initialValues,
+        },
       }}
       mt={mt}
       componentsProps={{
@@ -124,7 +127,7 @@ export default function Widget({
       <Group justify="space-between" wrap="nowrap">
         <Group gap={badgesGap} wrap="nowrap">
           <Title order={1} size="h3" lineClamp={1}>
-            {title}
+            {title ?? id}
           </Title>
           {badges !== undefined && (
             <BadgeGroup

@@ -39,8 +39,10 @@ export {
   ThemeProviderProps,
 } from "./components/RemoraidProvider/ThemeProvider";
 export {
-  useWidgets,
   WidgetsProviderProps,
+  useWidgets,
+  useWidget,
+  getDefaultWidgetContext,
 } from "./components/RemoraidProvider/WidgetsProvider";
 export {
   default as WidgetSelectionHeader,

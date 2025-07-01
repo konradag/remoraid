@@ -1,4 +1,8 @@
-import { WidgetConfiguration } from "@/core/lib/types";
+import {
+  WidgetConfiguration,
+  WidgetContext,
+  WidgetsContext,
+} from "@/core/lib/types";
 import React, {
   useState,
   useContext,
@@ -6,27 +10,13 @@ import React, {
   ReactNode,
 } from "react";
 
-export interface WidgetsContext {
-  widgets: {
-    [index: string]: { [index: string]: { name: string; selected: boolean } };
-  };
-  activeWidget: string | null;
-  updateActiveWidget: (widgetId: string | null) => void;
-  registerWidget: (pageId: string, widget: WidgetConfiguration) => void;
-  registerPage: (pageId: string, initialWidgets: WidgetConfiguration[]) => void;
-  isWidgetRegistered: (pageId: string, widgetId: string) => boolean;
-  isPageRegistered: (pageId: string) => boolean;
-  updateWidgetSelection: (
-    pageId: string,
-    widgetId: string,
-    value: boolean
-  ) => void;
-  updateWidgetSelectionBulk: (
-    pageId: string,
-    selectedWidgetIds: string[]
-  ) => void;
-  isWidgetSelected: (pageId: string, widgetId: string) => boolean;
-}
+export const getDefaultWidgetContext = (
+  configuration: WidgetConfiguration
+): WidgetContext => ({
+  name: configuration.widgetId,
+  selected: true,
+  ...configuration.initialValues,
+});
 
 const widgetsContext = React.createContext<WidgetsContext>({
   widgets: {},
@@ -43,6 +33,14 @@ const widgetsContext = React.createContext<WidgetsContext>({
 
 export const useWidgets = (): WidgetsContext => {
   return useContext(widgetsContext);
+};
+
+export const useWidget = (
+  pageId: string,
+  widgetId: string
+): WidgetContext | null => {
+  const { widgets } = useWidgets();
+  return widgets?.[pageId]?.[widgetId] ?? null;
 };
 
 export interface WidgetsProviderProps {}
@@ -111,15 +109,15 @@ export default function WidgetsProvider({
   ) => {
     setWidgets((prev) => ({
       ...prev,
-      [pageId]: initialWidgets.reduce((t, w) => {
-        return {
-          ...t,
-          [w.widgetId]: {
-            name: w.name,
-            selected: w.initialValue === undefined ? true : w.initialValue,
-          },
-        };
-      }, {}),
+      [pageId]: initialWidgets.reduce(
+        (t: Record<string, WidgetContext>, widget) => {
+          return {
+            ...t,
+            [widget.widgetId]: getDefaultWidgetContext(widget),
+          };
+        },
+        {}
+      ),
     }));
   };
   const isPageRegistered = (pageId: string) => {
@@ -143,11 +141,7 @@ export default function WidgetsProvider({
       ...prev,
       [pageId]: {
         ...prev[pageId],
-        [widget.widgetId]: {
-          name: widget.name,
-          selected:
-            widget.initialValue === undefined ? true : widget.initialValue,
-        },
+        [widget.widgetId]: getDefaultWidgetContext(widget),
       },
     }));
   };

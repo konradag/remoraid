@@ -1,10 +1,14 @@
 import { Chip, Divider, Flex, MantineSize, Text } from "@mantine/core";
-import { useWidgets } from "@/core/components/RemoraidProvider/WidgetsProvider";
+import {
+  getDefaultWidgetContext,
+  useWidgets,
+} from "@/core/components/RemoraidProvider/WidgetsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { usePage } from "../Page";
 import { IconCheck } from "@tabler/icons-react";
 import { ReactNode } from "react";
 import ScrollableChipGroup from "../ScrollableChipGroup";
+import { InvalidComponentUsageError } from "@/core/lib/errors";
 
 export interface WidgetSelectionHeaderProps {
   title?: string;
@@ -18,15 +22,18 @@ export default function WidgetSelectionHeader({
   mt,
 }: WidgetSelectionHeaderProps): ReactNode {
   const theme = useRemoraidTheme();
-  const { widgets, isPageRegistered, updateWidgetSelectionBulk } = useWidgets();
+  const { isPageRegistered, updateWidgetSelectionBulk, ...widgetsContext } =
+    useWidgets();
   const page = usePage();
-
   if (!page) {
-    console.error(
-      "'WidgetSelectionHeader' must be rendered inside of a 'Page' component."
+    throw new InvalidComponentUsageError(
+      "WidgetSelectionHeader",
+      "must be used as child of 'Page' component."
     );
-    return null;
   }
+
+  // Helpers
+  const widgets = widgetsContext.widgets[page.pageId] ?? {};
 
   return (
     <Flex justify="flex-start" align="center" gap="xs" mt={mt}>
@@ -36,25 +43,29 @@ export default function WidgetSelectionHeader({
       <Divider orientation="vertical" />
       {isPageRegistered(page.pageId) && (
         <ScrollableChipGroup
-          value={Object.keys(widgets[page.pageId]).filter(
-            (widgetId) => widgets[page.pageId][widgetId].selected
+          value={Object.keys(widgets).filter(
+            (widgetId) => widgets[widgetId]?.selected
           )}
           onChange={(value: string[]) => {
             updateWidgetSelectionBulk(page.pageId, value);
           }}
           componentsProps={{ scrollArea: { flex: 1 } }}
         >
-          {Object.keys(widgets[page.pageId]).map((widgetId) => (
-            <Chip
-              value={widgetId}
-              size="sm"
-              key={widgetId}
-              disabled={disabledWidgets && disabledWidgets.includes(widgetId)}
-              icon={<IconCheck {...theme.iconProps.tiny} />}
-            >
-              {widgets[page.pageId][widgetId].name}
-            </Chip>
-          ))}
+          {Object.keys(widgets).map((widgetId) => {
+            const widget =
+              widgets[widgetId] ?? getDefaultWidgetContext({ widgetId });
+            return (
+              <Chip
+                value={widgetId}
+                size="sm"
+                key={widgetId}
+                disabled={disabledWidgets && disabledWidgets.includes(widgetId)}
+                icon={<IconCheck {...theme.iconProps.tiny} />}
+              >
+                {widget.name}
+              </Chip>
+            );
+          })}
         </ScrollableChipGroup>
       )}
     </Flex>

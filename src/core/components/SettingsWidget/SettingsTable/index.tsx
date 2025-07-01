@@ -26,14 +26,15 @@ function SettingsTable({
   typeof RowComponent,
   SettingsTableProps
 >): ReactNode {
-  const theme = useRemoraidTheme();
-
   // Type safety
   const children = asChildrenOfType(
     RowComponent,
     childrenProp,
     "Check children passed to 'SettingsTable' component."
   );
+
+  // Contexts
+  const theme = useRemoraidTheme();
 
   return (
     <settingsTableOptionsContext.Provider
