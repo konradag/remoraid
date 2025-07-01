@@ -136,6 +136,11 @@ export {
   isFrameLayoutElementSection,
 } from "./components/FrameLayout/Element";
 export {
+  default as Pinnable,
+  PinnableProps,
+  PinnableDefaultLayoutType,
+} from "./components/Pinnable";
+export {
   co,
   Common,
   Optional,
