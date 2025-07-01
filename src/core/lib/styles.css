@@ -22,7 +22,7 @@
 }
 .remoraid-controls {
   position: absolute;
-  top: calc(var(--ai-size-xs) * -0.25);
-  right: calc(var(--ai-size-xs) * -0.25);
+  top: calc(var(--mantine-spacing-xs) * -0.5);
+  right: calc(var(--mantine-spacing-xs) * -0.5);
   z-index: 1;
 }
