@@ -32,6 +32,9 @@ export default function Element({
 
   // Helpers
   const layout = layouts[layoutId ?? closestLayout.layoutId];
+  if (!layout) {
+    return null;
+  }
   if (layout.type !== LayoutType.Frame) {
     throw new TypeError(
       "Prop 'layoutId' in 'FrameLayout.Element' must refer to a valid 'FrameLayout' component. Leave 'layoutId' undefined, if you want to use the closest 'FrameLayout' as reference layout."

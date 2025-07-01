@@ -40,7 +40,7 @@ export enum FooterVariant {
 }
 export type PrimitiveUserExperience = string | number | boolean;
 export type UserExperience =
-  | Record<string, any>
+  | Partial<Record<string, any>>
   | PrimitiveUserExperience
   | PrimitiveUserExperience[];
 export interface CoreUserExperience {
@@ -64,7 +64,7 @@ export interface WidgetContext {
   selected: boolean;
 }
 export interface WidgetsContext {
-  widgets: Record<string, Record<string, WidgetContext>>;
+  widgets: Partial<Record<string, Partial<Record<string, WidgetContext>>>>;
   activeWidget: string | null;
   updateActiveWidget: (widgetId: string | null) => void;
   registerWidget: (pageId: string, widget: WidgetConfiguration) => void;
@@ -163,9 +163,11 @@ export interface LayoutContext<T extends LayoutType> {
   >;
 }
 export interface LayoutsContext {
-  layouts: Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>;
+  layouts: Partial<Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>>;
   setLayouts: Dispatch<
-    SetStateAction<Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>>
+    SetStateAction<
+      Partial<Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>>
+    >
   >;
 }
 export enum FrameLayoutVariant {
@@ -173,8 +175,8 @@ export enum FrameLayoutVariant {
   Sticky = "sticky",
 }
 export interface ContextCluster<Context, StaticID extends string = never> {
-  contexts: Record<string, React.Context<Context>>;
-  defaultValues: Record<string, Context>;
+  contexts: Partial<Record<string, React.Context<Context>>>;
+  defaultValues: Partial<Record<string, Context>>;
   generalDefaultValue: Context;
   createContext: (id: string, defaultValue?: Context) => React.Context<Context>;
   useContext: <ID extends string>(

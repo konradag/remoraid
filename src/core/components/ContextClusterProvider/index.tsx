@@ -59,15 +59,20 @@ export default function ContextClusterProvider<
   ContextClusterProviderProps<Context, StaticID>
 >): ReactNode {
   return Object.entries(cluster.contexts).reduceRight(
-    (t, [id, context]) => (
-      <context.Provider
-        value={
-          values[id] ?? cluster.defaultValues[id] ?? cluster.generalDefaultValue
-        }
-      >
-        {t}
-      </context.Provider>
-    ),
+    (t, [id, context]) =>
+      context ? (
+        <context.Provider
+          value={
+            values[id] ??
+            cluster.defaultValues[id] ??
+            cluster.generalDefaultValue
+          }
+        >
+          {t}
+        </context.Provider>
+      ) : (
+        t
+      ),
     children
   );
 }
