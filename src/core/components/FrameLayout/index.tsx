@@ -84,6 +84,12 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
 
   // Helpers
   const layout = layouts[layoutId];
+  const defaultSections: LayoutContext<LayoutType.Frame>["sections"] = {
+    [FrameLayoutSection.Bottom]: null,
+    [FrameLayoutSection.Top]: null,
+    [FrameLayoutSection.Left]: null,
+    [FrameLayoutSection.Right]: null,
+  };
   const setSections: Dispatch<
     SetStateAction<LayoutContext<LayoutType.Frame>["sections"]>
   > = (value) => {
@@ -92,7 +98,9 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
       [layoutId]: {
         type: LayoutType.Frame,
         sections:
-          typeof value === "function" ? value(prev[layoutId].sections) : value,
+          typeof value === "function"
+            ? value(prev[layoutId]?.sections ?? defaultSections)
+            : value,
       },
     }));
   };
@@ -148,7 +156,14 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
   }
 
   return (
-    <layoutContext.Provider value={{ ...layout, layoutId }}>
+    <layoutContext.Provider
+      value={{
+        type: LayoutType.Frame,
+        sections: defaultSections,
+        ...layout,
+        layoutId,
+      }}
+    >
       <Group
         gap={0}
         h="100%"

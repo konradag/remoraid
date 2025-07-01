@@ -40,7 +40,7 @@ export default function Element({
       "Prop 'layoutId' in 'FrameLayout.Element' must refer to a valid 'FrameLayout' component. Leave 'layoutId' undefined, if you want to use the closest 'FrameLayout' as reference layout."
     );
   }
-  if (layout.sections[section] === null) {
+  if (!layout.sections[section]) {
     return null;
   }
   let containerProps: Partial<BoxProps> = {};

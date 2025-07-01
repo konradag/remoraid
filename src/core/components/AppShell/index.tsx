@@ -18,7 +18,7 @@ import {
   isFrameLayoutElementSection,
 } from "../FrameLayout/Element";
 
-export const defaultAppShellLayoutId = "remoraidAppShell";
+export const remoraidAppShellLayoutId = "remoraid-app-shell";
 
 export type AppShellNavbarVariant = NavbarVariant | null;
 export type AppShellFooterVariant = FooterVariant | null;
@@ -139,7 +139,7 @@ function AppShell<
     <AppProvider appContext={appContext} {...componentsProps?.AppProvider}>
       <Box h="100vh" {...componentsProps?.container}>
         <FrameLayout
-          layoutId={defaultAppShellLayoutId}
+          layoutId={remoraidAppShellLayoutId}
           {...componentsProps?.layout}
         >
           {navbarPosition !== null &&

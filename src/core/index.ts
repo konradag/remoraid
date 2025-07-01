@@ -4,7 +4,7 @@ export {
 } from "./components/RemoraidProvider";
 export {
   default as AppShell,
-  defaultAppShellLayoutId,
+  remoraidAppShellLayoutId,
   defaultAppShellNavbarPositions,
   defaultAppShellFooterPositions,
   AppShellProps,
