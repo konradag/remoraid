@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { PropsWithChildrenOfType } from "@/core/lib/utils";
+import { asChildrenOfType, PropsWithChildrenOfType } from "@/core/lib/utils";
 
 export interface ScrollbleChipGroupProps {
   value: string[];
@@ -27,8 +27,16 @@ export default function ScrollableChipGroup({
   onChange,
   gap,
   componentsProps,
-  children,
+  children: childrenProp,
 }: PropsWithChildrenOfType<typeof Chip, ScrollbleChipGroupProps>): ReactNode {
+  // Type safety
+  const children = asChildrenOfType(
+    Chip,
+    childrenProp,
+    "Check children passed to 'ScrollableChipGroup' component."
+  );
+
+  // Contexts
   const theme = useRemoraidTheme();
 
   return (
