@@ -1,6 +1,6 @@
 {
   "name": "remoraid",
-  "version": "2.16.6",
+  "version": "2.17.0",
   "author": "Konrad Goldammer",
   "repository": {
     "type": "git",
@@ -75,6 +75,7 @@
   },
   "type": "module",
   "dependencies": {
+    "clsx": "^2.1.1",
     "lodash": "^4.17.21"
   }
 }

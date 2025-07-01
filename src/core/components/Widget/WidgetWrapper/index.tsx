@@ -1,20 +1,25 @@
-import CloseButtonComponent from "@/core/components/Widget/WidgetWrapper/CloseButton";
 import { usePage } from "@/core/components/Page";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { WidgetConfiguration } from "@/core/lib/types";
 import {
+  Group,
+  GroupProps,
   MantineSize,
   Paper,
   PaperProps,
   Transition,
   TransitionProps,
 } from "@mantine/core";
-import { PropsWithChildren, ReactNode, useEffect } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 import { useWidgets } from "../../RemoraidProvider/WidgetsProvider";
+import ControlButton from "../../ControlButton";
+import { IconX } from "@tabler/icons-react";
+import clsx from "clsx";
 
 export interface WidgetWrapperComponentsProps {
   container?: Partial<Omit<PaperProps, "id">>;
   transition?: Partial<Omit<TransitionProps, "mounted">>;
+  controlsContainer?: Partial<GroupProps>;
 }
 
 export interface WidgetWrapperProps {
@@ -24,12 +29,12 @@ export interface WidgetWrapperProps {
   componentsProps?: WidgetWrapperComponentsProps;
 }
 
-function WidgetWrapper({
-  children,
+export default function WidgetWrapper({
   config,
-  mt,
-  withCloseButton,
+  mt = 0,
+  withCloseButton = true,
   componentsProps,
+  children,
 }: PropsWithChildren<WidgetWrapperProps>): ReactNode {
   const {
     isWidgetSelected,
@@ -37,6 +42,8 @@ function WidgetWrapper({
     isWidgetRegistered,
     registerWidget,
     updateActiveWidget,
+    updateWidgetSelection,
+    activeWidget,
   } = useWidgets();
   const page = usePage();
   const theme = useRemoraidTheme();
@@ -54,6 +61,9 @@ function WidgetWrapper({
     }
   }, [pageRegistered]);
 
+  // Helpers
+  const controlsContainer = useRef<HTMLDivElement | null>(null);
+
   return (
     <Transition
       mounted={page !== null && isWidgetSelected(page.pageId, config.widgetId)}
@@ -66,7 +76,7 @@ function WidgetWrapper({
           p="md"
           shadow="md"
           bg={theme.transparentBackground}
-          mt={mt || 0}
+          mt={mt}
           pos="relative"
           h="fit-content"
           {...componentsProps?.container}
@@ -79,20 +89,30 @@ function WidgetWrapper({
           }}
           id={config.widgetId}
         >
-          {withCloseButton !== false && (
-            <CloseButtonComponent widgetId={config.widgetId} />
-          )}
+          <Group
+            ref={controlsContainer}
+            gap="xs"
+            {...componentsProps?.controlsContainer}
+            className={clsx(
+              "remoraid-controls",
+              componentsProps?.controlsContainer?.className
+            )}
+          >
+            <ControlButton
+              icon={IconX}
+              mounted={withCloseButton && activeWidget === config.widgetId}
+              color="red"
+              onClick={() => {
+                if (!page) {
+                  return;
+                }
+                updateWidgetSelection(page.pageId, config.widgetId, false);
+              }}
+            />
+          </Group>
           {children}
         </Paper>
       )}
     </Transition>
   );
 }
-
-export interface WidgetWrapper
-  extends React.FC<PropsWithChildren<WidgetWrapperProps>> {
-  CloseButton: typeof CloseButtonComponent;
-}
-export default Object.assign(WidgetWrapper, {
-  CloseButton: CloseButtonComponent,
-}) as WidgetWrapper;

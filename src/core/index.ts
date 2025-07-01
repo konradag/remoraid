@@ -48,7 +48,6 @@ export {
   default as WidgetSelectionHeader,
   WidgetSelectionHeaderProps,
 } from "./components/WidgetSelectionHeader";
-export { CloseButtonProps } from "./components/Widget/WidgetWrapper/CloseButton";
 export {
   default as BadgeGroup,
   BadgeGroupProps,
@@ -66,6 +65,10 @@ export {
   RemoraidButtonProps,
   RemoraidButtonDefaultResponsivity,
 } from "./components/RemoraidButton";
+export {
+  default as ControlButton,
+  ControlButtonProps,
+} from "./components/ControlButton";
 export {
   default as WidgetWrapper,
   WidgetWrapperProps,
