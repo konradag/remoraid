@@ -19,6 +19,7 @@ export interface ControlButtonProps {
   iconSize?: RemoraidIconSize;
   color?: ActionIconProps["color"];
   onClick?: ComponentProps<typeof ActionIcon<"button">>["onClick"];
+  order?: number;
   componentsProps?: {
     transition?: Partial<TransitionProps>;
     tooltip?: Partial<TooltipProps>;
@@ -33,6 +34,7 @@ export default function ControlButton({
   size = "xs",
   iconSize = RemoraidIconSize.Tiny,
   onClick,
+  order,
   color,
   tooltip,
   componentsProps,
@@ -59,7 +61,11 @@ export default function ControlButton({
             onClick={onClick}
             radius="xl"
             {...componentsProps?.button}
-            style={{ ...transitionStyle, ...componentsProps?.button?.style }}
+            style={{
+              ...transitionStyle,
+              order,
+              ...componentsProps?.button?.style,
+            }}
           >
             <Icon {...theme.iconProps[iconSize]} {...componentsProps?.icon} />
           </ActionIcon>

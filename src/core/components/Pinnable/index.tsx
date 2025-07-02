@@ -76,6 +76,7 @@ export default function Pinnable<
       <ControlButton
         icon={pinned ? IconPinnedOff : IconPin}
         color="green"
+        order={-1}
         {...componentsProps?.button}
         onClick={(e) => {
           setPinned((p) => !p);

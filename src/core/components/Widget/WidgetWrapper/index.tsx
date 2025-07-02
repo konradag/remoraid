@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 import { useWidgets } from "../../RemoraidProvider/WidgetsProvider";
-import ControlButton from "../../ControlButton";
+import ControlButton, { ControlButtonProps } from "../../ControlButton";
 import { IconX } from "@tabler/icons-react";
 import clsx from "clsx";
 import Pinnable, { PinnableProps } from "../../Pinnable";
@@ -29,6 +29,7 @@ export interface WidgetWrapperProps {
     container?: Partial<BoxProps>;
     transition?: Partial<Omit<TransitionProps, "mounted">>;
     controlsContainer?: Partial<GroupProps>;
+    closeButton?: Partial<ControlButtonProps>;
     Paper?: Partial<PaperProps>;
     Pinnable?: Partial<PinnableProps>;
   };
@@ -112,11 +113,14 @@ export default function WidgetWrapper({
               icon={IconX}
               mounted={withCloseButton && activeWidget === config.widgetId}
               color="red"
-              onClick={() => {
+              order={0}
+              {...componentsProps?.closeButton}
+              onClick={(e) => {
                 if (!page) {
                   return;
                 }
                 updateWidgetSelection(page.pageId, config.widgetId, false);
+                componentsProps?.closeButton?.onClick?.(e);
               }}
             />
           </Group>
