@@ -26,7 +26,7 @@ interface ExplicitPinnableProps<T extends LayoutType> {
   section: keyof LayoutContext<T>["sections"];
   initialValue?: boolean;
   layoutId?: string;
-  controlsContainer?: RefObject<HTMLDivElement | null>;
+  controlsContainerRef?: RefObject<HTMLDivElement | null>;
   componentsProps?: {
     controlsContainer?: Partial<GroupProps>;
     button?: Partial<ControlButtonProps>;
@@ -50,7 +50,7 @@ export default function Pinnable<
   section,
   initialValue = false,
   layoutId,
-  controlsContainer,
+  controlsContainerRef,
   componentsProps,
   children,
 }: PropsWithChildren<PinnableProps<T>>): ReactNode {
@@ -77,9 +77,9 @@ export default function Pinnable<
         icon={pinned ? IconPinnedOff : IconPin}
         color="green"
         {...componentsProps?.button}
-        onClick={() => {
+        onClick={(e) => {
           setPinned((p) => !p);
-          componentsProps?.button?.onClick?.();
+          componentsProps?.button?.onClick?.(e);
         }}
       />
     ),
@@ -87,7 +87,7 @@ export default function Pinnable<
   );
   const element = (
     <Box {...componentsProps?.container}>
-      {controlsContainer === undefined ? (
+      {controlsContainerRef === undefined ? (
         <Group
           gap="xs"
           {...componentsProps?.controlsContainer}
@@ -99,8 +99,8 @@ export default function Pinnable<
           {controlButton}
         </Group>
       ) : (
-        controlsContainer.current !== null && (
-          <Portal target={controlsContainer.current}>{controlButton}</Portal>
+        controlsContainerRef.current !== null && (
+          <Portal target={controlsContainerRef.current}>{controlButton}</Portal>
         )
       )}
       {children}

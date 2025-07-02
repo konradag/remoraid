@@ -98,3 +98,14 @@ export const asElementOrPropsOfType = <
   }
   return elementOrProps;
 };
+export const isPointInside = (
+  element: HTMLElement | null,
+  x: number,
+  y: number
+): boolean => {
+  if (!element) {
+    return false;
+  }
+  const { left, right, top, bottom } = element.getBoundingClientRect();
+  return x >= left && x <= right && y >= top && y <= bottom;
+};

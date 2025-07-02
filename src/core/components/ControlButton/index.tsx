@@ -7,7 +7,7 @@ import {
   TransitionProps,
 } from "@mantine/core";
 import { Icon, IconClick, IconProps } from "@tabler/icons-react";
-import { ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { RemoraidIconSize } from "@/core/lib/types";
 
@@ -18,7 +18,7 @@ export interface ControlButtonProps {
   size?: ActionIconProps["size"];
   iconSize?: RemoraidIconSize;
   color?: ActionIconProps["color"];
-  onClick?: () => void;
+  onClick?: ComponentProps<typeof ActionIcon<"button">>["onClick"];
   componentsProps?: {
     transition?: Partial<TransitionProps>;
     tooltip?: Partial<TooltipProps>;

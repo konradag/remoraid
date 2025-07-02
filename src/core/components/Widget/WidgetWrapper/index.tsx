@@ -3,6 +3,7 @@ import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvid
 import { FrameLayoutSection, WidgetConfiguration } from "@/core/lib/types";
 import {
   Box,
+  BoxProps,
   Group,
   GroupProps,
   MantineSize,
@@ -11,18 +12,13 @@ import {
   Transition,
   TransitionProps,
 } from "@mantine/core";
-import {
-  ComponentProps,
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useRef,
-} from "react";
+import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 import { useWidgets } from "../../RemoraidProvider/WidgetsProvider";
 import ControlButton from "../../ControlButton";
 import { IconX } from "@tabler/icons-react";
 import clsx from "clsx";
 import Pinnable, { PinnableProps } from "../../Pinnable";
+import { isPointInside } from "@/core/lib/utils";
 
 export interface WidgetWrapperProps {
   config: WidgetConfiguration;
@@ -30,7 +26,7 @@ export interface WidgetWrapperProps {
   withCloseButton?: boolean;
   pinnableSection?: Exclude<FrameLayoutSection, FrameLayoutSection.Content>;
   componentsProps?: {
-    container?: Partial<ComponentProps<typeof Box<"div">>>;
+    container?: Partial<BoxProps>;
     transition?: Partial<Omit<TransitionProps, "mounted">>;
     controlsContainer?: Partial<GroupProps>;
     Paper?: Partial<PaperProps>;
@@ -73,7 +69,14 @@ export default function WidgetWrapper({
   }, [pageRegistered]);
 
   // Helpers
-  const controlsContainer = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const controlsContainerRef = useRef<HTMLDivElement | null>(null);
+  const handleEnter = () => {
+    updateActiveWidget(config.widgetId);
+  };
+  const handleLeave = () => {
+    updateActiveWidget(null);
+  };
   let element = (
     <Transition
       mounted={page !== null && isWidgetSelected(page.pageId, config.widgetId)}
@@ -97,7 +100,7 @@ export default function WidgetWrapper({
           id={config.widgetId}
         >
           <Group
-            ref={controlsContainer}
+            ref={controlsContainerRef}
             gap="xs"
             {...componentsProps?.controlsContainer}
             className={clsx(
@@ -126,13 +129,22 @@ export default function WidgetWrapper({
     element = (
       <Pinnable
         section={pinnableSection}
-        controlsContainer={controlsContainer}
+        controlsContainerRef={controlsContainerRef}
         {...componentsProps?.Pinnable}
         componentsProps={{
           ...componentsProps?.Pinnable?.componentsProps,
           button: {
-            ...componentsProps?.Pinnable?.componentsProps?.button,
             mounted: activeWidget === config.widgetId,
+            ...componentsProps?.Pinnable?.componentsProps?.button,
+            onClick: (e) => {
+              const { clientX, clientY } = e;
+              requestAnimationFrame(() => {
+                if (!isPointInside(containerRef.current, clientX, clientY)) {
+                  handleLeave();
+                }
+              });
+              componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
+            },
           },
         }}
       >
@@ -144,18 +156,9 @@ export default function WidgetWrapper({
   return (
     <Box
       {...componentsProps?.container}
-      onMouseEnter={(e) => {
-        updateActiveWidget(config.widgetId);
-        if (componentsProps?.container?.onMouseEnter) {
-          componentsProps.container.onMouseEnter(e);
-        }
-      }}
-      onMouseLeave={(e) => {
-        updateActiveWidget(null);
-        if (componentsProps?.container?.onMouseLeave) {
-          componentsProps.container.onMouseLeave(e);
-        }
-      }}
+      ref={containerRef}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
     >
       {element}
     </Box>

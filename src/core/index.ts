@@ -154,5 +154,6 @@ export {
   asElementOfType,
   asChildrenOfType,
   asElementOrPropsOfType,
+  isPointInside,
 } from "./lib/utils";
 export * from "./lib/types";
