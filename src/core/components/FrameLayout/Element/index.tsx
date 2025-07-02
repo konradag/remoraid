@@ -4,19 +4,23 @@ import { FrameLayoutSection, LayoutType } from "@/core/lib/types";
 import { useLayouts } from "../../RemoraidProvider/LayoutsProvider";
 import { useFrameLayout } from "..";
 import { InvalidComponentUsageError } from "@/core/lib/errors";
+import PageContainer, { PageContainerProps } from "../../Page/PageContainer";
 
 export interface FrameLayoutElementProps {
   section: Exclude<FrameLayoutSection, FrameLayoutSection.Content>;
   includeContainer?: boolean;
+  includePageContainer?: boolean;
   layoutId?: string;
   componentsProps?: {
     container?: Partial<BoxProps>;
+    PageContainer?: Partial<PageContainerProps>;
   };
 }
 
 export default function Element({
   section,
   includeContainer = true,
+  includePageContainer = false,
   layoutId,
   componentsProps,
   children,
@@ -50,15 +54,22 @@ export default function Element({
   ) {
     containerProps.h = "100%";
   }
+  const element = includeContainer ? (
+    <Box {...containerProps} {...componentsProps?.container}>
+      {children}
+    </Box>
+  ) : (
+    children
+  );
 
   return (
     <Portal target={layout.sections[section]}>
-      {includeContainer ? (
-        <Box {...containerProps} {...componentsProps?.container}>
-          {children}
-        </Box>
+      {includePageContainer ? (
+        <PageContainer {...componentsProps?.PageContainer}>
+          {element}
+        </PageContainer>
       ) : (
-        children
+        element
       )}
     </Portal>
   );

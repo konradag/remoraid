@@ -86,7 +86,7 @@ export default function Pinnable<
     [pinned, componentsProps?.button]
   );
   const element = (
-    <Box {...componentsProps?.container}>
+    <Box pos="relative" {...componentsProps?.container}>
       {controlsContainerRef === undefined ? (
         <Group
           gap="xs"
@@ -120,13 +120,6 @@ export default function Pinnable<
         layoutId={layoutId}
         section={section}
         {...componentsProps?.layoutElement}
-        componentsProps={{
-          ...componentsProps?.layoutElement?.componentsProps,
-          container: {
-            pos: "relative",
-            ...componentsProps?.layoutElement?.componentsProps?.container,
-          },
-        }}
       >
         {element}
       </FrameLayout.Element>

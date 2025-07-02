@@ -146,6 +146,12 @@ export default function WidgetWrapper({
               componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
             },
           },
+          layoutElement: {
+            includePageContainer:
+              pinnableSection === FrameLayoutSection.Top ||
+              pinnableSection === FrameLayoutSection.Bottom,
+            ...componentsProps?.Pinnable?.componentsProps?.layoutElement,
+          },
         }}
       >
         {element}

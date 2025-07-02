@@ -9,7 +9,7 @@ export interface PageContainerProps {
 
 export default function PageContainer({
   children,
-  pt,
+  pt = 0,
   componentsProps,
 }: PropsWithChildren<PageContainerProps>): ReactNode {
   const theme = useRemoraidTheme();
@@ -17,7 +17,7 @@ export default function PageContainer({
   return (
     <Container
       size={theme.containerSize}
-      pt={pt ?? "md"}
+      pt={pt}
       {...componentsProps?.container}
     >
       {children}
