@@ -170,10 +170,6 @@ export interface LayoutsContext {
     >
   >;
 }
-export enum FrameLayoutVariant {
-  Plain = "plain",
-  Sticky = "sticky",
-}
 export interface ContextCluster<Context, StaticID extends string = never> {
   contexts: Partial<Record<string, React.Context<Context>>>;
   defaultValues: Partial<Record<string, Context>>;

@@ -22,15 +22,11 @@ import {
 import ElementComponent from "./Element";
 import {
   FrameLayoutSection,
-  FrameLayoutVariant,
   LayoutContext,
   LayoutType,
 } from "@/core/lib/types";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { Optional } from "@/core/lib/utils";
-
-export type DefaultFrameLayoutVariant = FrameLayoutVariant.Sticky;
 
 const layoutContext = createContext<LayoutContext<LayoutType.Frame> | null>(
   null
@@ -40,17 +36,11 @@ export const useFrameLayout = (): LayoutContext<LayoutType.Frame> | null => {
   return useContext(layoutContext);
 };
 
-export interface FrameLayoutPropsWithExplicitVariant<
-  T extends FrameLayoutVariant
-> {
-  variant: T;
+export interface FrameLayoutProps {
   layoutId: string;
+  includeScrollArea?: boolean;
   componentsProps?: {
-    childrenContainer?: T extends FrameLayoutVariant.Plain
-      ? Partial<BoxProps>
-      : T extends FrameLayoutVariant.Sticky
-      ? Partial<ScrollAreaProps>
-      : never;
+    childrenContainer?: Partial<BoxProps>;
     horizontalContainer?: Partial<GroupProps>;
     verticalContainer?: Partial<StackProps>;
     sectionContainers?: {
@@ -59,26 +49,16 @@ export interface FrameLayoutPropsWithExplicitVariant<
       [FrameLayoutSection.Top]?: Partial<StackProps>;
       [FrameLayoutSection.Bottom]?: Partial<StackProps>;
     };
+    ScrollArea?: Partial<ScrollAreaProps>;
   };
 }
 
-export type FrameLayoutProps<
-  T extends FrameLayoutVariant = DefaultFrameLayoutVariant
-> = T extends DefaultFrameLayoutVariant
-  ? Optional<FrameLayoutPropsWithExplicitVariant<T>, "variant">
-  : FrameLayoutPropsWithExplicitVariant<T>;
-
-function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
-  variant: variantProp,
+function FrameLayout({
   layoutId,
+  includeScrollArea = true,
   componentsProps,
   children,
-}: PropsWithChildren<FrameLayoutProps<T>>): ReactNode {
-  // Props default values
-  const variant =
-    variantProp ??
-    (FrameLayoutVariant.Sticky satisfies DefaultFrameLayoutVariant);
-
+}: PropsWithChildren<FrameLayoutProps>): ReactNode {
   // Contexts
   const theme = useRemoraidTheme();
   const { layouts, setLayouts } = useLayouts();
@@ -152,14 +132,18 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
     flex: 1,
     ...componentsProps?.childrenContainer,
   };
-  if (variant === FrameLayoutVariant.Plain) {
-    contentSection = <Box {...childrenContainerProps}>{contentSection}</Box>;
-  } else if (variant === FrameLayoutVariant.Sticky) {
+  if (includeScrollArea) {
     contentSection = (
-      <ScrollArea {...theme.scrollAreaProps} {...childrenContainerProps}>
+      <ScrollArea
+        {...theme.scrollAreaProps}
+        {...childrenContainerProps}
+        {...componentsProps?.ScrollArea}
+      >
         {children}
       </ScrollArea>
     );
+  } else {
+    contentSection = <Box {...childrenContainerProps}>{contentSection}</Box>;
   }
   const layoutContextValue = useMemo(
     () => ({
@@ -221,10 +205,8 @@ function FrameLayout<T extends FrameLayoutVariant = DefaultFrameLayoutVariant>({
   );
 }
 
-export interface FrameLayout {
-  <T extends FrameLayoutVariant = DefaultFrameLayoutVariant>(
-    props: ComponentProps<typeof FrameLayout<T>>
-  ): ReactNode;
+export interface FrameLayout
+  extends React.FC<ComponentProps<typeof FrameLayout>> {
   Element: typeof ElementComponent;
 }
 export default Object.assign(FrameLayout, {

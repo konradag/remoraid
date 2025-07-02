@@ -7,7 +7,6 @@ import {
   CustomAppVariables,
   FooterVariant,
   FrameLayoutSection,
-  FrameLayoutVariant,
   NavbarVariant,
 } from "@/core/lib/types";
 import AppProvider, { AppProviderProps } from "./AppProvider";
@@ -64,8 +63,7 @@ interface ExplicitAppShellProps<
     footer?: N extends FooterVariant.Minimal
       ? Partial<FooterMinimalProps>
       : never;
-    layout?: Partial<FrameLayoutProps<FrameLayoutVariant.Sticky>>;
-    childrenContainer?: Partial<BoxProps>;
+    layout?: Partial<FrameLayoutProps>;
     navbarLayoutElement?: Omit<Partial<FrameLayoutElementProps>, "section">;
     footerLayoutElement?: Omit<Partial<FrameLayoutElementProps>, "section">;
     AppProvider?: Partial<AppProviderProps>;
@@ -161,7 +159,7 @@ function AppShell<
             ) : (
               <>{navbar}</>
             ))}
-          <Box {...componentsProps?.childrenContainer}>{children}</Box>
+          {children}
           {footerPosition !== null &&
             (isFrameLayoutElementSection(footerPosition) ? (
               <FrameLayout.Element

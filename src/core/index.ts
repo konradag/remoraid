@@ -124,7 +124,6 @@ export {
   default as FrameLayout,
   FrameLayoutProps,
   useFrameLayout,
-  DefaultFrameLayoutVariant,
 } from "./components/FrameLayout";
 export {
   default as ContextClusterProvider,
