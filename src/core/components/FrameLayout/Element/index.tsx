@@ -54,20 +54,20 @@ export default function Element({
   ) {
     containerProps.h = "100%";
   }
-  const element = includeContainer ? (
-    <Box {...containerProps} {...componentsProps?.container}>
+  const element = includePageContainer ? (
+    <PageContainer {...componentsProps?.PageContainer}>
       {children}
-    </Box>
+    </PageContainer>
   ) : (
     children
   );
 
   return (
     <Portal target={layout.sections[section]}>
-      {includePageContainer ? (
-        <PageContainer {...componentsProps?.PageContainer}>
+      {includeContainer ? (
+        <Box {...containerProps} {...componentsProps?.container}>
           {element}
-        </PageContainer>
+        </Box>
       ) : (
         element
       )}
