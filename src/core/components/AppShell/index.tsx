@@ -55,6 +55,7 @@ interface ExplicitAppShellProps<
   appContext: AppContextProps<V>;
   navbarPosition?: AppShellNavbarPosition<N>;
   footerPosition?: AppShellFooterPosition<F>;
+  gutter?: FrameLayoutProps["gutter"];
   componentsProps?: {
     container?: Partial<BoxProps>;
     navbar?: N extends NavbarVariant.Minimal
@@ -95,6 +96,7 @@ function AppShell<
   footerVariant: footerVariantProp,
   navbarPosition: navbarPositionProp,
   footerPosition: footerPositionProp,
+  gutter = "md",
   appContext,
   componentsProps,
   children,
@@ -118,16 +120,14 @@ function AppShell<
   // Helpers
   let navbar: ReactNode;
   let footer: ReactNode;
-  let navbarContainerProps: Partial<BoxProps> = {};
-  let footerContainerProps: Partial<BoxProps> = {};
+  let navbarLayoutElementProps: Partial<FrameLayoutElementProps> = {
+    includeContainer: false,
+  };
+  let footerLayoutElementProps: Partial<FrameLayoutElementProps> = {
+    includeContainer: false,
+  };
   if (navbarVariant === NavbarVariant.Minimal) {
     navbar = <NavbarMinimal {...componentsProps?.navbar} />;
-    navbarContainerProps.py = "md";
-    if (navbarPosition === FrameLayoutSection.Left) {
-      navbarContainerProps.pl = "md";
-    } else if (navbarPosition === FrameLayoutSection.Right) {
-      navbarContainerProps.pr = "md";
-    }
   }
   if (footerVariant === FooterVariant.Minimal) {
     footer = <FooterMinimal {...componentsProps?.footer} />;
@@ -138,21 +138,16 @@ function AppShell<
       <Box h="100vh" {...componentsProps?.container}>
         <FrameLayout
           layoutId={remoraidAppShellLayoutId}
+          gutter={gutter}
           {...componentsProps?.layout}
         >
           {navbarPosition !== null &&
             (isFrameLayoutElementSection(navbarPosition) ? (
               <FrameLayout.Element
                 section={navbarPosition}
+                includeContainer={false}
+                {...navbarLayoutElementProps}
                 {...componentsProps?.navbarLayoutElement}
-                componentsProps={{
-                  ...componentsProps?.navbarLayoutElement?.componentsProps,
-                  container: {
-                    ...navbarContainerProps,
-                    ...componentsProps?.navbarLayoutElement?.componentsProps
-                      ?.container,
-                  },
-                }}
               >
                 {navbar}
               </FrameLayout.Element>
@@ -164,15 +159,8 @@ function AppShell<
             (isFrameLayoutElementSection(footerPosition) ? (
               <FrameLayout.Element
                 section={footerPosition}
+                {...footerLayoutElementProps}
                 {...componentsProps?.footerLayoutElement}
-                componentsProps={{
-                  ...componentsProps?.footerLayoutElement?.componentsProps,
-                  container: {
-                    ...footerContainerProps,
-                    ...componentsProps?.footerLayoutElement?.componentsProps
-                      ?.container,
-                  },
-                }}
               >
                 {footer}
               </FrameLayout.Element>

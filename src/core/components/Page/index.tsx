@@ -8,7 +8,7 @@ import React, {
 import { usePathname } from "next/navigation";
 import { PageConfiguration } from "@/core/lib/types";
 import { useWidgets } from "../RemoraidProvider/WidgetsProvider";
-import PageContainer from "./PageContainer";
+import PageContainer, { PageContainerProps } from "./PageContainer";
 
 const pageContext = React.createContext<PageConfiguration | null>(null);
 
@@ -19,7 +19,7 @@ export const usePage = (): PageConfiguration | null => {
 export interface PageProps {
   name?: string;
   config?: Partial<Omit<PageConfiguration, "name">>;
-  pt?: MantineSize | number;
+  p?: PageContainerProps["p"];
   componentsProps?: { container?: ContainerProps };
 }
 
@@ -27,7 +27,7 @@ export default function Page({
   children,
   name,
   config,
-  pt,
+  p = 0,
   componentsProps,
 }: PropsWithChildren<PageProps>): ReactNode {
   const pathname = usePathname();
@@ -48,7 +48,7 @@ export default function Page({
   return (
     <pageContext.Provider value={{ name: name ?? pathname, pageId, ...config }}>
       <PageContainer
-        pt={pt}
+        p={p}
         componentsProps={{ container: componentsProps?.container }}
       >
         {children}

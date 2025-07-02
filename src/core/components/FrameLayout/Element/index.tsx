@@ -55,7 +55,7 @@ export default function Element({
     containerProps.h = "100%";
   }
   const element = includePageContainer ? (
-    <PageContainer {...componentsProps?.PageContainer}>
+    <PageContainer p={0} {...componentsProps?.PageContainer}>
       {children}
     </PageContainer>
   ) : (

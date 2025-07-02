@@ -13,7 +13,7 @@ export default function FooterMinimal({
   componentsProps,
 }: FooterMinimalProps): ReactNode {
   return (
-    <Group justify="center" w="100%" py="md" {...componentsProps?.container}>
+    <Group justify="center" w="100%" {...componentsProps?.container}>
       <IconPennant
         size={50}
         color="var(--mantine-color-default-border)"

@@ -3,6 +3,7 @@ import {
   BoxProps,
   Group,
   GroupProps,
+  MantineSize,
   ScrollArea,
   ScrollAreaProps,
   Stack,
@@ -39,6 +40,7 @@ export const useFrameLayout = (): LayoutContext<LayoutType.Frame> | null => {
 export interface FrameLayoutProps {
   layoutId: string;
   includeScrollArea?: boolean;
+  gutter?: MantineSize | number;
   componentsProps?: {
     childrenContainer?: Partial<BoxProps>;
     horizontalContainer?: Partial<GroupProps>;
@@ -56,6 +58,7 @@ export interface FrameLayoutProps {
 function FrameLayout({
   layoutId,
   includeScrollArea = true,
+  gutter = 0,
   componentsProps,
   children,
 }: PropsWithChildren<FrameLayoutProps>): ReactNode {
@@ -130,6 +133,7 @@ function FrameLayout({
   let contentSection: ReactNode = children;
   const childrenContainerProps = {
     flex: 1,
+    p: gutter,
     ...componentsProps?.childrenContainer,
   };
   if (includeScrollArea) {
@@ -159,6 +163,7 @@ function FrameLayout({
     <layoutContext.Provider value={layoutContextValue}>
       <Group
         gap={0}
+        p={gutter}
         h="100%"
         w="100%"
         wrap="nowrap"
@@ -167,7 +172,7 @@ function FrameLayout({
         <Group
           ref={leftSection}
           h="100%"
-          gap={0}
+          gap={gutter}
           wrap="nowrap"
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]}
         />
@@ -178,25 +183,27 @@ function FrameLayout({
           {...componentsProps?.verticalContainer}
         >
           <Stack
-            h="100%"
             ref={topSection}
-            gap={0}
+            h="100%"
+            gap={gutter}
+            px={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]}
           />
           {contentSection}
           <Stack
-            h="100%"
             ref={bottomSection}
-            gap={0}
+            h="100%"
+            gap={gutter}
+            px={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]}
           />
         </Stack>
         <Group
-          gap={0}
           ref={rightSection}
           h="100%"
+          gap={gutter}
           wrap="nowrap"
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]}
         />

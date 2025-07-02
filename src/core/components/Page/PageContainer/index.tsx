@@ -3,23 +3,19 @@ import { PropsWithChildren, ReactNode } from "react";
 import { useRemoraidTheme } from "../../RemoraidProvider/ThemeProvider";
 
 export interface PageContainerProps {
-  pt?: MantineSize | number;
+  p?: MantineSize | number;
   componentsProps?: { container?: ContainerProps };
 }
 
 export default function PageContainer({
   children,
-  pt = 0,
+  p = 0,
   componentsProps,
 }: PropsWithChildren<PageContainerProps>): ReactNode {
   const theme = useRemoraidTheme();
 
   return (
-    <Container
-      size={theme.containerSize}
-      pt={pt}
-      {...componentsProps?.container}
-    >
+    <Container size={theme.containerSize} p={p} {...componentsProps?.container}>
       {children}
     </Container>
   );
