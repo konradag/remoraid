@@ -1,4 +1,10 @@
-import { PropsWithChildren, ReactNode, useMemo, useState } from "react";
+import {
+  PropsWithChildren,
+  ReactNode,
+  RefObject,
+  useMemo,
+  useState,
+} from "react";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
 import AppShell, { remoraidAppShellLayoutId } from "../AppShell";
 import { LayoutContext, LayoutType } from "@/core/lib/types";
@@ -6,8 +12,12 @@ import { OptionalIfExtends } from "@/core/lib/utils";
 import FrameLayout from "../FrameLayout";
 import ControlButton, { ControlButtonProps } from "../ControlButton";
 import { IconPin, IconPinnedOff } from "@tabler/icons-react";
-import { Group, GroupProps, Portal } from "@mantine/core";
+import { Box, BoxProps, Group, GroupProps, Portal } from "@mantine/core";
 import clsx from "clsx";
+import {
+  FrameLayoutElementProps,
+  isFrameLayoutElementSection,
+} from "../FrameLayout/Element";
 
 export type PinnableDefaultLayoutType = LayoutType.Frame;
 
@@ -16,10 +26,12 @@ interface ExplicitPinnableProps<T extends LayoutType> {
   section: keyof LayoutContext<T>["sections"];
   initialValue?: boolean;
   layoutId?: string;
-  controlsContainer?: HTMLElement;
+  controlsContainer?: RefObject<HTMLDivElement | null>;
   componentsProps?: {
     controlsContainer?: Partial<GroupProps>;
     button?: Partial<ControlButtonProps>;
+    container?: Partial<BoxProps>;
+    layoutElement?: Partial<FrameLayoutElementProps>;
   };
 }
 
@@ -41,7 +53,7 @@ export default function Pinnable<
   controlsContainer,
   componentsProps,
   children,
-}: PropsWithChildren<PinnableProps>): ReactNode {
+}: PropsWithChildren<PinnableProps<T>>): ReactNode {
   // Props default values
   const layoutType =
     layoutTypeProp ?? (LayoutType.Frame satisfies PinnableDefaultLayoutType);
@@ -53,12 +65,8 @@ export default function Pinnable<
   const [pinned, setPinned] = useState<boolean>(initialValue);
 
   // Helpers
-
   const layout = layouts[layoutId ?? remoraidAppShellLayoutId];
-  if (!layout) {
-    return null;
-  }
-  if (layout.type !== layoutType) {
+  if (layout && layout.type !== layoutType) {
     throw new TypeError(
       `Prop 'layoutId' in '${Pinnable.name}' refers to a layout of type ${layout.type}, expected ${layoutType}. Leave 'layoutId' undefined, if you want to use the layout in '${AppShell.name}' as reference layout.`
     );
@@ -78,10 +86,8 @@ export default function Pinnable<
     [pinned, componentsProps?.button]
   );
   const element = (
-    <>
-      {controlsContainer ? (
-        <Portal target={controlsContainer}>{controlButton}</Portal>
-      ) : (
+    <Box {...componentsProps?.container}>
+      {controlsContainer === undefined ? (
         <Group
           gap="xs"
           {...componentsProps?.controlsContainer}
@@ -92,17 +98,35 @@ export default function Pinnable<
         >
           {controlButton}
         </Group>
+      ) : (
+        controlsContainer.current !== null && (
+          <Portal target={controlsContainer.current}>{controlButton}</Portal>
+        )
       )}
       {children}
-    </>
+    </Box>
   );
 
-  if (pinned && layoutType === LayoutType.Frame) {
+  if (!layout) {
+    return null;
+  }
+  if (
+    pinned &&
+    layoutType === LayoutType.Frame &&
+    isFrameLayoutElementSection(section)
+  ) {
     return (
       <FrameLayout.Element
         layoutId={layoutId}
         section={section}
-        componentsProps={{ container: { pos: "relative" } }}
+        {...componentsProps?.layoutElement}
+        componentsProps={{
+          ...componentsProps?.layoutElement?.componentsProps,
+          container: {
+            pos: "relative",
+            ...componentsProps?.layoutElement?.componentsProps?.container,
+          },
+        }}
       >
         {element}
       </FrameLayout.Element>

@@ -11,10 +11,7 @@ import {
   StackProps,
 } from "@mantine/core";
 import { ComponentProps, PropsWithChildren, ReactNode } from "react";
-import WidgetWrapper, {
-  WidgetWrapperComponentsProps,
-  WidgetWrapperProps,
-} from "./WidgetWrapper";
+import WidgetWrapper, { WidgetWrapperProps } from "./WidgetWrapper";
 import BadgeMinimal from "@/core/components/BadgeMinimal";
 import BadgeGroup, { BadgeGroupProps } from "@/core/components/BadgeGroup";
 import { WidgetConfiguration } from "@/core/lib/types";
@@ -25,14 +22,6 @@ import {
   ElementOfType,
   isValidElementOfType,
 } from "@/core/lib/utils";
-
-interface WidgetComponentsProps extends WidgetWrapperComponentsProps {
-  wrapper?: Partial<Omit<WidgetWrapperProps, "widgetId">>;
-  loader?: Partial<LoaderProps>;
-  badgeGroup?: Partial<BadgeGroupProps>;
-  divider?: Partial<DividerProps>;
-  alertsContainer?: Partial<StackProps>;
-}
 
 export interface WidgetProps {
   id: string;
@@ -64,7 +53,14 @@ export interface WidgetProps {
       };
   loading?: boolean;
   mt?: MantineSize | number;
-  componentsProps?: WidgetComponentsProps;
+  pinnableSection?: WidgetWrapperProps["pinnableSection"];
+  componentsProps?: {
+    wrapper?: Partial<Omit<WidgetWrapperProps, "config">>;
+    loader?: Partial<LoaderProps>;
+    badgeGroup?: Partial<BadgeGroupProps>;
+    divider?: Partial<DividerProps>;
+    alertsContainer?: Partial<StackProps>;
+  };
 }
 
 export default function Widget({
@@ -77,6 +73,7 @@ export default function Widget({
   gaps,
   loading,
   mt,
+  pinnableSection,
   componentsProps,
   children,
 }: PropsWithChildren<WidgetProps>): ReactNode {
@@ -118,11 +115,10 @@ export default function Widget({
         },
       }}
       mt={mt}
-      componentsProps={{
-        container: componentsProps?.container,
-        transition: componentsProps?.transition,
-      }}
       {...componentsProps?.wrapper}
+      pinnableSection={
+        pinnableSection ?? componentsProps?.wrapper?.pinnableSection
+      }
     >
       <Group justify="space-between" wrap="nowrap">
         <Group gap={badgesGap} wrap="nowrap">
