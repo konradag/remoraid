@@ -4,14 +4,12 @@
   align-items: center;
   justify-content: center;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
-
   &:hover {
     background-color: light-dark(
       var(--mantine-color-gray-0),
       var(--mantine-color-dark-5)
     );
   }
-
   &[data-active] {
     &,
     &:hover {
@@ -25,4 +23,25 @@
   top: calc(var(--mantine-spacing-xs) * -0.5);
   right: calc(var(--mantine-spacing-xs) * -0.5);
   z-index: 1;
+}
+.remoraid-frame-layout-section-gutter-0 {
+  padding: 0;
+}
+[class^="remoraid-frame-layout-section-gutter-"]:empty {
+  padding: 0;
+}
+.remoraid-frame-layout-section-gutter-xs {
+  padding: var(--mantine-spacing-xs);
+}
+.remoraid-frame-layout-section-gutter-sm {
+  padding: var(--mantine-spacing-sm);
+}
+.remoraid-frame-layout-section-gutter-md {
+  padding: var(--mantine-spacing-md);
+}
+.remoraid-frame-layout-section-gutter-lg {
+  padding: var(--mantine-spacing-lg);
+}
+.remoraid-frame-layout-section-gutter-xl {
+  padding: var(--mantine-spacing-xl);
 }

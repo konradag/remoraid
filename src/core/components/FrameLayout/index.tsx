@@ -28,6 +28,7 @@ import {
 } from "@/core/lib/types";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import clsx from "clsx";
 
 const layoutContext = createContext<LayoutContext<LayoutType.Frame> | null>(
   null
@@ -40,7 +41,7 @@ export const useFrameLayout = (): LayoutContext<LayoutType.Frame> | null => {
 export interface FrameLayoutProps {
   layoutId: string;
   includeScrollArea?: boolean;
-  gutter?: MantineSize | number;
+  gutter?: MantineSize | 0;
   componentsProps?: {
     childrenContainer?: Partial<BoxProps>;
     horizontalContainer?: Partial<GroupProps>;
@@ -163,7 +164,6 @@ function FrameLayout({
     <layoutContext.Provider value={layoutContextValue}>
       <Group
         gap={0}
-        p={gutter}
         h="100%"
         w="100%"
         wrap="nowrap"
@@ -174,7 +174,13 @@ function FrameLayout({
           h="100%"
           gap={gutter}
           wrap="nowrap"
+          pr={0}
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]}
+          className={clsx(
+            `remoraid-frame-layout-section-gutter-${gutter}`,
+            componentsProps?.sectionContainers?.[FrameLayoutSection.Left]
+              ?.className
+          )}
         />
         <Stack
           h="100%"
@@ -186,26 +192,40 @@ function FrameLayout({
             ref={topSection}
             h="100%"
             gap={gutter}
-            px={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]}
+            className={clsx(
+              `remoraid-frame-layout-section-gutter-${gutter}`,
+              componentsProps?.sectionContainers?.[FrameLayoutSection.Top]
+                ?.className
+            )}
           />
           {contentSection}
           <Stack
             ref={bottomSection}
             h="100%"
             gap={gutter}
-            px={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]}
+            className={clsx(
+              `remoraid-frame-layout-section-gutter-${gutter}`,
+              componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]
+                ?.className
+            )}
           />
         </Stack>
         <Group
           ref={rightSection}
           h="100%"
           gap={gutter}
+          pl={0}
           wrap="nowrap"
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]}
+          className={clsx(
+            `remoraid-frame-layout-section-gutter-${gutter}`,
+            componentsProps?.sectionContainers?.[FrameLayoutSection.Right]
+              ?.className
+          )}
         />
       </Group>
     </layoutContext.Provider>
