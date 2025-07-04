@@ -41,7 +41,7 @@ export const useFrameLayout = (): LayoutContext<LayoutType.Frame> | null => {
 export interface FrameLayoutProps {
   layoutId: string;
   includeScrollArea?: boolean;
-  gutter?: MantineSize | 0;
+  gutter?: MantineSize | number;
   componentsProps?: {
     childrenContainer?: Partial<BoxProps>;
     horizontalContainer?: Partial<GroupProps>;
@@ -159,6 +159,12 @@ function FrameLayout({
     }),
     [layout?.sections, defaultSections, layoutId]
   );
+  const sectionStyle = {
+    "--remoraid-frame-layout-gutter":
+      typeof gutter === "string"
+        ? `var(--mantine-spacing-${gutter})`
+        : `${gutter}px`,
+  };
 
   return (
     <layoutContext.Provider value={layoutContextValue}>
@@ -172,12 +178,17 @@ function FrameLayout({
         <Group
           ref={leftSection}
           h="100%"
-          gap={gutter}
           wrap="nowrap"
+          gap={gutter}
           pr={0}
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]}
+          style={{
+            ...sectionStyle,
+            ...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]
+              ?.style,
+          }}
           className={clsx(
-            `remoraid-frame-layout-section-gutter-${gutter}`,
+            "remoraid-frame-layout-section",
             componentsProps?.sectionContainers?.[FrameLayoutSection.Left]
               ?.className
           )}
@@ -194,8 +205,13 @@ function FrameLayout({
             gap={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]}
+            style={{
+              ...sectionStyle,
+              ...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]
+                ?.style,
+            }}
             className={clsx(
-              `remoraid-frame-layout-section-gutter-${gutter}`,
+              "remoraid-frame-layout-section",
               componentsProps?.sectionContainers?.[FrameLayoutSection.Top]
                 ?.className
             )}
@@ -207,8 +223,13 @@ function FrameLayout({
             gap={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]}
+            style={{
+              ...sectionStyle,
+              ...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]
+                ?.style,
+            }}
             className={clsx(
-              `remoraid-frame-layout-section-gutter-${gutter}`,
+              "remoraid-frame-layout-section",
               componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]
                 ?.className
             )}
@@ -221,8 +242,13 @@ function FrameLayout({
           pl={0}
           wrap="nowrap"
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]}
+          style={{
+            ...sectionStyle,
+            ...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]
+              ?.style,
+          }}
           className={clsx(
-            `remoraid-frame-layout-section-gutter-${gutter}`,
+            "remoraid-frame-layout-section",
             componentsProps?.sectionContainers?.[FrameLayoutSection.Right]
               ?.className
           )}
