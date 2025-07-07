@@ -150,17 +150,13 @@ export enum FrameLayoutSection {
   Right = "right",
   Content = "content",
 }
+export type LayoutSection<T extends LayoutType> = T extends LayoutType.Frame
+  ? FrameLayoutSection
+  : string;
 export interface LayoutContext<T extends LayoutType> {
   type: T;
   layoutId: string;
-  sections: T extends LayoutType.Frame
-    ? Record<
-        T extends LayoutType.Frame
-          ? Exclude<FrameLayoutSection, FrameLayoutSection.Content>
-          : string,
-        HTMLDivElement | null
-      >
-    : Partial<Record<string, HTMLDivElement | null>>;
+  sections: Record<LayoutSection<T>, HTMLDivElement | null>;
 }
 export interface LayoutsContext {
   layouts: Partial<Record<string, Omit<LayoutContext<LayoutType>, "layoutId">>>;

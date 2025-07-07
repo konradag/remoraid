@@ -7,23 +7,20 @@ import {
 } from "react";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
 import AppShell, { remoraidAppShellLayoutId } from "../AppShell";
-import { LayoutContext, LayoutType } from "@/core/lib/types";
+import { LayoutSection, LayoutType } from "@/core/lib/types";
 import { OptionalIfExtends } from "@/core/lib/utils";
 import FrameLayout from "../FrameLayout";
 import ControlButton, { ControlButtonProps } from "../ControlButton";
 import { IconPin, IconPinnedOff } from "@tabler/icons-react";
 import { Box, BoxProps, Group, GroupProps, Portal } from "@mantine/core";
 import clsx from "clsx";
-import {
-  FrameLayoutElementProps,
-  isFrameLayoutElementSection,
-} from "../FrameLayout/Element";
+import { FrameLayoutElementProps } from "../FrameLayout/Element";
 
 export type PinnableDefaultLayoutType = LayoutType.Frame;
 
 interface ExplicitPinnableProps<T extends LayoutType> {
   layoutType: T;
-  section: keyof LayoutContext<T>["sections"];
+  section: LayoutSection<T>;
   initialValue?: boolean;
   layoutId?: string;
   controlsContainerRef?: RefObject<HTMLDivElement | null>;
@@ -111,11 +108,7 @@ export default function Pinnable<
   if (!layout) {
     return null;
   }
-  if (
-    pinned &&
-    layoutType === LayoutType.Frame &&
-    isFrameLayoutElementSection(section)
-  ) {
+  if (pinned && layoutType === LayoutType.Frame) {
     return (
       <FrameLayout.Element
         layoutId={layoutId}

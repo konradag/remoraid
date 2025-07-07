@@ -130,10 +130,7 @@ export {
   ContextClusterProviderProps,
   createContextCluster,
 } from "./components/ContextClusterProvider";
-export {
-  FrameLayoutElementProps,
-  isFrameLayoutElementSection,
-} from "./components/FrameLayout/Element";
+export { FrameLayoutElementProps } from "./components/FrameLayout/Element";
 export {
   default as Pinnable,
   PinnableProps,

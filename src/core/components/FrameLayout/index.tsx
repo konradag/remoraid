@@ -1,6 +1,4 @@
 import {
-  Box,
-  BoxProps,
   Group,
   GroupProps,
   MantineSize,
@@ -43,7 +41,6 @@ export interface FrameLayoutProps {
   includeScrollArea?: boolean;
   gutter?: MantineSize | number;
   componentsProps?: {
-    childrenContainer?: Partial<BoxProps>;
     horizontalContainer?: Partial<GroupProps>;
     verticalContainer?: Partial<StackProps>;
     sectionContainers?: {
@@ -51,6 +48,7 @@ export interface FrameLayoutProps {
       [FrameLayoutSection.Right]?: Partial<GroupProps>;
       [FrameLayoutSection.Top]?: Partial<StackProps>;
       [FrameLayoutSection.Bottom]?: Partial<StackProps>;
+      [FrameLayoutSection.Content]?: Partial<StackProps>;
     };
     ScrollArea?: Partial<ScrollAreaProps>;
   };
@@ -72,9 +70,10 @@ function FrameLayout({
   const defaultSections = useMemo(
     () => ({
       [FrameLayoutSection.Bottom]: null,
+      [FrameLayoutSection.Right]: null,
       [FrameLayoutSection.Top]: null,
       [FrameLayoutSection.Left]: null,
-      [FrameLayoutSection.Right]: null,
+      [FrameLayoutSection.Content]: null,
     }),
     []
   );
@@ -95,7 +94,7 @@ function FrameLayout({
     },
     [layoutId, setLayouts, defaultSections]
   );
-  const topSection = useCallback(
+  const topSectionRef = useCallback(
     (n: HTMLDivElement | null) => {
       setSections((prev) => ({
         ...prev,
@@ -104,7 +103,7 @@ function FrameLayout({
     },
     [setSections]
   );
-  const bottomSection = useCallback(
+  const bottomSectionRef = useCallback(
     (n: HTMLDivElement | null) => {
       setSections((prev) => ({
         ...prev,
@@ -113,7 +112,7 @@ function FrameLayout({
     },
     [setSections]
   );
-  const leftSection = useCallback(
+  const leftSectionRef = useCallback(
     (n: HTMLDivElement | null) => {
       setSections((prev) => ({
         ...prev,
@@ -122,7 +121,7 @@ function FrameLayout({
     },
     [setSections]
   );
-  const rightSection = useCallback(
+  const rightSectionRef = useCallback(
     (n: HTMLDivElement | null) => {
       setSections((prev) => ({
         ...prev,
@@ -131,25 +130,32 @@ function FrameLayout({
     },
     [setSections]
   );
-  let contentSection: ReactNode = children;
-  const childrenContainerProps = {
-    flex: 1,
-    p: gutter,
-    ...componentsProps?.childrenContainer,
-  };
-  if (includeScrollArea) {
-    contentSection = (
-      <ScrollArea
-        {...theme.scrollAreaProps}
-        {...childrenContainerProps}
-        {...componentsProps?.ScrollArea}
-      >
-        {children}
-      </ScrollArea>
-    );
-  } else {
-    contentSection = <Box {...childrenContainerProps}>{contentSection}</Box>;
-  }
+  const contentSectionRef = useCallback(
+    (n: HTMLDivElement | null) => {
+      setSections((prev) => ({
+        ...prev,
+        [FrameLayoutSection.Content]: n,
+      }));
+    },
+    [setSections]
+  );
+  const contentSection = (
+    <Stack
+      ref={contentSectionRef}
+      h="100%"
+      gap={gutter}
+      flex={1}
+      {...componentsProps?.sectionContainers?.[FrameLayoutSection.Content]}
+      className={clsx(
+        "remoraid-frame-layout-section",
+        "remoraid-frame-layout-content-section",
+        componentsProps?.sectionContainers?.[FrameLayoutSection.Content]
+          ?.className
+      )}
+    >
+      {children}
+    </Stack>
+  );
   const layoutContextValue = useMemo(
     () => ({
       type: LayoutType.Frame,
@@ -159,12 +165,6 @@ function FrameLayout({
     }),
     [layout?.sections, defaultSections, layoutId]
   );
-  const sectionStyle = {
-    "--remoraid-frame-layout-gutter":
-      typeof gutter === "string"
-        ? `var(--mantine-spacing-${gutter})`
-        : `${gutter}px`,
-  };
 
   return (
     <layoutContext.Provider value={layoutContextValue}>
@@ -174,19 +174,24 @@ function FrameLayout({
         w="100%"
         wrap="nowrap"
         {...componentsProps?.horizontalContainer}
+        style={{
+          "--remoraid-frame-layout-gutter":
+            typeof gutter === "string"
+              ? `var(--mantine-spacing-${gutter})`
+              : `${gutter}px`,
+        }}
+        className={clsx(
+          "remoraid-frame-layout",
+          componentsProps?.horizontalContainer?.className
+        )}
       >
         <Group
-          ref={leftSection}
+          ref={leftSectionRef}
           h="100%"
           wrap="nowrap"
           gap={gutter}
           pr={0}
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]}
-          style={{
-            ...sectionStyle,
-            ...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]
-              ?.style,
-          }}
           className={clsx(
             "remoraid-frame-layout-section",
             componentsProps?.sectionContainers?.[FrameLayoutSection.Left]
@@ -200,53 +205,48 @@ function FrameLayout({
           {...componentsProps?.verticalContainer}
         >
           <Stack
-            ref={topSection}
-            h="100%"
+            ref={topSectionRef}
             gap={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]}
-            style={{
-              ...sectionStyle,
-              ...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]
-                ?.style,
-            }}
             className={clsx(
               "remoraid-frame-layout-section",
+              "remoraid-frame-layout-top-section",
               componentsProps?.sectionContainers?.[FrameLayoutSection.Top]
                 ?.className
             )}
           />
-          {contentSection}
+          {includeScrollArea ? (
+            <ScrollArea
+              flex={1}
+              {...theme.scrollAreaProps}
+              {...componentsProps?.ScrollArea}
+            >
+              {contentSection}
+            </ScrollArea>
+          ) : (
+            contentSection
+          )}
           <Stack
-            ref={bottomSection}
-            h="100%"
+            ref={bottomSectionRef}
             gap={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]}
-            style={{
-              ...sectionStyle,
-              ...componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]
-                ?.style,
-            }}
             className={clsx(
               "remoraid-frame-layout-section",
+              "remoraid-frame-layout-bottom-section",
               componentsProps?.sectionContainers?.[FrameLayoutSection.Bottom]
                 ?.className
             )}
           />
         </Stack>
         <Group
-          ref={rightSection}
+          ref={rightSectionRef}
           h="100%"
           gap={gutter}
           pl={0}
           wrap="nowrap"
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]}
-          style={{
-            ...sectionStyle,
-            ...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]
-              ?.style,
-          }}
           className={clsx(
             "remoraid-frame-layout-section",
             componentsProps?.sectionContainers?.[FrameLayoutSection.Right]

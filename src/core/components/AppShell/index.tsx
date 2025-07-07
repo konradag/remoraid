@@ -12,10 +12,7 @@ import {
 import AppProvider, { AppProviderProps } from "./AppProvider";
 import { OptionalIfExtends } from "@/core/lib/utils";
 import FrameLayout, { FrameLayoutProps } from "../FrameLayout";
-import {
-  FrameLayoutElementProps,
-  isFrameLayoutElementSection,
-} from "../FrameLayout/Element";
+import { FrameLayoutElementProps } from "../FrameLayout/Element";
 
 export const remoraidAppShellLayoutId = "remoraid-app-shell";
 
@@ -141,32 +138,27 @@ function AppShell<
           gutter={gutter}
           {...componentsProps?.layout}
         >
-          {navbarPosition !== null &&
-            (isFrameLayoutElementSection(navbarPosition) ? (
-              <FrameLayout.Element
-                section={navbarPosition}
-                includeContainer={false}
-                {...navbarLayoutElementProps}
-                {...componentsProps?.navbarLayoutElement}
-              >
-                {navbar}
-              </FrameLayout.Element>
-            ) : (
-              <>{navbar}</>
-            ))}
+          {navbarPosition !== null && (
+            <FrameLayout.Element
+              section={navbarPosition}
+              includeContainer={false}
+              {...navbarLayoutElementProps}
+              {...componentsProps?.navbarLayoutElement}
+            >
+              {navbar}
+            </FrameLayout.Element>
+          )}
           {children}
-          {footerPosition !== null &&
-            (isFrameLayoutElementSection(footerPosition) ? (
-              <FrameLayout.Element
-                section={footerPosition}
-                {...footerLayoutElementProps}
-                {...componentsProps?.footerLayoutElement}
-              >
-                {footer}
-              </FrameLayout.Element>
-            ) : (
-              <>{footer}</>
-            ))}
+          {footerPosition !== null && (
+            <FrameLayout.Element
+              includeContainer={false}
+              section={footerPosition}
+              {...footerLayoutElementProps}
+              {...componentsProps?.footerLayoutElement}
+            >
+              {footer}
+            </FrameLayout.Element>
+          )}
         </FrameLayout>
       </Box>
     </AppProvider>
