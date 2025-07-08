@@ -15,7 +15,12 @@ export default function PageContainer({
   const theme = useRemoraidTheme();
 
   return (
-    <Container size={theme.containerSize} p={p} {...componentsProps?.container}>
+    <Container
+      size={theme.containerSize}
+      p={p}
+      w="100%"
+      {...componentsProps?.container}
+    >
       {children}
     </Container>
   );
