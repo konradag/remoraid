@@ -59,7 +59,7 @@ interface ExplicitAppShellProps<
     navbar?: N extends NavbarVariant.Minimal
       ? Partial<NavbarMinimalProps>
       : never;
-    footer?: N extends FooterVariant.Minimal
+    footer?: F extends FooterVariant.Minimal
       ? Partial<FooterMinimalProps>
       : never;
     layout?: Partial<FrameLayoutProps>;
