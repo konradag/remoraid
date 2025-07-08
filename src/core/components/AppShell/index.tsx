@@ -13,6 +13,7 @@ import AppProvider, { AppProviderProps } from "./AppProvider";
 import { OptionalIfExtends } from "@/core/lib/utils";
 import FrameLayout, { FrameLayoutProps } from "../FrameLayout";
 import { FrameLayoutElementProps } from "../FrameLayout/Element";
+import { merge } from "lodash";
 
 export const remoraidAppShellLayoutId = "remoraid-app-shell";
 
@@ -121,7 +122,8 @@ function AppShell<
     includeContainer: false,
   };
   let footerLayoutElementProps: Partial<FrameLayoutElementProps> = {
-    includeContainer: false,
+    includeContainer: true,
+    componentsProps: { container: { style: { order: 1 } } },
   };
   if (navbarVariant === NavbarVariant.Minimal) {
     navbar = <NavbarMinimal {...componentsProps?.navbar} />;
@@ -142,8 +144,10 @@ function AppShell<
             <FrameLayout.Element
               section={navbarPosition}
               includeContainer={false}
-              {...navbarLayoutElementProps}
-              {...componentsProps?.navbarLayoutElement}
+              {...merge(
+                navbarLayoutElementProps,
+                componentsProps?.navbarLayoutElement
+              )}
             >
               {navbar}
             </FrameLayout.Element>
@@ -151,10 +155,11 @@ function AppShell<
           {children}
           {footerPosition !== null && (
             <FrameLayout.Element
-              includeContainer={false}
               section={footerPosition}
-              {...footerLayoutElementProps}
-              {...componentsProps?.footerLayoutElement}
+              {...merge(
+                footerLayoutElementProps,
+                componentsProps?.footerLayoutElement
+              )}
             >
               {footer}
             </FrameLayout.Element>

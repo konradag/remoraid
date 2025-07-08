@@ -5,6 +5,7 @@ import { useLayouts } from "../../RemoraidProvider/LayoutsProvider";
 import { useFrameLayout } from "..";
 import { InvalidComponentUsageError } from "@/core/lib/errors";
 import PageContainer, { PageContainerProps } from "../../Page/PageContainer";
+import { merge } from "lodash";
 
 export interface FrameLayoutElementProps {
   section: FrameLayoutSection;
@@ -65,7 +66,7 @@ export default function Element({
   return (
     <Portal target={layout.sections[section]}>
       {includeContainer ? (
-        <Box {...containerProps} {...componentsProps?.container}>
+        <Box {...merge(containerProps, componentsProps?.container)}>
           {element}
         </Box>
       ) : (
