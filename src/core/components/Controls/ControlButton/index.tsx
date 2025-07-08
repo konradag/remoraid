@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { Icon, IconClick, IconProps } from "@tabler/icons-react";
 import { ComponentProps, ReactNode } from "react";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import { useRemoraidTheme } from "../../RemoraidProvider/ThemeProvider";
 import { RemoraidIconSize } from "@/core/lib/types";
 
 export interface ControlButtonProps {

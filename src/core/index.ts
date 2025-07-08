@@ -65,10 +65,11 @@ export {
   RemoraidButtonProps,
   RemoraidButtonDefaultResponsivity,
 } from "./components/RemoraidButton";
+export { default as Controls, ControlsProps } from "./components/Controls";
 export {
   default as ControlButton,
   ControlButtonProps,
-} from "./components/ControlButton";
+} from "./components/Controls/ControlButton";
 export {
   default as WidgetWrapper,
   WidgetWrapperProps,
@@ -150,6 +151,5 @@ export {
   asElementOfType,
   asChildrenOfType,
   asElementOrPropsOfType,
-  isPointInside,
 } from "./lib/utils";
 export * from "./lib/types";

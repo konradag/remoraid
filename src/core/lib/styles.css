@@ -19,10 +19,14 @@
   }
 }
 .remoraid-controls {
-  position: absolute;
-  top: calc(var(--mantine-spacing-xs) * -0.5);
-  right: calc(var(--mantine-spacing-xs) * -0.5);
   z-index: 1;
+  cursor: grab;
+  &:active {
+    cursor: grabbing;
+  }
+  &:has(> .remoraid-controls-group:empty) {
+    display: none;
+  }
 }
 .remoraid-frame-layout {
   --remoraid-frame-layout-content-section-padding-top: 0;

@@ -3,6 +3,7 @@ import {
   ReactNode,
   RefObject,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
@@ -10,11 +11,11 @@ import AppShell, { remoraidAppShellLayoutId } from "../AppShell";
 import { LayoutSection, LayoutType } from "@/core/lib/types";
 import { OptionalIfExtends } from "@/core/lib/utils";
 import FrameLayout from "../FrameLayout";
-import ControlButton, { ControlButtonProps } from "../ControlButton";
 import { IconPin, IconPinnedOff } from "@tabler/icons-react";
-import { Box, BoxProps, Group, GroupProps, Portal } from "@mantine/core";
-import clsx from "clsx";
+import { Box, BoxProps, Portal } from "@mantine/core";
 import { FrameLayoutElementProps } from "../FrameLayout/Element";
+import Controls, { ControlsProps } from "../Controls";
+import ControlButton, { ControlButtonProps } from "../Controls/ControlButton";
 
 export type PinnableDefaultLayoutType = LayoutType.Frame;
 
@@ -25,7 +26,7 @@ interface ExplicitPinnableProps<T extends LayoutType> {
   layoutId?: string;
   controlsContainerRef?: RefObject<HTMLDivElement | null>;
   componentsProps?: {
-    controlsContainer?: Partial<GroupProps>;
+    controls?: Partial<ControlsProps>;
     button?: Partial<ControlButtonProps>;
     container?: Partial<BoxProps>;
     layoutElement?: Partial<FrameLayoutElementProps>;
@@ -62,6 +63,7 @@ export default function Pinnable<
   const [pinned, setPinned] = useState<boolean>(initialValue);
 
   // Helpers
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const layout = layouts[layoutId ?? remoraidAppShellLayoutId];
   if (layout && layout.type !== layoutType) {
     throw new TypeError(
@@ -72,8 +74,9 @@ export default function Pinnable<
     () => (
       <ControlButton
         icon={pinned ? IconPinnedOff : IconPin}
+        tooltip={pinned ? "Unpin" : "Pin"}
         color="green"
-        order={-1}
+        order={-100}
         {...componentsProps?.button}
         onClick={(e) => {
           setPinned((p) => !p);
@@ -84,18 +87,14 @@ export default function Pinnable<
     [pinned, componentsProps?.button]
   );
   const element = (
-    <Box pos="relative" {...componentsProps?.container}>
+    <Box pos="relative" ref={containerRef} {...componentsProps?.container}>
       {controlsContainerRef === undefined ? (
-        <Group
-          gap="xs"
-          {...componentsProps?.controlsContainer}
-          className={clsx(
-            "remoraid-controls",
-            componentsProps?.controlsContainer?.className
-          )}
+        <Controls
+          dragContainerRef={containerRef}
+          {...componentsProps?.controls}
         >
           {controlButton}
-        </Group>
+        </Controls>
       ) : (
         controlsContainerRef.current !== null && (
           <Portal target={controlsContainerRef.current}>{controlButton}</Portal>

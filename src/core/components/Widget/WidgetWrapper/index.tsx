@@ -2,24 +2,21 @@ import { usePage } from "@/core/components/Page";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { FrameLayoutSection, WidgetConfiguration } from "@/core/lib/types";
 import {
-  Box,
   BoxProps,
-  Group,
-  GroupProps,
   MantineSize,
   Paper,
-  PaperProps,
   Transition,
   TransitionProps,
 } from "@mantine/core";
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
 import { useWidgets } from "../../RemoraidProvider/WidgetsProvider";
-import ControlButton, { ControlButtonProps } from "../../ControlButton";
 import { IconX } from "@tabler/icons-react";
-import clsx from "clsx";
 import Pinnable, { PinnableProps } from "../../Pinnable";
-import { isPointInside } from "@/core/lib/utils";
 import { merge } from "lodash";
+import Controls, { ControlsProps } from "../../Controls";
+import ControlButton, {
+  ControlButtonProps,
+} from "../../Controls/ControlButton";
 
 export interface WidgetWrapperProps {
   config: WidgetConfiguration;
@@ -29,10 +26,8 @@ export interface WidgetWrapperProps {
   componentsProps?: {
     container?: Partial<BoxProps>;
     transition?: Partial<TransitionProps>;
-    controlsContainer?: Partial<GroupProps>;
-    controlsContainerTransition?: Partial<TransitionProps>;
+    controls?: Partial<ControlsProps>;
     closeButton?: Partial<ControlButtonProps>;
-    Paper?: Partial<PaperProps>;
     Pinnable?: Partial<PinnableProps>;
   };
 }
@@ -60,18 +55,6 @@ export default function WidgetWrapper({
 
   // Helpers
   const pageRegistered: boolean = page ? isPageRegistered(page.pageId) : false;
-
-  // Effects
-  useEffect(() => {
-    if (!page) {
-      return;
-    }
-    if (!isWidgetRegistered(page.pageId, config.widgetId)) {
-      registerWidget(page.pageId, config);
-    }
-  }, [pageRegistered]);
-
-  // Helpers
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controlsContainerRef = useRef<HTMLDivElement | null>(null);
   const handleEnter = () => {
@@ -90,57 +73,40 @@ export default function WidgetWrapper({
     >
       {(transitionStyle) => (
         <Paper
+          ref={containerRef}
+          onMouseEnter={handleEnter}
+          onMouseLeave={handleLeave}
           p="md"
           shadow="md"
           bg={theme.transparentBackground}
           mt={mt}
           pos="relative"
           h="fit-content"
-          {...componentsProps?.Paper}
-          style={{
-            ...transitionStyle,
-            ...componentsProps?.Paper?.style,
-          }}
+          {...componentsProps?.container}
+          style={merge(transitionStyle, componentsProps?.container?.style)}
           id={config.widgetId}
         >
-          <Transition
+          <Controls
+            dragContainerRef={containerRef}
+            groupRef={controlsContainerRef}
             mounted={withCloseButton && activeWidget === config.widgetId}
-            keepMounted
-            transition="pop-top-right"
-            duration={theme.transitionDurations.short}
-            timingFunction="ease"
-            {...componentsProps?.controlsContainerTransition}
+            {...componentsProps?.controls}
           >
-            {(transitionStyle) => (
-              <Group
-                ref={controlsContainerRef}
-                gap="xs"
-                {...componentsProps?.controlsContainer}
-                style={merge(
-                  transitionStyle,
-                  componentsProps?.controlsContainer?.style
-                )}
-                className={clsx(
-                  "remoraid-controls",
-                  componentsProps?.controlsContainer?.className
-                )}
-              >
-                <ControlButton
-                  icon={IconX}
-                  color="red"
-                  order={0}
-                  {...componentsProps?.closeButton}
-                  onClick={(e) => {
-                    if (!page) {
-                      return;
-                    }
-                    updateWidgetSelection(page.pageId, config.widgetId, false);
-                    componentsProps?.closeButton?.onClick?.(e);
-                  }}
-                />
-              </Group>
-            )}
-          </Transition>
+            <ControlButton
+              icon={IconX}
+              tooltip="Hide widget"
+              color="red"
+              order={-200}
+              {...componentsProps?.closeButton}
+              onClick={(e) => {
+                if (!page) {
+                  return;
+                }
+                updateWidgetSelection(page.pageId, config.widgetId, false);
+                componentsProps?.closeButton?.onClick?.(e);
+              }}
+            />
+          </Controls>
           {children}
         </Paper>
       )}
@@ -154,18 +120,18 @@ export default function WidgetWrapper({
         {...componentsProps?.Pinnable}
         componentsProps={{
           ...componentsProps?.Pinnable?.componentsProps,
-          button: {
-            ...componentsProps?.Pinnable?.componentsProps?.button,
-            onClick: (e) => {
-              const { clientX, clientY } = e;
-              requestAnimationFrame(() => {
-                if (!isPointInside(containerRef.current, clientX, clientY)) {
-                  handleLeave();
-                }
-              });
-              componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
-            },
-          },
+          // button: {
+          //   ...componentsProps?.Pinnable?.componentsProps?.button,
+          //   onClick: (e) => {
+          //     const { clientX, clientY } = e;
+          //     requestAnimationFrame(() => {
+          //       if (!isPointInside(containerRef.current, clientX, clientY)) {
+          //         handleLeave();
+          //       }
+          //     });
+          //     componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
+          //   },
+          // },
           layoutElement: {
             includePageContainer:
               pinnableSection === FrameLayoutSection.Top ||
@@ -179,14 +145,15 @@ export default function WidgetWrapper({
     );
   }
 
-  return (
-    <Box
-      {...componentsProps?.container}
-      ref={containerRef}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-    >
-      {element}
-    </Box>
-  );
+  // Effects
+  useEffect(() => {
+    if (!page) {
+      return;
+    }
+    if (!isWidgetRegistered(page.pageId, config.widgetId)) {
+      registerWidget(page.pageId, config);
+    }
+  }, [pageRegistered]);
+
+  return element;
 }
