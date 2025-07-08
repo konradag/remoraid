@@ -203,6 +203,10 @@ function FrameLayout({
           flex={1}
           gap={0}
           {...componentsProps?.verticalContainer}
+          className={clsx(
+            "remoraid-frame-layout-vertical-container",
+            componentsProps?.verticalContainer?.className
+          )}
         >
           <Stack
             ref={topSectionRef}

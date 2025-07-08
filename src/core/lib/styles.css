@@ -27,12 +27,18 @@
 .remoraid-frame-layout {
   --remoraid-frame-layout-content-section-padding-top: 0;
   --remoraid-frame-layout-content-section-padding-bottom: 0;
-  &:has(.remoraid-frame-layout-top-section:empty) {
+  &:has(
+      > .remoraid-frame-layout-vertical-container
+        > .remoraid-frame-layout-top-section:empty
+    ) {
     --remoraid-frame-layout-content-section-padding-top: var(
       --remoraid-frame-layout-gutter
     );
   }
-  &:has(.remoraid-frame-layout-bottom-section:empty) {
+  &:has(
+      > .remoraid-frame-layout-vertical-container
+        > .remoraid-frame-layout-bottom-section:empty
+    ) {
     --remoraid-frame-layout-content-section-padding-bottom: var(
       --remoraid-frame-layout-gutter
     );
