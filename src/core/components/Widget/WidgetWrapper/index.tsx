@@ -19,6 +19,7 @@ import { IconX } from "@tabler/icons-react";
 import clsx from "clsx";
 import Pinnable, { PinnableProps } from "../../Pinnable";
 import { isPointInside } from "@/core/lib/utils";
+import { merge } from "lodash";
 
 export interface WidgetWrapperProps {
   config: WidgetConfiguration;
@@ -27,8 +28,9 @@ export interface WidgetWrapperProps {
   pinnableSection?: Exclude<FrameLayoutSection, FrameLayoutSection.Content>;
   componentsProps?: {
     container?: Partial<BoxProps>;
-    transition?: Partial<Omit<TransitionProps, "mounted">>;
+    transition?: Partial<TransitionProps>;
     controlsContainer?: Partial<GroupProps>;
+    controlsContainerTransition?: Partial<TransitionProps>;
     closeButton?: Partial<ControlButtonProps>;
     Paper?: Partial<PaperProps>;
     Pinnable?: Partial<PinnableProps>;
@@ -84,6 +86,7 @@ export default function WidgetWrapper({
       transition="fade-left"
       duration={theme.transitionDurations.medium}
       timingFunction="ease"
+      {...componentsProps?.transition}
     >
       {(transitionStyle) => (
         <Paper
@@ -100,30 +103,44 @@ export default function WidgetWrapper({
           }}
           id={config.widgetId}
         >
-          <Group
-            ref={controlsContainerRef}
-            gap="xs"
-            {...componentsProps?.controlsContainer}
-            className={clsx(
-              "remoraid-controls",
-              componentsProps?.controlsContainer?.className
-            )}
+          <Transition
+            mounted={withCloseButton && activeWidget === config.widgetId}
+            keepMounted
+            transition="pop-top-right"
+            duration={theme.transitionDurations.short}
+            timingFunction="ease"
+            {...componentsProps?.controlsContainerTransition}
           >
-            <ControlButton
-              icon={IconX}
-              mounted={withCloseButton && activeWidget === config.widgetId}
-              color="red"
-              order={0}
-              {...componentsProps?.closeButton}
-              onClick={(e) => {
-                if (!page) {
-                  return;
-                }
-                updateWidgetSelection(page.pageId, config.widgetId, false);
-                componentsProps?.closeButton?.onClick?.(e);
-              }}
-            />
-          </Group>
+            {(transitionStyle) => (
+              <Group
+                ref={controlsContainerRef}
+                gap="xs"
+                {...componentsProps?.controlsContainer}
+                style={merge(
+                  transitionStyle,
+                  componentsProps?.controlsContainer?.style
+                )}
+                className={clsx(
+                  "remoraid-controls",
+                  componentsProps?.controlsContainer?.className
+                )}
+              >
+                <ControlButton
+                  icon={IconX}
+                  color="red"
+                  order={0}
+                  {...componentsProps?.closeButton}
+                  onClick={(e) => {
+                    if (!page) {
+                      return;
+                    }
+                    updateWidgetSelection(page.pageId, config.widgetId, false);
+                    componentsProps?.closeButton?.onClick?.(e);
+                  }}
+                />
+              </Group>
+            )}
+          </Transition>
           {children}
         </Paper>
       )}
@@ -138,7 +155,6 @@ export default function WidgetWrapper({
         componentsProps={{
           ...componentsProps?.Pinnable?.componentsProps,
           button: {
-            mounted: activeWidget === config.widgetId,
             ...componentsProps?.Pinnable?.componentsProps?.button,
             onClick: (e) => {
               const { clientX, clientY } = e;
