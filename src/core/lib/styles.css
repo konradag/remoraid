@@ -22,6 +22,9 @@
   &:empty {
     display: none;
   }
+  &:has(> .remoraid-pinnable:empty) {
+    display: none;
+  }
   &:has(> .remoraid-frame-layout-element:empty) {
     display: none;
   }
