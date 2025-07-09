@@ -18,13 +18,29 @@
     }
   }
 }
+.remoraid-page-container {
+  &:empty {
+    display: none;
+  }
+  &:has(> .remoraid-frame-layout-element:empty) {
+    display: none;
+  }
+  &:has(> .remoraid-frame-layout-element > .remoraid-pinnable:empty) {
+    display: none;
+  }
+}
+.remoraid-pinnable {
+  &:empty {
+    display: none;
+  }
+}
 .remoraid-controls {
   z-index: 1;
   cursor: grab;
   &:active {
     cursor: grabbing;
   }
-  &:has(> .remoraid-controls-group:empty) {
+  &:not(:has(> .remoraid-controls-group > button[data-control-button])) {
     display: none;
   }
 }
@@ -57,4 +73,9 @@
 .remoraid-frame-layout-content-section {
   padding-top: var(--remoraid-frame-layout-content-section-padding-top);
   padding-bottom: var(--remoraid-frame-layout-content-section-padding-bottom);
+}
+.remoraid-frame-layout-element {
+  &:has(> .remoraid-page-container:empty) {
+    display: none;
+  }
 }

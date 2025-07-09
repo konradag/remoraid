@@ -1,6 +1,12 @@
-import { asChildrenOfType, PropsWithChildrenOfType } from "@/core/lib/utils";
+import {
+  asChildrenOfType,
+  asElementOrPropsOfType,
+  ElementOrPropsOfType,
+  isValidElementOfType,
+  PropsWithChildrenOfType,
+} from "@/core/lib/utils";
 import ControlButton from "./ControlButton";
-import { ReactNode, RefObject, useRef, useState } from "react";
+import { ReactNode, Ref, RefObject, useRef, useState } from "react";
 import {
   Group,
   GroupProps,
@@ -19,9 +25,10 @@ import { merge } from "lodash";
 export interface ControlsProps {
   dragContainerRef: RefObject<HTMLDivElement | null>;
   mounted?: boolean;
-  groupRef?: RefObject<HTMLDivElement | null>;
+  groupRef?: Ref<HTMLDivElement>;
   gutter?: MantineSize | number;
   iconSize?: RemoraidIconSize;
+  additionalButtons?: ElementOrPropsOfType<typeof ControlButton>[];
   componentsProps?: {
     group?: Partial<GroupProps>;
     container?: Partial<PaperProps>;
@@ -36,10 +43,18 @@ export default function Controls({
   dragContainerRef,
   gutter = 5,
   iconSize = RemoraidIconSize.Tiny,
+  additionalButtons: additionalButtonsProp,
   componentsProps,
   children: childrenProp,
 }: PropsWithChildrenOfType<typeof ControlButton, ControlsProps>): ReactNode {
   // Type safety
+  const additionalButtons = additionalButtonsProp?.map((additionalButton) =>
+    asElementOrPropsOfType(
+      ControlButton,
+      additionalButton,
+      "Check the 'additionalButtons' property of 'Controls'."
+    )
+  );
   const children = asChildrenOfType(
     ControlButton,
     childrenProp,
@@ -50,8 +65,8 @@ export default function Controls({
   const theme = useRemoraidTheme();
 
   // State
-  const [pos, setPos] = useState<{ x: number | string; y: number | string }>({
-    x: "100%",
+  const [pos, setPos] = useState<{ x: number; y: number }>({
+    x: 0,
     y: 0,
   });
 
@@ -62,12 +77,18 @@ export default function Controls({
     return Math.min(Math.max(v, min), max);
   };
   const handlePointerDown = (e: React.PointerEvent) => {
+    if (
+      e.target instanceof Element &&
+      e.target.closest("button,[data-control-button]")
+    ) {
+      return;
+    }
     if (!containerRef.current) {
       return;
     }
     const paperRect = containerRef.current.getBoundingClientRect();
     offsetRef.current = {
-      x: e.clientX - paperRect.left,
+      x: e.clientX - paperRect.right,
       y: e.clientY - paperRect.top,
     };
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -81,12 +102,12 @@ export default function Controls({
     }
     const boxRect = dragContainerRef.current.getBoundingClientRect();
     const paperRect = containerRef.current.getBoundingClientRect();
-    const rawX = e.clientX - boxRect.left - offsetRef.current.x;
+    const rawX = e.clientX - boxRect.right - offsetRef.current.x;
     const rawY = e.clientY - boxRect.top - offsetRef.current.y;
     const maxX = boxRect.width - paperRect.width;
     const maxY = boxRect.height - paperRect.height;
     setPos({
-      x: clamp(rawX, 0, maxX),
+      x: clamp(-rawX, 0, maxX),
       y: clamp(rawY, 0, maxY),
     });
   };
@@ -98,7 +119,7 @@ export default function Controls({
     <Transition
       mounted={mounted}
       keepMounted
-      transition={pos.x === "100%" ? "fade-left" : "fade"}
+      transition="pop"
       duration={theme.transitionDurations.short}
       timingFunction="ease"
       {...componentsProps?.transition}
@@ -115,9 +136,8 @@ export default function Controls({
           onPointerUp={handlePointerUp}
           {...componentsProps?.container}
           style={{
-            left: pos.x,
+            right: pos.x,
             top: pos.y,
-            transform: pos.x === "100%" ? "translateX(-100%)" : undefined,
             ...merge(transitionStyle, componentsProps?.container?.style),
           }}
           className={clsx(
@@ -136,11 +156,18 @@ export default function Controls({
             )}
           >
             <IconGripHorizontal
-              order={100}
+              order={-100}
               color="var(--mantine-color-default-border)"
               {...merge(theme.iconProps[iconSize], componentsProps?.gripIcon)}
             />
             {children}
+            {additionalButtons &&
+              additionalButtons.map((button, i) => {
+                if (isValidElementOfType(ControlButton, button)) {
+                  return button;
+                }
+                return <ControlButton key={i} {...button} />;
+              })}
           </Group>
         </Paper>
       )}

@@ -56,6 +56,7 @@ export default function ControlButton({
           {...componentsProps?.tooltip}
         >
           <ActionIcon
+            data-control-button
             size={size}
             color={color}
             onClick={onClick}

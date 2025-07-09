@@ -6,6 +6,7 @@ import { useFrameLayout } from "..";
 import { InvalidComponentUsageError } from "@/core/lib/errors";
 import PageContainer, { PageContainerProps } from "../../Page/PageContainer";
 import { merge } from "lodash";
+import clsx from "clsx";
 
 export interface FrameLayoutElementProps {
   section: FrameLayoutSection;
@@ -66,7 +67,14 @@ export default function Element({
   return (
     <Portal target={layout.sections[section]}>
       {includeContainer ? (
-        <Box {...merge(containerProps, componentsProps?.container)}>
+        <Box
+          {...merge(containerProps, componentsProps?.container)}
+          className={clsx(
+            "remoraid-frame-layout-element",
+            containerProps?.className,
+            componentsProps?.container?.className
+          )}
+        >
           {element}
         </Box>
       ) : (

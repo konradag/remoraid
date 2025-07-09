@@ -10,7 +10,11 @@ import { Chip, Group } from "@mantine/core";
 import { useRemoraidApp } from "../AppShell/AppProvider";
 import { IconLink } from "@tabler/icons-react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { ElementOfType, isValidElementOfType } from "@/core/lib/utils";
+import {
+  asElementOrPropsOfType,
+  ElementOfType,
+  isValidElementOfType,
+} from "@/core/lib/utils";
 
 export const defaultNavbarSettingsWidgetId = "navbar-settings";
 
@@ -24,10 +28,20 @@ export interface NavbarSettingsWidgetProps {
 }
 
 export default function NavbarSettingsWidget({
-  additionalRows,
+  additionalRows: additionalRowsProp,
   widgetProps,
   componentsProps,
 }: NavbarSettingsWidgetProps): ReactNode {
+  // Type safety
+  const additionalRows = additionalRowsProp?.map((additionalRow) =>
+    asElementOrPropsOfType(
+      SettingsTable.Row,
+      additionalRow,
+      "Check the 'additionalRows' property of 'NavbarSettingsWidget'."
+    )
+  );
+
+  // Contexts
   const { userExperience, updateUserExperience, initialUserExperience } =
     useRemoraidUserExperience();
   const app = useRemoraidApp();

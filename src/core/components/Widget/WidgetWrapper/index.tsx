@@ -1,14 +1,16 @@
 import { usePage } from "@/core/components/Page";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { FrameLayoutSection, WidgetConfiguration } from "@/core/lib/types";
+import { MantineSize, Paper, Transition, TransitionProps } from "@mantine/core";
 import {
-  BoxProps,
-  MantineSize,
-  Paper,
-  Transition,
-  TransitionProps,
-} from "@mantine/core";
-import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
+  ComponentProps,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useWidgets } from "../../RemoraidProvider/WidgetsProvider";
 import { IconX } from "@tabler/icons-react";
 import Pinnable, { PinnableProps } from "../../Pinnable";
@@ -24,7 +26,7 @@ export interface WidgetWrapperProps {
   withCloseButton?: boolean;
   pinnableSection?: Exclude<FrameLayoutSection, FrameLayoutSection.Content>;
   componentsProps?: {
-    container?: Partial<BoxProps>;
+    container?: Partial<ComponentProps<typeof Paper<"div">>>;
     transition?: Partial<TransitionProps>;
     controls?: Partial<ControlsProps>;
     closeButton?: Partial<ControlButtonProps>;
@@ -53,10 +55,19 @@ export default function WidgetWrapper({
   const page = usePage();
   const theme = useRemoraidTheme();
 
+  // State
+  const [controlsContainer, setControlsContainer] =
+    useState<HTMLDivElement | null>(null);
+
   // Helpers
   const pageRegistered: boolean = page ? isPageRegistered(page.pageId) : false;
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const controlsContainerRef = useRef<HTMLDivElement | null>(null);
+  const controlsContainerRef = useCallback(
+    (n: HTMLDivElement | null) => {
+      setControlsContainer(n);
+    },
+    [setControlsContainer]
+  );
   const handleEnter = () => {
     updateActiveWidget(config.widgetId);
   };
@@ -74,8 +85,6 @@ export default function WidgetWrapper({
       {(transitionStyle) => (
         <Paper
           ref={containerRef}
-          onMouseEnter={handleEnter}
-          onMouseLeave={handleLeave}
           p="md"
           shadow="md"
           bg={theme.transparentBackground}
@@ -83,26 +92,40 @@ export default function WidgetWrapper({
           pos="relative"
           h="fit-content"
           {...componentsProps?.container}
+          onMouseEnter={(e) => {
+            if (!pinnableSection) {
+              handleEnter();
+            }
+            componentsProps?.container?.onMouseEnter?.(e);
+          }}
+          onMouseLeave={(e) => {
+            if (!pinnableSection) {
+              handleLeave();
+            }
+            componentsProps?.container?.onMouseLeave?.(e);
+          }}
           style={merge(transitionStyle, componentsProps?.container?.style)}
           id={config.widgetId}
         >
           <Controls
             dragContainerRef={containerRef}
             groupRef={controlsContainerRef}
-            mounted={withCloseButton && activeWidget === config.widgetId}
+            mounted={activeWidget === config.widgetId}
             {...componentsProps?.controls}
           >
             <ControlButton
+              mounted={withCloseButton}
               icon={IconX}
               tooltip="Hide widget"
               color="red"
-              order={-200}
+              order={200}
               {...componentsProps?.closeButton}
               onClick={(e) => {
                 if (!page) {
                   return;
                 }
                 updateWidgetSelection(page.pageId, config.widgetId, false);
+                handleLeave();
                 componentsProps?.closeButton?.onClick?.(e);
               }}
             />
@@ -116,23 +139,34 @@ export default function WidgetWrapper({
     element = (
       <Pinnable
         section={pinnableSection}
-        controlsContainerRef={controlsContainerRef}
+        controlsContainer={controlsContainer}
         {...componentsProps?.Pinnable}
         componentsProps={{
           ...componentsProps?.Pinnable?.componentsProps,
-          // button: {
-          //   ...componentsProps?.Pinnable?.componentsProps?.button,
-          //   onClick: (e) => {
-          //     const { clientX, clientY } = e;
-          //     requestAnimationFrame(() => {
-          //       if (!isPointInside(containerRef.current, clientX, clientY)) {
-          //         handleLeave();
-          //       }
-          //     });
-          //     componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
-          //   },
-          // },
+          container: {
+            ...componentsProps?.Pinnable?.componentsProps?.container,
+            onMouseEnter: (e) => {
+              handleEnter();
+              componentsProps?.Pinnable?.componentsProps?.container?.onMouseEnter?.(
+                e
+              );
+            },
+            onMouseLeave: (e) => {
+              handleLeave();
+              componentsProps?.Pinnable?.componentsProps?.container?.onMouseLeave?.(
+                e
+              );
+            },
+          },
+          button: {
+            ...componentsProps?.Pinnable?.componentsProps?.button,
+            onClick: (e) => {
+              handleLeave();
+              componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
+            },
+          },
           layoutElement: {
+            includeContainer: false,
             includePageContainer:
               pinnableSection === FrameLayoutSection.Top ||
               pinnableSection === FrameLayoutSection.Bottom,
