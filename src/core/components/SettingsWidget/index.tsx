@@ -31,7 +31,6 @@ function SettingsWidget({
       <Widget
         title="Settings"
         id="settings"
-        mt="md"
         {...widgetProps}
         buttons={[
           ...(onRestoreDefaultValues
