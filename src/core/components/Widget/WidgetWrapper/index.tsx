@@ -55,11 +55,16 @@ export default function WidgetWrapper({
   const page = usePage();
   const theme = useRemoraidTheme();
 
+  // Helpers 1
+  const mounted =
+    page !== null && isWidgetSelected(page.pageId, config.widgetId);
+
   // State
   const [controlsContainer, setControlsContainer] =
     useState<HTMLDivElement | null>(null);
+  const [hidden, setHidden] = useState<boolean>(!mounted);
 
-  // Helpers
+  // Helpers 2
   const pageRegistered: boolean = page ? isPageRegistered(page.pageId) : false;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controlsContainerRef = useCallback(
@@ -76,11 +81,15 @@ export default function WidgetWrapper({
   };
   let element = (
     <Transition
-      mounted={page !== null && isWidgetSelected(page.pageId, config.widgetId)}
+      mounted={mounted}
       transition="fade-left"
       duration={theme.transitionDurations.medium}
       timingFunction="ease"
       {...componentsProps?.transition}
+      onExited={() => {
+        setHidden(true);
+        componentsProps?.transition?.onExited?.();
+      }}
     >
       {(transitionStyle) => (
         <Paper
@@ -140,6 +149,7 @@ export default function WidgetWrapper({
       <Pinnable
         section={pinnableSection}
         controlsContainer={controlsContainer}
+        hidden={hidden}
         {...componentsProps?.Pinnable}
         componentsProps={{
           ...componentsProps?.Pinnable?.componentsProps,
@@ -188,6 +198,16 @@ export default function WidgetWrapper({
       registerWidget(page.pageId, config);
     }
   }, [pageRegistered]);
+  useEffect(() => {
+    if (mounted) {
+      const id = requestAnimationFrame(() => {
+        setHidden(false);
+      });
+      return () => {
+        cancelAnimationFrame(id);
+      };
+    }
+  }, [mounted]);
 
   return element;
 }

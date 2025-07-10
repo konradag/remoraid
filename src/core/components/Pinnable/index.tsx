@@ -26,6 +26,7 @@ interface ExplicitPinnableProps<T extends LayoutType> {
   initialValue?: boolean;
   layoutId?: string;
   controlsContainer?: HTMLDivElement | null;
+  hidden?: boolean;
   componentsProps?: {
     controls?: Partial<ControlsProps>;
     button?: Partial<ControlButtonProps>;
@@ -50,6 +51,7 @@ export default function Pinnable<
   initialValue = false,
   layoutId,
   controlsContainer,
+  hidden = false,
   componentsProps,
   children,
 }: PropsWithChildren<PinnableProps<T>>): ReactNode {
@@ -91,6 +93,7 @@ export default function Pinnable<
     <Box
       pos="relative"
       ref={containerRef}
+      data-hidden={hidden}
       {...componentsProps?.container}
       className={clsx(
         "remoraid-pinnable",
@@ -121,6 +124,7 @@ export default function Pinnable<
       <FrameLayout.Element
         layoutId={layoutId}
         section={section}
+        hidden={hidden}
         {...componentsProps?.layoutElement}
       >
         {element}

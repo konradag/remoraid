@@ -18,67 +18,54 @@
     }
   }
 }
-.remoraid-page-container {
-  &:empty {
-    display: none;
-  }
-  &:has(> .remoraid-pinnable:empty) {
-    display: none;
-  }
-  &:has(> .remoraid-frame-layout-element:empty) {
-    display: none;
-  }
-  &:has(> .remoraid-frame-layout-element > .remoraid-pinnable:empty) {
-    display: none;
-  }
-}
-.remoraid-pinnable {
-  &:empty {
-    display: none;
-  }
-}
 .remoraid-controls {
   z-index: 1;
   cursor: grab;
   &:active {
     cursor: grabbing;
   }
-  &:not(:has(> .remoraid-controls-group > button[data-control-button])) {
+  &:not(:has(> .remoraid-controls-group > button[data-control-button="true"])) {
     display: none;
   }
 }
 .remoraid-frame-layout {
-  --remoraid-frame-layout-content-section-padding-top: 0;
-  --remoraid-frame-layout-content-section-padding-bottom: 0;
+  --remoraid-frame-layout-content-section-padding-top: var(
+    --remoraid-frame-layout-gutter
+  );
+  --remoraid-frame-layout-content-section-padding-bottom: var(
+    --remoraid-frame-layout-gutter
+  );
   &:has(
       > .remoraid-frame-layout-vertical-container
-        > .remoraid-frame-layout-top-section:empty
+        > .remoraid-frame-layout-top-section
+        > :not([data-hidden="true"])
     ) {
-    --remoraid-frame-layout-content-section-padding-top: var(
-      --remoraid-frame-layout-gutter
-    );
+    --remoraid-frame-layout-content-section-padding-top: 0;
   }
   &:has(
       > .remoraid-frame-layout-vertical-container
-        > .remoraid-frame-layout-bottom-section:empty
+        > .remoraid-frame-layout-bottom-section
+        > :not([data-hidden="true"])
     ) {
-    --remoraid-frame-layout-content-section-padding-bottom: var(
-      --remoraid-frame-layout-gutter
-    );
+    --remoraid-frame-layout-content-section-padding-bottom: 0;
   }
 }
 .remoraid-frame-layout-section {
-  padding: var(--remoraid-frame-layout-gutter);
-  &:empty {
-    padding: 0;
+  padding: 0;
+  &:has(> :not([data-hidden="true"])) {
+    &:not(.remoraid-frame-layout-content-section) {
+      padding: var(--remoraid-frame-layout-gutter);
+    }
+    &.remoraid-frame-layout-content-section {
+      padding-left: var(--remoraid-frame-layout-gutter);
+      padding-right: var(--remoraid-frame-layout-gutter);
+      padding-top: var(--remoraid-frame-layout-content-section-padding-top);
+      padding-bottom: var(
+        --remoraid-frame-layout-content-section-padding-bottom
+      );
+    }
   }
 }
-.remoraid-frame-layout-content-section {
-  padding-top: var(--remoraid-frame-layout-content-section-padding-top);
-  padding-bottom: var(--remoraid-frame-layout-content-section-padding-bottom);
-}
-.remoraid-frame-layout-element {
-  &:has(> .remoraid-page-container:empty) {
-    display: none;
-  }
+[data-hidden="true"] {
+  display: none;
 }

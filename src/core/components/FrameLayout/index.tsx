@@ -165,9 +165,6 @@ function FrameLayout({
     }),
     [layout?.sections, defaultSections, layoutId]
   );
-  const hasTop = Boolean(
-    layout?.sections[FrameLayoutSection.Top]?.childElementCount
-  );
 
   return (
     <layoutContext.Provider value={layoutContextValue}>
@@ -213,7 +210,6 @@ function FrameLayout({
         >
           <Stack
             ref={topSectionRef}
-            data-empty={!hasTop || undefined}
             gap={gutter}
             flex={0}
             {...componentsProps?.sectionContainers?.[FrameLayoutSection.Top]}

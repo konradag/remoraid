@@ -5,12 +5,14 @@ import clsx from "clsx";
 
 export interface PageContainerProps {
   p?: MantineSize | number;
+  hidden?: boolean;
   componentsProps?: { container?: ContainerProps };
 }
 
 export default function PageContainer({
   children,
   p = 0,
+  hidden = false,
   componentsProps,
 }: PropsWithChildren<PageContainerProps>): ReactNode {
   const theme = useRemoraidTheme();
@@ -20,6 +22,7 @@ export default function PageContainer({
       size={theme.containerSize}
       p={p}
       w="100%"
+      data-hidden={hidden}
       {...componentsProps?.container}
       className={clsx(
         "remoraid-page-container",

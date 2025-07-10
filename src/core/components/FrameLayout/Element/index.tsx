@@ -13,6 +13,7 @@ export interface FrameLayoutElementProps {
   includeContainer?: boolean;
   includePageContainer?: boolean;
   layoutId?: string;
+  hidden?: boolean;
   componentsProps?: {
     container?: Partial<BoxProps>;
     PageContainer?: Partial<PageContainerProps>;
@@ -24,6 +25,7 @@ export default function Element({
   includeContainer = true,
   includePageContainer = false,
   layoutId,
+  hidden = false,
   componentsProps,
   children,
 }: PropsWithChildren<FrameLayoutElementProps>): ReactNode {
@@ -57,7 +59,7 @@ export default function Element({
     containerProps.h = "100%";
   }
   const element = includePageContainer ? (
-    <PageContainer p={0} {...componentsProps?.PageContainer}>
+    <PageContainer p={0} hidden={hidden} {...componentsProps?.PageContainer}>
       {children}
     </PageContainer>
   ) : (
@@ -68,6 +70,7 @@ export default function Element({
     <Portal target={layout.sections[section]}>
       {includeContainer ? (
         <Box
+          data-hidden={hidden}
           {...merge(containerProps, componentsProps?.container)}
           className={clsx(
             "remoraid-frame-layout-element",
