@@ -111,6 +111,7 @@ export interface RemoraidTheme {
   transparentBackground?: string;
   primaryColor?: string;
   spacingPx?: Record<MantineSize, number>;
+  primaryGutter?: MantineSize | number;
 }
 export interface RemoraidThemeDependencies {
   mantineTheme: MantineTheme;

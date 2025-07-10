@@ -135,6 +135,7 @@ export const createRemoraidTheme: (
         ...customTheme?.iconProps?.tiny,
       },
     },
+    primaryGutter: "md",
   };
 };
 

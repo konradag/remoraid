@@ -14,6 +14,7 @@ import { OptionalIfExtends } from "@/core/lib/utils";
 import FrameLayout, { FrameLayoutProps } from "../FrameLayout";
 import { FrameLayoutElementProps } from "../FrameLayout/Element";
 import { merge } from "lodash";
+import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 export const remoraidAppShellLayoutId = "remoraid-app-shell";
 
@@ -94,7 +95,7 @@ function AppShell<
   footerVariant: footerVariantProp,
   navbarPosition: navbarPositionProp,
   footerPosition: footerPositionProp,
-  gutter = "md",
+  gutter,
   appContext,
   componentsProps,
   children,
@@ -114,6 +115,9 @@ function AppShell<
     (footerVariant === null
       ? null
       : defaultAppShellFooterPositions[footerVariant]);
+
+  // Contexts
+  const theme = useRemoraidTheme();
 
   // Helpers
   let navbar: ReactNode;
@@ -137,7 +141,7 @@ function AppShell<
       <Box h="100vh" {...componentsProps?.container}>
         <FrameLayout
           layoutId={remoraidAppShellLayoutId}
-          gutter={gutter}
+          gutter={gutter ?? theme.primaryGutter}
           {...componentsProps?.layout}
         >
           {navbarPosition !== null && (

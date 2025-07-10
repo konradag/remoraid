@@ -66,6 +66,13 @@
     }
   }
 }
+.remoraid-page-container {
+  &:has(> .remoraid-page) {
+    &:not(:has(> .remoraid-page > :not([data-hidden="true"]))) {
+      display: none;
+    }
+  }
+}
 [data-hidden="true"] {
   display: none;
 }

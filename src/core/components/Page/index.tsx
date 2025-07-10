@@ -1,4 +1,4 @@
-import { ContainerProps, MantineSize } from "@mantine/core";
+import { ContainerProps, Stack, StackProps } from "@mantine/core";
 import React, {
   PropsWithChildren,
   ReactNode,
@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation";
 import { PageConfiguration } from "@/core/lib/types";
 import { useWidgets } from "../RemoraidProvider/WidgetsProvider";
 import PageContainer, { PageContainerProps } from "./PageContainer";
+import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import clsx from "clsx";
 
 const pageContext = React.createContext<PageConfiguration | null>(null);
 
@@ -19,17 +21,23 @@ export const usePage = (): PageConfiguration | null => {
 export interface PageProps {
   name?: string;
   config?: Partial<Omit<PageConfiguration, "name">>;
-  p?: PageContainerProps["p"];
-  componentsProps?: { container?: ContainerProps };
+  gap?: StackProps["gap"];
+  componentsProps?: {
+    container?: ContainerProps;
+    PageContainer: Partial<PageContainerProps>;
+    Stack?: Partial<StackProps>;
+  };
 }
 
 export default function Page({
   children,
   name,
   config,
-  p = 0,
+  gap,
   componentsProps,
 }: PropsWithChildren<PageProps>): ReactNode {
+  // Contexts
+  const theme = useRemoraidTheme();
   const pathname = usePathname();
   const { isPageRegistered, registerPage } = useWidgets();
 
@@ -47,11 +55,14 @@ export default function Page({
 
   return (
     <pageContext.Provider value={{ name: name ?? pathname, pageId, ...config }}>
-      <PageContainer
-        p={p}
-        componentsProps={{ container: componentsProps?.container }}
-      >
-        {children}
+      <PageContainer {...componentsProps?.PageContainer}>
+        <Stack
+          gap={gap ?? theme.primaryGutter}
+          {...componentsProps?.Stack}
+          className={clsx("remoraid-page", componentsProps?.Stack?.className)}
+        >
+          {children}
+        </Stack>
       </PageContainer>
     </pageContext.Provider>
   );
