@@ -11,7 +11,7 @@ import {
   StackProps,
   TitleProps,
 } from "@mantine/core";
-import { ComponentProps, PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, { WidgetWrapperProps } from "./WidgetWrapper";
 import BadgeMinimal from "@/core/components/BadgeMinimal";
 import BadgeGroup, { BadgeGroupProps } from "@/core/components/BadgeGroup";
@@ -20,7 +20,7 @@ import AlertMinimal from "@/core/components/AlertMinimal";
 import RemoraidButton, { RemoraidButtonProps } from "../RemoraidButton";
 import {
   asElementOrPropsOfType,
-  ElementOfType,
+  ElementOrPropsOfType,
   isValidElementOfType,
 } from "@/core/lib/utils";
 
@@ -28,22 +28,12 @@ export interface WidgetProps {
   id: string;
   title?: string;
   config?: Partial<Omit<WidgetConfiguration, "widgetId">>;
-  badges?: (
-    | ComponentProps<typeof BadgeMinimal>
-    | ElementOfType<typeof BadgeMinimal>
-  )[];
-  buttons?: (
-    | RemoraidButtonProps<true>
-    | RemoraidButtonProps<false>
-    | ElementOfType<
-        typeof RemoraidButton,
-        RemoraidButtonProps<true> | RemoraidButtonProps<false>
-      >
-  )[];
-  alerts?: (
-    | ComponentProps<typeof AlertMinimal>
-    | ElementOfType<typeof AlertMinimal>
-  )[];
+  badges?: ElementOrPropsOfType<typeof BadgeMinimal>[];
+  buttons?: ElementOrPropsOfType<
+    typeof RemoraidButton,
+    RemoraidButtonProps<true> | RemoraidButtonProps<false>
+  >[];
+  alerts?: ElementOrPropsOfType<typeof AlertMinimal>[];
   gaps?:
     | MantineSize
     | number
@@ -124,7 +114,7 @@ export default function Widget({
     >
       <Group justify="space-between" wrap="nowrap">
         <Group gap={badgesGap} wrap="nowrap">
-          <Title order={1} size="h3" lineClamp={1} {...componentsProps?.title}>
+          <Title order={1} size="h2" lineClamp={1} {...componentsProps?.title}>
             {title ?? id}
           </Title>
           {badges !== undefined && (

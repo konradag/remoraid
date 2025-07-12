@@ -3,6 +3,7 @@ import {
   WidgetContext,
   WidgetsContext,
 } from "@/core/lib/types";
+import { merge } from "lodash";
 import React, {
   useState,
   useContext,
@@ -12,11 +13,11 @@ import React, {
 
 export const getDefaultWidgetContext = (
   configuration: WidgetConfiguration
-): WidgetContext => ({
-  name: configuration.widgetId,
-  selected: true,
-  ...configuration.initialValues,
-});
+): WidgetContext =>
+  merge(
+    { name: configuration.widgetId, selected: true },
+    configuration.initialValues
+  );
 
 const widgetsContext = React.createContext<WidgetsContext>({
   widgets: {},

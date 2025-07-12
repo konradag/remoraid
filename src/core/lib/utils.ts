@@ -30,7 +30,7 @@ export type PropsWithChildrenOfType<T extends ElementType, P = {}> = P & {
 export type ElementOrPropsOfType<
   T extends ElementType,
   P = ComponentProps<T>
-> = ElementOfType<T> | P;
+> = ElementOfType<T, P> | P;
 export const isValidElementOfType = <T extends ElementType>(
   type: T,
   value: unknown
