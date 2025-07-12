@@ -2,41 +2,46 @@ import {
   Badge,
   BadgeProps,
   Group,
+  GroupProps,
+  HoverCard,
+  HoverCardProps,
   MantineBreakpoint,
   MantineSize,
-  Tooltip,
-  TooltipProps,
+  Stack,
+  StackProps,
+  Transition,
+  TransitionProps,
 } from "@mantine/core";
-import React, { ComponentProps, isValidElement, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import BadgeMinimal from "../BadgeMinimal";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import {
   asElementOrPropsOfType,
-  ElementOfType,
+  ElementOrPropsOfType,
   isValidElementOfType,
 } from "@/core/lib/utils";
+import { merge } from "lodash";
+import clsx from "clsx";
 
 export interface BadgeGroupProps {
-  badges: (
-    | ComponentProps<typeof BadgeMinimal>
-    | ElementOfType<typeof BadgeMinimal>
-  )[];
+  badges: ElementOrPropsOfType<typeof BadgeMinimal>[];
   gap?: MantineSize | number;
   breakpoint?: MantineBreakpoint;
   componentsProps?: {
-    tooltip?: Partial<TooltipProps>;
-    cumulativeBadge?: Partial<Omit<BadgeProps, "hiddenFrom" | "circle">>;
+    container?: Partial<Omit<GroupProps, "visibleFrom">>;
+    hoverCard?: Partial<HoverCardProps>;
+    hoverCardStack?: Partial<StackProps>;
+    cumulativeBadge?: Partial<Omit<BadgeProps, "hiddenFrom">>;
+    cumulativeBadgeTransition?: Partial<TransitionProps>;
   };
 }
 
 export default function BadgeGroup({
   badges: badgesProp,
-  gap,
-  breakpoint,
+  gap = "xs",
+  breakpoint: breakpointProp,
   componentsProps,
 }: BadgeGroupProps): ReactNode {
-  const theme = useRemoraidTheme();
-
   // Type safety
   const badges = badgesProp.map((badge) =>
     asElementOrPropsOfType(
@@ -46,52 +51,72 @@ export default function BadgeGroup({
     )
   );
 
+  // Contexts
+  const theme = useRemoraidTheme();
+
+  // Props default values
+  const breakpoint = breakpointProp ?? theme.breakpoints.badgeGroupCollapse;
+
   // Helpers
   const numVisibleBadges = badges.filter((badge) =>
     isValidElementOfType(BadgeMinimal, badge)
       ? badge.props.mounted
       : badge.mounted !== false
   ).length;
+  const badgesElement = badges.map((badge, i) => {
+    if (isValidElementOfType(BadgeMinimal, badge)) {
+      return badge;
+    }
+    return <BadgeMinimal {...badge} key={i} />;
+  });
 
   return (
     <>
       <Group
-        gap={gap ?? "xs"}
+        gap={gap}
         wrap="nowrap"
-        visibleFrom={breakpoint ?? theme.breakpoints.badgeGroupCollapse}
+        visibleFrom={numVisibleBadges > 1 ? breakpoint : undefined}
+        {...componentsProps?.container}
+        className={clsx(
+          "remoraid-badge-group",
+          componentsProps?.container?.className
+        )}
       >
-        {badges.map((badge, i) => {
-          if (isValidElementOfType(BadgeMinimal, badge)) {
-            return badge;
-          } else if (isValidElement(badge)) {
-            throw new TypeError(
-              `Expected React element of type ${
-                BadgeMinimal.name
-              }, but received type: ${
-                typeof badge.type === "string"
-                  ? badge.type
-                  : badge.type?.name ?? "unknown"
-              }. Check the 'badges' property of this widget.`
-            );
-          }
-          return <BadgeMinimal {...badge} key={i} />;
-        })}
+        {badgesElement}
       </Group>
-      <Tooltip
-        label={`${numVisibleBadges} badge${numVisibleBadges === 1 ? "" : "s"}`}
-        {...componentsProps?.tooltip}
+      <Transition
+        mounted={numVisibleBadges > 1}
+        transition="fade"
+        duration={theme.transitionDurations.short}
+        timingFunction="ease"
+        {...componentsProps?.cumulativeBadgeTransition}
       >
-        <Badge
-          hiddenFrom={breakpoint ?? theme.breakpoints.badgeGroupCollapse}
-          hidden={numVisibleBadges === 0}
-          variant="light"
-          circle
-          style={{ cursor: "pointer" }}
-          {...componentsProps?.cumulativeBadge}
-        >
-          {numVisibleBadges}
-        </Badge>
-      </Tooltip>
+        {(transitionStyle) => (
+          <HoverCard {...componentsProps?.hoverCard}>
+            <HoverCard.Target>
+              <Badge
+                hiddenFrom={breakpoint}
+                variant="dot"
+                {...componentsProps?.cumulativeBadge}
+                style={{
+                  cursor: "pointer",
+                  ...merge(
+                    transitionStyle,
+                    componentsProps?.cumulativeBadge?.style
+                  ),
+                }}
+              >
+                {numVisibleBadges} badges
+              </Badge>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+              <Stack gap={gap} {...componentsProps?.hoverCardStack}>
+                {badgesElement}
+              </Stack>
+            </HoverCard.Dropdown>
+          </HoverCard>
+        )}
+      </Transition>
     </>
   );
 }

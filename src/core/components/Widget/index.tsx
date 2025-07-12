@@ -9,6 +9,7 @@ import {
   DividerProps,
   Stack,
   StackProps,
+  TitleProps,
 } from "@mantine/core";
 import { ComponentProps, PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, { WidgetWrapperProps } from "./WidgetWrapper";
@@ -57,6 +58,7 @@ export interface WidgetProps {
   componentsProps?: {
     wrapper?: Partial<Omit<WidgetWrapperProps, "config">>;
     loader?: Partial<LoaderProps>;
+    title?: Partial<TitleProps>;
     badgeGroup?: Partial<BadgeGroupProps>;
     divider?: Partial<DividerProps>;
     alertsContainer?: Partial<StackProps>;
@@ -122,7 +124,7 @@ export default function Widget({
     >
       <Group justify="space-between" wrap="nowrap">
         <Group gap={badgesGap} wrap="nowrap">
-          <Title order={1} size="h3" lineClamp={1}>
+          <Title order={1} size="h3" lineClamp={1} {...componentsProps?.title}>
             {title ?? id}
           </Title>
           {badges !== undefined && (

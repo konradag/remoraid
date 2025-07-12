@@ -28,6 +28,11 @@
     display: none;
   }
 }
+.remoraid-badge-group {
+  &:empty {
+    display: none;
+  }
+}
 .remoraid-frame-layout {
   --remoraid-frame-layout-content-section-padding-top: var(
     --remoraid-frame-layout-gutter
