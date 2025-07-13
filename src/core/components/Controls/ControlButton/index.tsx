@@ -10,6 +10,7 @@ import { Icon, IconClick, IconProps } from "@tabler/icons-react";
 import { ComponentProps, ReactNode } from "react";
 import { useRemoraidTheme } from "../../RemoraidProvider/ThemeProvider";
 import { RemoraidIconSize } from "@/core/lib/types";
+import { merge } from "lodash";
 
 export interface ControlButtonProps {
   icon: Icon;
@@ -63,14 +64,15 @@ export default function ControlButton({
             radius="xl"
             {...componentsProps?.button}
             style={{
-              ...transitionStyle,
               order,
-              ...componentsProps?.button?.style,
+              ...merge(transitionStyle, componentsProps?.button?.style),
             }}
           >
             <Icon
-              {...theme.componentsProps.icons[iconSize]}
-              {...componentsProps?.icon}
+              {...merge(
+                theme.componentsProps.icons[iconSize],
+                componentsProps?.icon
+              )}
             />
           </ActionIcon>
         </Tooltip>

@@ -19,7 +19,7 @@
   }
 }
 .remoraid-controls {
-  z-index: 1;
+  z-index: 400;
   cursor: grab;
   &:active {
     cursor: grabbing;
