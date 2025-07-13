@@ -114,7 +114,7 @@ export default function BadgeGroup({
                 {numVisibleBadges} badges
               </Badge>
             </HoverCard.Target>
-            <HoverCard.Dropdown>
+            <HoverCard.Dropdown p={gap}>
               <Stack gap={gap} {...componentsProps?.hoverContainer}>
                 {badgesElement}
               </Stack>

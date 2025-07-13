@@ -120,6 +120,7 @@ export const createRemoraidTheme: (
         },
         styles: {
           dropdown: { border: "none", background: transparentBackground },
+          arrow: { border: "none" },
         },
       },
       Tooltip: {
