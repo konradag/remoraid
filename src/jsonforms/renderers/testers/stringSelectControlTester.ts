@@ -4,9 +4,12 @@ import {
   and,
   schemaTypeIs,
   isEnumControl,
+  RankedTester,
 } from "@jsonforms/core";
 
-export default rankWith(
+const tester: RankedTester = rankWith(
   11,
   and(uiTypeIs("Control"), schemaTypeIs("string"), isEnumControl)
 );
+
+export default tester;

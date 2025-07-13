@@ -1,6 +1,8 @@
-import { rankWith, uiTypeIs } from "@jsonforms/core";
+import { RankedTester, rankWith, uiTypeIs } from "@jsonforms/core";
 
-export default rankWith(
+const tester: RankedTester = rankWith(
   2, // higher than 1
   uiTypeIs("VerticalLayout")
 );
+
+export default tester;

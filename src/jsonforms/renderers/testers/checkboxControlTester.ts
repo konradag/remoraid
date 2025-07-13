@@ -1,3 +1,14 @@
-import { rankWith, uiTypeIs, and, schemaTypeIs } from "@jsonforms/core";
+import {
+  rankWith,
+  uiTypeIs,
+  and,
+  schemaTypeIs,
+  RankedTester,
+} from "@jsonforms/core";
 
-export default rankWith(10, and(uiTypeIs("Control"), schemaTypeIs("boolean")));
+const tester: RankedTester = rankWith(
+  10,
+  and(uiTypeIs("Control"), schemaTypeIs("boolean"))
+);
+
+export default tester;

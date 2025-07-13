@@ -4,9 +4,12 @@ import {
   and,
   schemaTypeIs,
   scopeEndsWith,
+  RankedTester,
 } from "@jsonforms/core";
 
-export default rankWith(
+const tester: RankedTester = rankWith(
   11,
   and(uiTypeIs("Control"), schemaTypeIs("integer"), scopeEndsWith("startTime"))
 );
+
+export default tester;

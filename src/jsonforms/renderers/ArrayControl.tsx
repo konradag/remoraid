@@ -115,7 +115,7 @@ function PlainArrayControl(props: ControlProps): ReactNode {
                           setIsHoveringDelete(null);
                         }}
                       >
-                        <IconTrash {...theme.iconProps.medium} />
+                        <IconTrash {...theme.componentsProps.icons.medium} />
                       </ActionIcon>
                     </Tooltip>
                   </Flex>
@@ -126,7 +126,7 @@ function PlainArrayControl(props: ControlProps): ReactNode {
             )}
             <Button
               variant="default"
-              leftSection={<IconPlus {...theme.iconProps.medium} />}
+              leftSection={<IconPlus {...theme.componentsProps.icons.medium} />}
               onClick={() => {
                 let defaultValue: any = "";
                 if (schemaItems.type === "string" && schemaItems.enum) {

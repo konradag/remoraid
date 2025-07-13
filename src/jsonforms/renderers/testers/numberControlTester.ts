@@ -1,6 +1,13 @@
-import { rankWith, uiTypeIs, and, schemaTypeIs, or } from "@jsonforms/core";
+import {
+  rankWith,
+  uiTypeIs,
+  and,
+  schemaTypeIs,
+  or,
+  RankedTester,
+} from "@jsonforms/core";
 
-export default rankWith(8, (a, b, c) => {
+const tester: RankedTester = rankWith(8, (a, b, c) => {
   if (b.type === "integer") {
     return true;
   }
@@ -9,3 +16,5 @@ export default rankWith(8, (a, b, c) => {
     or(schemaTypeIs("number"), schemaTypeIs("integer"))
   )(a, b, c);
 });
+
+export default tester;
