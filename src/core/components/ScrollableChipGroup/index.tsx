@@ -42,7 +42,11 @@ export default function ScrollableChipGroup({
 
   return (
     <ScrollArea
-      {...merge(theme.componentsProps.ScrollArea, componentsProps?.ScrollArea)}
+      {...merge(
+        {},
+        theme.componentsProps.ScrollArea,
+        componentsProps?.ScrollArea
+      )}
     >
       <Chip.Group
         value={value}

@@ -95,7 +95,7 @@ export default function NavbarSettingsWidget({
                       value={href}
                       icon={
                         <Icon
-                          {...theme.componentsProps.icons.tiny}
+                          {...theme.componentsProps.icons.small}
                           color="var(--mantine-primary-color-filled)"
                         />
                       }

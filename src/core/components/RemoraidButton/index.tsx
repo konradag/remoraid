@@ -16,7 +16,11 @@ import {
 import { Icon, IconClick, IconProps } from "@tabler/icons-react";
 import { ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { Common, OptionalIfExtends } from "@/core/lib/utils";
+import {
+  Common,
+  getDefaultButtonIconSize,
+  OptionalIfExtends,
+} from "@/core/lib/utils";
 import { RemoraidIconSize } from "@/core/lib/types";
 import { merge } from "lodash";
 
@@ -64,14 +68,14 @@ export default function RemoraidButton<
   responsive: ResponsiveProp,
   breakpoint: breakpointProp,
   collapsed: collapsedProp,
-  size,
+  size = "sm",
   color,
   onClick,
   loading,
   variant = "default",
   mounted = true,
   icon: iconProp,
-  iconSize = RemoraidIconSize.Medium,
+  iconSize: iconSizeProp,
   componentsProps,
 }: RemoraidButtonProps<Responsive>): ReactNode {
   // Props default values
@@ -79,6 +83,8 @@ export default function RemoraidButton<
     ResponsiveProp ?? (true satisfies RemoraidButtonDefaultResponsivity);
   const breakpoint: MantineBreakpoint = breakpointProp ?? "md";
   const collapsed: boolean = collapsedProp ?? false;
+  const iconSize: RemoraidIconSize =
+    iconSizeProp ?? getDefaultButtonIconSize(size);
   const Icon: Icon = iconProp ?? IconClick;
 
   // Contexts
@@ -87,7 +93,11 @@ export default function RemoraidButton<
   // Helpers
   const iconElement = (
     <Icon
-      {...merge(theme.componentsProps.icons[iconSize], componentsProps?.icon)}
+      {...merge(
+        {},
+        theme.componentsProps.icons[iconSize],
+        componentsProps?.icon
+      )}
     />
   );
 
@@ -103,6 +113,7 @@ export default function RemoraidButton<
         <>
           <Tooltip
             {...merge(
+              {},
               theme.componentsProps.Tooltip,
               { label },
               componentsProps?.tooltip

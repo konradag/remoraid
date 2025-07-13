@@ -1,10 +1,15 @@
-import { MantineColorShade, MantinePrimaryShade } from "@mantine/core";
+import {
+  MantineColorShade,
+  MantinePrimaryShade,
+  MantineSize,
+} from "@mantine/core";
 import {
   ComponentProps,
   ElementType,
   isValidElement,
   ReactElement,
 } from "react";
+import { RemoraidIconSize } from "./types";
 
 export const co = <T>(
   condition: (value: T) => boolean,
@@ -106,4 +111,12 @@ export const isMantinePrimaryShade = (
     return true;
   }
   return false;
+};
+export const getDefaultButtonIconSize = (
+  buttonSize: MantineSize
+): RemoraidIconSize => {
+  if (buttonSize === "xs") {
+    return RemoraidIconSize.Small;
+  }
+  return RemoraidIconSize.Medium;
 };

@@ -94,6 +94,7 @@ export default function BadgeGroup({
         {(transitionStyle) => (
           <HoverCard
             {...merge(
+              {},
               theme.componentsProps.HoverCard,
               componentsProps?.HoverCard
             )}

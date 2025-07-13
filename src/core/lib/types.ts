@@ -101,6 +101,7 @@ export enum RemoraidBreakpoint {
 }
 export enum RemoraidIconSize {
   Tiny = "tiny",
+  Small = "small",
   Medium = "medium",
 }
 export interface RemoraidTheme {

@@ -225,6 +225,7 @@ function FrameLayout({
             <ScrollArea
               flex={1}
               {...merge(
+                {},
                 theme.componentsProps.ScrollArea,
                 componentsProps?.ScrollArea
               )}

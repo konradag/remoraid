@@ -40,6 +40,7 @@ export default function BadgeMinimal({
       {(transitionStyle) => (
         <Tooltip
           {...merge(
+            {},
             theme.componentsProps.Tooltip,
             { label: tooltip, disabled: !Boolean(tooltip) },
             componentsProps?.tooltip

@@ -99,11 +99,16 @@ export const createRemoraidTheme: (
       },
       icons: {
         [RemoraidIconSize.Medium]: {
-          size: "1.125em",
+          size: 20,
+          stroke: 2,
+        },
+        [RemoraidIconSize.Small]: {
+          size: 16,
+          stroke: 2.3,
         },
         [RemoraidIconSize.Tiny]: {
-          size: 14,
-          stroke: 3,
+          size: 12,
+          stroke: 2.6,
         },
       },
       ScrollArea: {

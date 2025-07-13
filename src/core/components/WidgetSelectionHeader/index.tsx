@@ -60,7 +60,7 @@ export default function WidgetSelectionHeader({
                 size="sm"
                 key={widgetId}
                 disabled={disabledWidgets && disabledWidgets.includes(widgetId)}
-                icon={<IconCheck {...theme.componentsProps.icons.tiny} />}
+                icon={<IconCheck {...theme.componentsProps.icons.small} />}
               >
                 {widget.name}
               </Chip>

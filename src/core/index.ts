@@ -152,5 +152,6 @@ export {
   asElementOfType,
   asChildrenOfType,
   asElementOrPropsOfType,
+  getDefaultButtonIconSize,
 } from "./lib/utils";
 export * from "./lib/types";

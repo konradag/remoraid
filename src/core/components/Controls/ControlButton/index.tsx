@@ -40,12 +40,13 @@ export default function ControlButton({
   tooltip,
   componentsProps,
 }: ControlButtonProps): ReactNode {
+  // Contexts
   const theme = useRemoraidTheme();
 
   return (
     <Transition
       mounted={mounted}
-      transition="pop-top-right"
+      transition="pop"
       duration={theme.transitionDurations.short}
       timingFunction="ease"
       {...componentsProps?.transition}
@@ -53,6 +54,7 @@ export default function ControlButton({
       {(transitionStyle) => (
         <Tooltip
           {...merge(
+            {},
             theme.componentsProps.Tooltip,
             { label: tooltip, disabled: !Boolean(tooltip) },
             componentsProps?.tooltip
@@ -72,6 +74,7 @@ export default function ControlButton({
           >
             <Icon
               {...merge(
+                {},
                 theme.componentsProps.icons[iconSize],
                 componentsProps?.icon
               )}

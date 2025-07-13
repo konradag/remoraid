@@ -39,7 +39,7 @@ export default function AlertMinimal({
     icon: Icon,
     iconSize = RemoraidIconSize.Medium,
     componentsProps,
-  } = merge(theme.componentsProps.alerts[category], props);
+  } = merge({}, theme.componentsProps.alerts[category], props);
 
   return (
     <Transition
@@ -60,6 +60,7 @@ export default function AlertMinimal({
             Icon ? (
               <Icon
                 {...merge(
+                  {},
                   theme.componentsProps.icons[iconSize],
                   componentsProps?.icon
                 )}
