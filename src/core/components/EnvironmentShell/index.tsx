@@ -52,9 +52,11 @@ export default function EnvironmentShell({
   }
   if (variant === EnvironmentShellVariant.Alert) {
     if (includeAlertContainer) {
-      <PageContainer {...componentsProps?.alertContainer}>
-        {alertElement}
-      </PageContainer>;
+      return (
+        <PageContainer {...componentsProps?.alertContainer}>
+          {alertElement}
+        </PageContainer>
+      );
     }
     return alertElement;
   }
