@@ -13,11 +13,13 @@ import React, {
 
 export const getDefaultWidgetContext = (
   configuration: WidgetConfiguration
-): WidgetContext =>
-  merge(
+): WidgetContext => {
+  const mergedConfiguration = merge(
     { name: configuration.widgetId, selected: true },
     configuration.initialValues
   );
+  return { ...mergedConfiguration, hidden: !mergedConfiguration.selected };
+};
 
 const widgetsContext = React.createContext<WidgetsContext>({
   widgets: {},
@@ -30,6 +32,7 @@ const widgetsContext = React.createContext<WidgetsContext>({
   updateWidgetSelection: () => {},
   updateWidgetSelectionBulk: () => {},
   isWidgetSelected: () => false,
+  hideWidget: () => {},
 });
 
 export const useWidgets = (): WidgetsContext => {
@@ -50,9 +53,7 @@ export default function WidgetsProvider({
   children,
 }: PropsWithChildren<WidgetsProviderProps>): ReactNode {
   const [activeWidget, setActiveWidget] = useState<string | null>(null);
-  const [widgets, setWidgets] = useState<{
-    [index: string]: { [index: string]: { name: string; selected: boolean } };
-  }>({});
+  const [widgets, setWidgets] = useState<WidgetsContext["widgets"]>({});
 
   const updateActiveWidget = (widgetId: string | null) => {
     setActiveWidget(widgetId);
@@ -62,13 +63,15 @@ export default function WidgetsProvider({
     widgetId: string,
     value: boolean
   ) => {
-    if (!widgets[pageId]) {
+    const page = widgets[pageId];
+    if (!page) {
       console.error(
         `Cannot change selection of widget in page ${pageId}. Because this page does exist.`
       );
       return;
     }
-    if (!widgets[pageId][widgetId]) {
+    const widget = page[widgetId];
+    if (!widget) {
       console.error(
         `Cannot change selection of widget ${widgetId}. Because this widget does not exist on page ${pageId}.`
       );
@@ -77,8 +80,12 @@ export default function WidgetsProvider({
     setWidgets((prev) => ({
       ...prev,
       [pageId]: {
-        ...widgets[pageId],
-        [widgetId]: { ...widgets[pageId][widgetId], selected: value },
+        ...page,
+        [widgetId]: {
+          ...widget,
+          selected: value,
+          hidden: false,
+        },
       },
     }));
   };
@@ -86,23 +93,30 @@ export default function WidgetsProvider({
     pageId: string,
     selectedWidgetIds: string[]
   ) => {
-    if (!widgets[pageId]) {
+    const page = widgets[pageId];
+    if (!page) {
       console.error(
         `Cannot change selection of widget in page ${pageId}. Because this page does exist.`
       );
       return;
     }
-    const updatedPage = widgets[pageId];
-    for (let widgetId of Object.keys(updatedPage)) {
-      updatedPage[widgetId] = {
-        ...updatedPage[widgetId],
-        selected: selectedWidgetIds.includes(widgetId),
+    setWidgets((prev) => {
+      const updatedPage: Partial<Record<string, WidgetContext>> = {};
+      for (const [widgetId, widget] of Object.entries(page)) {
+        if (!widget) {
+          continue;
+        }
+        updatedPage[widgetId] = {
+          ...widget,
+          selected: selectedWidgetIds.includes(widgetId),
+          hidden: false,
+        };
+      }
+      return {
+        ...prev,
+        [pageId]: updatedPage,
       };
-    }
-    setWidgets((prev) => ({
-      ...prev,
-      [pageId]: updatedPage,
-    }));
+    });
   };
   const registerPage = (
     pageId: string,
@@ -155,11 +169,24 @@ export default function WidgetsProvider({
     }
     return true;
   };
-  const isWidgetSelected = (pageId: string, widgetId: string) => {
-    if (!isWidgetRegistered(pageId, widgetId)) {
-      return false;
+  const isWidgetSelected = (pageId: string, widgetId: string): boolean => {
+    return Boolean(widgets[pageId]?.[widgetId]?.selected);
+  };
+  const hideWidget = (pageId: string, widgetId: string) => {
+    const widget = widgets[pageId]?.[widgetId];
+    if (!widget) {
+      console.error(
+        `Cannot call 'hideWidget' for widget ${widgetId}. Because this widget does not exist on page ${pageId}.`
+      );
+      return;
     }
-    return widgets[pageId][widgetId].selected;
+    setWidgets((prev) => ({
+      ...prev,
+      [pageId]: {
+        ...prev[pageId],
+        [widgetId]: { ...widget, selected: false, hidden: true },
+      },
+    }));
   };
 
   return (
@@ -175,6 +202,7 @@ export default function WidgetsProvider({
         registerPage,
         isWidgetRegistered,
         isPageRegistered,
+        hideWidget,
       }}
     >
       {children}

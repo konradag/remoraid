@@ -65,6 +65,7 @@ export interface UserExperienceContext<T extends UserExperience> {
 export interface WidgetContext {
   name: string;
   selected: boolean;
+  hidden: boolean;
 }
 export interface WidgetsContext {
   widgets: Partial<Record<string, Partial<Record<string, WidgetContext>>>>;
@@ -84,6 +85,7 @@ export interface WidgetsContext {
     selectedWidgetIds: string[]
   ) => void;
   isWidgetSelected: (pageId: string, widgetId: string) => boolean;
+  hideWidget: (pageId: string, widgetId: string) => void;
 }
 export enum AlertCategory {
   Negative = "negative",
@@ -129,7 +131,7 @@ export type RemoraidThemeCallback = (
 ) => PartialDeep<RemoraidTheme>;
 export interface WidgetConfiguration {
   widgetId: string;
-  initialValues?: PartialDeep<WidgetContext>;
+  initialValues?: PartialDeep<Omit<WidgetContext, "hidden">>;
   allowUnregisteredPageUsage?: boolean;
 }
 export interface PageConfiguration {

@@ -44,7 +44,8 @@ export default function WidgetWrapper({
 }: PropsWithChildren<WidgetWrapperProps>): ReactNode {
   // Contexts
   const {
-    isWidgetSelected,
+    widgets,
+    hideWidget,
     isPageRegistered,
     isWidgetRegistered,
     registerWidget,
@@ -55,16 +56,12 @@ export default function WidgetWrapper({
   const page = usePage();
   const theme = useRemoraidTheme();
 
-  // Helpers 1
-  const mounted =
-    page !== null && isWidgetSelected(page.pageId, config.widgetId);
-
   // State
   const [controlsContainer, setControlsContainer] =
     useState<HTMLDivElement | null>(null);
-  const [hidden, setHidden] = useState<boolean>(!mounted);
 
-  // Helpers 2
+  // Helpers
+  const widget = page ? widgets[page.pageId]?.[config.widgetId] : undefined;
   const pageRegistered: boolean = page ? isPageRegistered(page.pageId) : false;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const controlsContainerRef = useCallback(
@@ -81,13 +78,15 @@ export default function WidgetWrapper({
   };
   let element = (
     <Transition
-      mounted={mounted}
+      mounted={Boolean(widget?.selected)}
       transition="fade-left"
       duration={theme.transitionDurations.medium}
       timingFunction="ease"
       {...componentsProps?.transition}
       onExited={() => {
-        setHidden(true);
+        if (page) {
+          hideWidget(page.pageId, config.widgetId);
+        }
         componentsProps?.transition?.onExited?.();
       }}
     >
@@ -149,7 +148,7 @@ export default function WidgetWrapper({
       <Pinnable
         section={pinnableSection}
         controlsContainer={controlsContainer}
-        hidden={hidden}
+        hidden={Boolean(widget?.hidden)}
         {...componentsProps?.Pinnable}
         componentsProps={{
           ...componentsProps?.Pinnable?.componentsProps,
@@ -198,16 +197,6 @@ export default function WidgetWrapper({
       registerWidget(page.pageId, config);
     }
   }, [pageRegistered]);
-  useEffect(() => {
-    if (mounted) {
-      const id = requestAnimationFrame(() => {
-        setHidden(false);
-      });
-      return () => {
-        cancelAnimationFrame(id);
-      };
-    }
-  }, [mounted]);
 
   return element;
 }
