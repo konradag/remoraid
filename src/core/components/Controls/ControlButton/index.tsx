@@ -46,7 +46,7 @@ export default function ControlButton({
   return (
     <Transition
       mounted={mounted}
-      transition="pop"
+      transition="fade"
       duration={theme.transitionDurations.short}
       timingFunction="ease"
       {...componentsProps?.transition}
