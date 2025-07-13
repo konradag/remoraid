@@ -47,6 +47,9 @@ function NavbarLink({
   href,
   indicator,
 }: NavbarLinkProps): ReactNode {
+  // Contexts
+  const theme = useRemoraidTheme();
+
   // State
   const [isHoveringRoleIndicator, setIsHoveringRoleIndicator] =
     useState<boolean>(false);
@@ -59,7 +62,11 @@ function NavbarLink({
   const Icon = icon ?? IconLink;
   if (!href) {
     return (
-      <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
+      <Tooltip
+        {...theme.componentsProps.Tooltip}
+        label={label}
+        position="right"
+      >
         <UnstyledButton
           onClick={onClick}
           className="remoraid-navbar-minimal-link"
@@ -87,7 +94,7 @@ function NavbarLink({
   );
 
   return (
-    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
+    <Tooltip {...theme.componentsProps.Tooltip} label={label} position="right">
       {indicator === undefined ? (
         button
       ) : (

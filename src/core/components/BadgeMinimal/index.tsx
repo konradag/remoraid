@@ -8,6 +8,7 @@ import {
 } from "@mantine/core";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { ReactNode } from "react";
+import { merge } from "lodash";
 
 export interface BadgeMinimalProps {
   label: string;
@@ -38,9 +39,11 @@ export default function BadgeMinimal({
     >
       {(transitionStyle) => (
         <Tooltip
-          disabled={!tooltip}
-          label={tooltip}
-          {...componentsProps?.tooltip}
+          {...merge(
+            theme.componentsProps.Tooltip,
+            { label: tooltip, disabled: !Boolean(tooltip) },
+            componentsProps?.tooltip
+          )}
         >
           <Badge
             variant="default"
