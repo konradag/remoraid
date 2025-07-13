@@ -29,8 +29,8 @@ export interface BadgeGroupProps {
   breakpoint?: MantineBreakpoint;
   componentsProps?: {
     container?: Partial<Omit<GroupProps, "visibleFrom">>;
-    hoverCard?: Partial<HoverCardProps>;
-    hoverCardStack?: Partial<StackProps>;
+    HoverCard?: Partial<HoverCardProps>;
+    hoverContainer?: Partial<StackProps>;
     cumulativeBadge?: Partial<Omit<BadgeProps, "hiddenFrom">>;
     cumulativeBadgeTransition?: Partial<TransitionProps>;
   };
@@ -92,7 +92,12 @@ export default function BadgeGroup({
         {...componentsProps?.cumulativeBadgeTransition}
       >
         {(transitionStyle) => (
-          <HoverCard {...componentsProps?.hoverCard}>
+          <HoverCard
+            {...merge(
+              theme.componentsProps.HoverCard,
+              componentsProps?.HoverCard
+            )}
+          >
             <HoverCard.Target>
               <Badge
                 hiddenFrom={breakpoint}
@@ -110,7 +115,7 @@ export default function BadgeGroup({
               </Badge>
             </HoverCard.Target>
             <HoverCard.Dropdown>
-              <Stack gap={gap} {...componentsProps?.hoverCardStack}>
+              <Stack gap={gap} {...componentsProps?.hoverContainer}>
                 {badgesElement}
               </Stack>
             </HoverCard.Dropdown>

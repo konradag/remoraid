@@ -1,58 +1,65 @@
-import { Alert, ContainerProps, MantineSize } from "@mantine/core";
 import { PropsWithChildren, ReactNode } from "react";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import PageContainer from "../Page/PageContainer";
+import AlertMinimal, { AlertMinimalProps } from "../AlertMinimal";
+import { AlertCategory } from "@/core/lib/types";
+import PageContainer, { PageContainerProps } from "../Page/PageContainer";
+
+export enum EnvironmentShellVariant {
+  Alert = "alert",
+  Error = "error",
+  Silent = "silent",
+}
 
 export interface EnvironmentShellProps {
-  environment: Record<string, string | undefined>;
+  environment: Partial<Record<string, string | undefined>>;
+  variant?: EnvironmentShellVariant;
   message?: string;
-  m?: MantineSize | number;
-  mt?: MantineSize | number;
-  withContainer?: boolean;
+  includeAlertContainer?: boolean;
   componentsProps?: {
-    container?: ContainerProps;
+    alert: Partial<AlertMinimalProps>;
+    alertContainer: Partial<PageContainerProps>;
   };
 }
 
 export default function EnvironmentShell({
-  children,
   environment,
+  variant = EnvironmentShellVariant.Alert,
   message,
-  m,
-  mt,
-  withContainer,
+  includeAlertContainer = false,
   componentsProps,
+  children,
 }: PropsWithChildren<EnvironmentShellProps>): ReactNode {
-  // Style
-  const theme = useRemoraidTheme();
-
   // Helpers
   const undefinedKeys = Object.keys(environment).filter(
     (key) => environment[key] === undefined
   );
-  const alertTitle = `Please Specify Environment Variable${
+  const defaultMessage = `Components could not be rendered because the following environment variable${
     undefinedKeys.length > 1 ? "s" : ""
-  }`;
-  const alertMessage = `Components could not be rendered because the following environment variables are not specified: ${undefinedKeys.join(
-    ", "
-  )}.`;
-  const alert = (
-    <Alert {...theme.alertProps.neutral} title={alertTitle} m={m} mt={mt}>
-      {message ?? alertMessage}
-    </Alert>
+  } are not specified: ${undefinedKeys.join(", ")}.`;
+  const alertElement = (
+    <AlertMinimal
+      mounted={undefinedKeys.length > 0}
+      title={`Please specify environment variable${
+        undefinedKeys.length > 1 ? "s" : ""
+      }`}
+      category={AlertCategory.Negative}
+      text={message ?? defaultMessage}
+      {...componentsProps?.alert}
+    />
   );
 
   if (undefinedKeys.length === 0) {
-    return <>{children}</>;
+    return children;
   }
-  if (withContainer) {
-    return (
-      <PageContainer
-        componentsProps={{ container: componentsProps?.container }}
-      >
-        {alert}
-      </PageContainer>
-    );
+  if (variant === EnvironmentShellVariant.Alert) {
+    if (includeAlertContainer) {
+      <PageContainer {...componentsProps?.alertContainer}>
+        {alertElement}
+      </PageContainer>;
+    }
+    return alertElement;
   }
-  return alert;
+  if (variant === EnvironmentShellVariant.Error) {
+    throw new ReferenceError(message ?? defaultMessage);
+  }
+  return null;
 }

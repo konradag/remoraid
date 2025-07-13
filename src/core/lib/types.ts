@@ -1,14 +1,17 @@
 import {
-  AlertProps,
+  HoverCardProps,
   MantineBreakpoint,
   MantineColorScheme,
   MantineSize,
   MantineTheme,
   ScrollAreaProps,
+  TooltipProps,
 } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
 import React, { Dispatch, ReactNode, SetStateAction } from "react";
+import { PartialDeep } from "type-fest";
+import { AlertMinimalProps } from "../components/AlertMinimal";
 
 export type RemoraidUser = { name: string } | null; // null when logged out
 export interface RemoraidAuthContext {
@@ -49,8 +52,8 @@ export interface CoreUserExperience {
 }
 export type UserExperienceProviderProps<T extends UserExperience> = {
   initialValue?: T extends PrimitiveUserExperience | PrimitiveUserExperience[]
-    ? T
-    : Partial<T>;
+    ? never
+    : PartialDeep<T>;
   cookieName?: string;
 };
 export interface UserExperienceContext<T extends UserExperience> {
@@ -101,17 +104,20 @@ export enum RemoraidIconSize {
   Medium = "medium",
 }
 export interface RemoraidTheme {
+  containerSize: MantineSize | number;
+  jsonStringifySpace: string | number;
+  primaryGutter: MantineSize | number;
   transitionDurations: Record<TransitionDuration, number>;
   breakpoints: Record<RemoraidBreakpoint, MantineBreakpoint>;
-  scrollAreaProps: ScrollAreaProps;
-  alertProps: Record<AlertCategory, AlertProps>;
-  containerSize: MantineSize | number;
-  iconProps: Record<RemoraidIconSize, IconProps>;
-  jsonStringifySpace: string | number;
   transparentBackground?: string;
-  primaryColor?: string;
   spacingPx?: Record<MantineSize, number>;
-  primaryGutter?: MantineSize | number;
+  componentsProps: {
+    icons: Record<RemoraidIconSize, Partial<IconProps>>;
+    alerts: Record<AlertCategory, Omit<Partial<AlertMinimalProps>, "category">>;
+    ScrollArea: Partial<ScrollAreaProps>;
+    HoverCard: Partial<HoverCardProps>;
+    Tooltip: Partial<TooltipProps>;
+  };
 }
 export interface RemoraidThemeDependencies {
   mantineTheme: MantineTheme;
@@ -119,10 +125,10 @@ export interface RemoraidThemeDependencies {
 }
 export type RemoraidThemeCallback = (
   dependencies: Partial<RemoraidThemeDependencies>
-) => Partial<RemoraidTheme>;
+) => PartialDeep<RemoraidTheme>;
 export interface WidgetConfiguration {
   widgetId: string;
-  initialValues?: Partial<WidgetContext>;
+  initialValues?: PartialDeep<WidgetContext>;
   allowUnregisteredPageUsage?: boolean;
 }
 export interface PageConfiguration {

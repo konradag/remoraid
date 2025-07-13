@@ -87,24 +87,26 @@ export default function NavbarSettingsWidget({
             }}
           >
             <Group justify="flex-start" gap="xs">
-              {app.navigablePages
-                .map((p) => ({ ...p, icon: p.icon ?? IconLink }))
-                .map((p, i) => (
-                  <Chip
-                    value={p.href}
-                    key={i}
-                    icon={
-                      <p.icon
-                        {...theme.iconProps.tiny}
-                        color={theme.primaryColor}
-                      />
-                    }
-                    variant="outline"
-                    // disabled={p.href === "/settings"}
-                  >
-                    {p.label}
-                  </Chip>
-                ))}
+              {app.navigablePages.map(
+                ({ label, href, icon: Icon = IconLink }, i) => {
+                  return (
+                    <Chip
+                      key={i}
+                      value={href}
+                      icon={
+                        <Icon
+                          {...theme.componentsProps.icons.tiny}
+                          color="var(--mantine-primary-color-filled)"
+                        />
+                      }
+                      variant="outline"
+                      // disabled={href === "/settings"}
+                    >
+                      {label}
+                    </Chip>
+                  );
+                }
+              )}
             </Group>
           </Chip.Group>
         </SettingsTable.Row>

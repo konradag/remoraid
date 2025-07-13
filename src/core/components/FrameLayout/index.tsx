@@ -27,6 +27,7 @@ import {
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import clsx from "clsx";
+import { merge } from "lodash";
 
 const layoutContext = createContext<LayoutContext<LayoutType.Frame> | null>(
   null
@@ -223,8 +224,10 @@ function FrameLayout({
           {includeScrollArea ? (
             <ScrollArea
               flex={1}
-              {...theme.scrollAreaProps}
-              {...componentsProps?.ScrollArea}
+              {...merge(
+                theme.componentsProps.ScrollArea,
+                componentsProps?.ScrollArea
+              )}
             >
               {contentSection}
             </ScrollArea>

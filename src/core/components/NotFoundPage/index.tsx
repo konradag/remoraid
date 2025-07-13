@@ -1,8 +1,8 @@
 import React, { PropsWithChildren, ReactNode } from "react";
 import Page, { PageProps } from "../Page";
-import { Alert } from "@mantine/core";
-import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { usePathname } from "next/navigation";
+import AlertMinimal from "../AlertMinimal";
+import { AlertCategory } from "@/core/lib/types";
 
 export interface NotFoundPageProps {
   message?: string;
@@ -16,16 +16,17 @@ export default function NotFoundPage({
   message,
   componentsProps,
 }: PropsWithChildren<NotFoundPageProps>): ReactNode {
+  // Contexts
   const pathname = usePathname();
-
-  // Style
-  const theme = useRemoraidTheme();
 
   return (
     <Page name="Not Found" {...componentsProps?.page}>
-      <Alert {...theme.alertProps.negative} title="404 - Page Not Found">
+      <AlertMinimal
+        category={AlertCategory.Negative}
+        title="404 - Page Not Found"
+      >
         {message ?? `Could not find page ${pathname}.`}
-      </Alert>
+      </AlertMinimal>
       {children}
     </Page>
   );

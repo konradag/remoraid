@@ -3,6 +3,7 @@ import {
   UserExperience,
   UserExperienceContext,
 } from "@/core/lib/types";
+import { merge } from "lodash";
 import React, {
   Context,
   createContext,
@@ -12,6 +13,7 @@ import React, {
   useState,
 } from "react";
 import { useCookies } from "react-cookie";
+import { PartialDeep } from "type-fest";
 
 export const createUserExperienceContext = <T extends UserExperience>(
   defaultUserExperience: T
@@ -30,7 +32,7 @@ export interface UserExperienceProviderWrapperProps<T extends UserExperience> {
   isValidUserExperience: (x: unknown) => x is T;
   initialValue?: T extends PrimitiveUserExperience | PrimitiveUserExperience[]
     ? never
-    : Partial<T>;
+    : PartialDeep<T>;
 }
 
 export default function UserExperienceProviderWrapper<
@@ -46,13 +48,7 @@ export default function UserExperienceProviderWrapper<
   const [cookies, setCookie] = useCookies();
 
   // Helpers 1
-  let initialUserExperience: T = defaultUserExperience;
-  if (
-    typeof initialValue === "object" &&
-    typeof initialUserExperience === "object"
-  ) {
-    initialUserExperience = { ...initialUserExperience, ...initialValue };
-  }
+  const initialUserExperience = merge(defaultUserExperience, initialValue);
 
   // State
   const [userExperience, setUserExperience] = useState<T>(

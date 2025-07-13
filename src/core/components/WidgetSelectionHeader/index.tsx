@@ -49,7 +49,7 @@ export default function WidgetSelectionHeader({
           onChange={(value: string[]) => {
             updateWidgetSelectionBulk(page.pageId, value);
           }}
-          componentsProps={{ scrollArea: { flex: 1 } }}
+          componentsProps={{ ScrollArea: { flex: 1 } }}
         >
           {Object.keys(widgets).map((widgetId) => {
             const widget =
@@ -60,7 +60,7 @@ export default function WidgetSelectionHeader({
                 size="sm"
                 key={widgetId}
                 disabled={disabledWidgets && disabledWidgets.includes(widgetId)}
-                icon={<IconCheck {...theme.iconProps.tiny} />}
+                icon={<IconCheck {...theme.componentsProps.icons.tiny} />}
               >
                 {widget.name}
               </Chip>

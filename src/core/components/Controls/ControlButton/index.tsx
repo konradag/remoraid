@@ -68,7 +68,10 @@ export default function ControlButton({
               ...componentsProps?.button?.style,
             }}
           >
-            <Icon {...theme.iconProps[iconSize]} {...componentsProps?.icon} />
+            <Icon
+              {...theme.componentsProps.icons[iconSize]}
+              {...componentsProps?.icon}
+            />
           </ActionIcon>
         </Tooltip>
       )}

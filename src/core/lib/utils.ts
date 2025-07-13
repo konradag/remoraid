@@ -1,3 +1,4 @@
+import { MantineColorShade, MantinePrimaryShade } from "@mantine/core";
 import {
   ComponentProps,
   ElementType,
@@ -97,4 +98,12 @@ export const asElementOrPropsOfType = <
     return asElementOfType(type, elementOrProps, additionalErrorMessage);
   }
   return elementOrProps;
+};
+export const isMantinePrimaryShade = (
+  shade: MantinePrimaryShade | MantineColorShade
+): shade is MantinePrimaryShade => {
+  if (isNaN(Number(shade))) {
+    return true;
+  }
+  return false;
 };

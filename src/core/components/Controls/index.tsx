@@ -158,7 +158,10 @@ export default function Controls({
             <IconGripHorizontal
               order={-100}
               color="var(--mantine-color-default-border)"
-              {...merge(theme.iconProps[iconSize], componentsProps?.gripIcon)}
+              {...merge(
+                theme.componentsProps.icons[iconSize],
+                componentsProps?.gripIcon
+              )}
             />
             {children}
             {additionalButtons &&

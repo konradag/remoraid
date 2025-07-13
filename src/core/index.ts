@@ -87,6 +87,7 @@ export {
 export {
   default as EnvironmentShell,
   EnvironmentShellProps,
+  EnvironmentShellVariant,
 } from "./components/EnvironmentShell";
 export {
   default as SettingsWidget,

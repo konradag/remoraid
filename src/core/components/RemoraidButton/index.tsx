@@ -14,10 +14,11 @@ import {
   TransitionProps,
 } from "@mantine/core";
 import { Icon, IconClick, IconProps } from "@tabler/icons-react";
-import { createElement, ReactNode } from "react";
+import { ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { Common, OptionalIfExtends } from "@/core/lib/utils";
 import { RemoraidIconSize } from "@/core/lib/types";
+import { merge } from "lodash";
 
 export type RemoraidButtonDefaultResponsivity = true;
 
@@ -78,14 +79,17 @@ export default function RemoraidButton<
     ResponsiveProp ?? (true satisfies RemoraidButtonDefaultResponsivity);
   const breakpoint: MantineBreakpoint = breakpointProp ?? "md";
   const collapsed: boolean = collapsedProp ?? false;
-  const icon: Icon = iconProp ?? IconClick;
+  const Icon: Icon = iconProp ?? IconClick;
 
   // Contexts
   const theme = useRemoraidTheme();
 
   // Helpers
-  const iconProps = { ...theme.iconProps[iconSize], ...componentsProps?.icon };
-  const iconElement = createElement(icon, iconProps);
+  const iconElement = (
+    <Icon
+      {...merge(theme.componentsProps.icons[iconSize], componentsProps?.icon)}
+    />
+  );
 
   return (
     <Transition
