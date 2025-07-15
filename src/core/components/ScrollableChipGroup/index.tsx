@@ -7,9 +7,8 @@ import {
   ScrollArea,
   ScrollAreaProps,
 } from "@mantine/core";
-import { ReactNode } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { asChildrenOfType, PropsWithChildrenOfType } from "@/core/lib/utils";
 import { merge } from "lodash";
 
 export interface ScrollableChipGroupProps {
@@ -28,15 +27,8 @@ export default function ScrollableChipGroup({
   onChange,
   gap = "xs",
   componentsProps,
-  children: childrenProp,
-}: PropsWithChildrenOfType<typeof Chip, ScrollableChipGroupProps>): ReactNode {
-  // Type safety
-  const children = asChildrenOfType(
-    Chip,
-    childrenProp,
-    "Check children passed to 'ScrollableChipGroup' component."
-  );
-
+  children,
+}: PropsWithChildren<ScrollableChipGroupProps>): ReactNode {
   // Contexts
   const theme = useRemoraidTheme();
 
