@@ -154,5 +154,6 @@ export {
   asChildrenOfType,
   asElementOrPropsOfType,
   getDefaultButtonIconSize,
+  scrollToWidget,
 } from "./lib/utils";
 export * from "./lib/types";

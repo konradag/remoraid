@@ -120,3 +120,13 @@ export const getDefaultButtonIconSize = (
   }
   return RemoraidIconSize.Medium;
 };
+export const scrollToWidget = (widgetId: string): void => {
+  const widgetElement = document.getElementById(widgetId);
+  if (!widgetElement) {
+    return;
+  }
+  widgetElement.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+};

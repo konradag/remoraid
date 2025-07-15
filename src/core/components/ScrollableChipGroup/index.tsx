@@ -7,12 +7,13 @@ import {
   ScrollArea,
   ScrollAreaProps,
 } from "@mantine/core";
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren, ReactNode, RefObject } from "react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { merge } from "lodash";
 
 export interface ScrollableChipGroupProps {
   value: string[];
+  ref?: RefObject<HTMLDivElement | null>;
   onChange?: (value: string[]) => void;
   gap?: MantineSize | number;
   componentsProps?: {
@@ -24,6 +25,7 @@ export interface ScrollableChipGroupProps {
 
 export default function ScrollableChipGroup({
   value,
+  ref,
   onChange,
   gap = "xs",
   componentsProps,
@@ -34,9 +36,11 @@ export default function ScrollableChipGroup({
 
   return (
     <ScrollArea
+      ref={ref}
       {...merge(
         {},
         theme.componentsProps.ScrollArea,
+        { style: { contain: "inline-size" } },
         componentsProps?.ScrollArea
       )}
     >

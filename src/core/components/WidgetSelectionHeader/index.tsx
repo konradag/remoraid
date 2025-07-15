@@ -1,6 +1,7 @@
 import {
   Box,
   Chip,
+  ChipProps,
   Divider,
   Flex,
   FlexProps,
@@ -8,12 +9,13 @@ import {
   MenuProps,
   Text,
   TextProps,
+  useMantineTheme,
 } from "@mantine/core";
 import { useWidgets } from "@/core/components/RemoraidProvider/WidgetsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { usePage } from "../Page";
 import { IconCheck, IconFocus, IconNavigation } from "@tabler/icons-react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import ScrollableChipGroup, {
   ScrollableChipGroupProps,
 } from "../ScrollableChipGroup";
@@ -22,6 +24,7 @@ import { merge } from "lodash";
 import { FrameLayoutSection } from "@/core/lib/types";
 import Pinnable, { PinnableProps } from "../Pinnable";
 import clsx from "clsx";
+import { scrollToWidget } from "@/core/lib/utils";
 
 export interface WidgetSelectionHeaderProps {
   title?: string;
@@ -33,6 +36,7 @@ export interface WidgetSelectionHeaderProps {
     widgetMenu?: Partial<MenuProps>;
     title?: Partial<TextProps>;
     ScrollableChipGroup?: Partial<ScrollableChipGroupProps>;
+    Chip?: Partial<ChipProps>;
     Pinnable?: Partial<PinnableProps>;
   };
 }
@@ -44,9 +48,15 @@ export default function WidgetSelectionHeader({
   disabledWidgets,
   componentsProps,
 }: WidgetSelectionHeaderProps): ReactNode {
+  // Contexts
   const theme = useRemoraidTheme();
-  const { isPageRegistered, updateWidgetSelectionBulk, ...widgetsContext } =
-    useWidgets();
+  const mantineTheme = useMantineTheme();
+  const {
+    activeWidget,
+    isPageRegistered,
+    updateWidgetSelectionBulk,
+    ...widgetsContext
+  } = useWidgets();
   const page = usePage();
   if (!page) {
     throw new InvalidComponentUsageError(
@@ -65,6 +75,7 @@ export default function WidgetSelectionHeader({
   const handleLeave = () => {
     setHover(false);
   };
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const widgets = widgetsContext.widgets[page.pageId] ?? {};
   const selectedWidgets = Object.entries(widgets).reduce(
     (t: string[], [widgetId, widget]) =>
@@ -102,6 +113,7 @@ export default function WidgetSelectionHeader({
       {isPageRegistered(page.pageId) && (
         <ScrollableChipGroup
           value={selectedWidgets}
+          ref={scrollAreaRef}
           {...componentsProps?.ScrollableChipGroup}
           onChange={(value: string[]) => {
             updateWidgetSelectionBulk(page.pageId, value);
@@ -129,12 +141,33 @@ export default function WidgetSelectionHeader({
                 <Menu.Target>
                   <Box>
                     <Chip
+                      variant={
+                        selectedWidgets.includes(widgetId)
+                          ? "filled"
+                          : "outline"
+                      }
+                      color={
+                        activeWidget === widgetId
+                          ? mantineTheme.primaryColor
+                          : "gray"
+                      }
                       value={widgetId}
                       size="sm"
                       disabled={disabledWidgets?.includes(widgetId)}
                       icon={
                         <IconCheck {...theme.componentsProps.icons.small} />
                       }
+                      {...componentsProps?.Chip}
+                      styles={merge(
+                        {
+                          label: {
+                            transition:
+                              "background-color var(--remoraid-transition-duration-short)",
+                          },
+                        },
+                        componentsProps?.Chip?.styles
+                      )}
+                      id={`remoraid-widget-selection-header-chip-${widgetId}`}
                     >
                       {widget.name}
                     </Chip>
@@ -147,14 +180,8 @@ export default function WidgetSelectionHeader({
                       <IconNavigation {...theme.componentsProps.icons.small} />
                     }
                     onClick={() => {
-                      const widgetElement = document.getElementById(widgetId);
-                      if (!widgetElement) {
-                        return;
-                      }
-                      widgetElement.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
+                      scrollToWidget(widgetId);
+                      handleLeave();
                     }}
                     disabled={!widget.selected}
                   >
@@ -166,6 +193,7 @@ export default function WidgetSelectionHeader({
                     }
                     onClick={() => {
                       updateWidgetSelectionBulk(page.pageId, [widgetId]);
+                      handleLeave();
                     }}
                     disabled={
                       selectedWidgets.length === 1 &&
@@ -182,6 +210,23 @@ export default function WidgetSelectionHeader({
       )}
     </Flex>
   );
+
+  // Effects
+  useEffect(() => {
+    if (!activeWidget) {
+      return;
+    }
+    const activeWidgetChipElement = scrollAreaRef?.current?.querySelector(
+      `#remoraid-widget-selection-header-chip-${activeWidget}`
+    );
+    if (!activeWidgetChipElement) {
+      return;
+    }
+    activeWidgetChipElement.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+    });
+  }, [activeWidget]);
 
   if (pinnableSection) {
     return (
