@@ -19,6 +19,7 @@ import Controls, { ControlsProps } from "../../Controls";
 import ControlButton, {
   ControlButtonProps,
 } from "../../Controls/ControlButton";
+import clsx from "clsx";
 
 export interface WidgetWrapperProps {
   config: WidgetConfiguration;
@@ -113,6 +114,10 @@ export default function WidgetWrapper({
             componentsProps?.container?.onMouseLeave?.(e);
           }}
           style={merge(transitionStyle, componentsProps?.container?.style)}
+          className={clsx(
+            "remoraid-segment",
+            componentsProps?.container?.className
+          )}
           id={config.widgetId}
         >
           <Controls

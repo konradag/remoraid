@@ -1,4 +1,5 @@
 import {
+  Box,
   Chip,
   Divider,
   Flex,
@@ -90,6 +91,7 @@ export default function WidgetSelectionHeader({
       }}
       className={clsx(
         !pinnableSection ? "remoraid-non-widget-segment" : undefined,
+        !pinnableSection ? "remoraid-segment" : undefined,
         componentsProps?.container?.className
       )}
     >
@@ -125,14 +127,18 @@ export default function WidgetSelectionHeader({
                 )}
               >
                 <Menu.Target>
-                  <Chip
-                    value={widgetId}
-                    size="sm"
-                    disabled={disabledWidgets?.includes(widgetId)}
-                    icon={<IconCheck {...theme.componentsProps.icons.small} />}
-                  >
-                    {widget.name}
-                  </Chip>
+                  <Box>
+                    <Chip
+                      value={widgetId}
+                      size="sm"
+                      disabled={disabledWidgets?.includes(widgetId)}
+                      icon={
+                        <IconCheck {...theme.componentsProps.icons.small} />
+                      }
+                    >
+                      {widget.name}
+                    </Chip>
+                  </Box>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Widget menu</Menu.Label>
@@ -140,8 +146,16 @@ export default function WidgetSelectionHeader({
                     leftSection={
                       <IconNavigation {...theme.componentsProps.icons.small} />
                     }
-                    component="a"
-                    href={`#${widgetId}`}
+                    onClick={() => {
+                      const widgetElement = document.getElementById(widgetId);
+                      if (!widgetElement) {
+                        return;
+                      }
+                      widgetElement.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
                     disabled={!widget.selected}
                   >
                     Scroll to widget
@@ -192,6 +206,7 @@ export default function WidgetSelectionHeader({
               );
             },
             className: clsx(
+              "remoraid-segment",
               "remoraid-non-widget-segment",
               componentsProps?.Pinnable?.componentsProps?.container?.className
             ),

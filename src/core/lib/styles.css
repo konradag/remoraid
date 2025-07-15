@@ -20,6 +20,9 @@
     }
   }
 }
+.remoraid-segment {
+  scroll-margin-top: var(--remoraid-frame-layout-content-section-padding-top);
+}
 .remoraid-non-widget-segment {
   border-radius: var(--mantine-radius-default);
   transition: background-color var(--remoraid-transition-duration-short);
