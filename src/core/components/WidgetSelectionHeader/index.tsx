@@ -24,7 +24,8 @@ import clsx from "clsx";
 
 export interface WidgetSelectionHeaderProps {
   title?: string;
-  pinnableSection?: FrameLayoutSection.Top | FrameLayoutSection.Bottom;
+  pinnableSection?: FrameLayoutSection.Top | FrameLayoutSection.Bottom | null;
+  initiallyPinned?: boolean;
   disabledWidgets?: string[];
   componentsProps?: {
     container?: Partial<FlexProps>;
@@ -37,7 +38,8 @@ export interface WidgetSelectionHeaderProps {
 
 export default function WidgetSelectionHeader({
   title,
-  pinnableSection,
+  pinnableSection = FrameLayoutSection.Top,
+  initiallyPinned = true,
   disabledWidgets,
   componentsProps,
 }: WidgetSelectionHeaderProps): ReactNode {
@@ -114,10 +116,11 @@ export default function WidgetSelectionHeader({
             }
             return (
               <Menu
+                key={widgetId}
                 {...merge(
                   {},
                   theme.componentsProps.Menu,
-                  { trigger: "hover", key: widgetId },
+                  { trigger: "hover" },
                   componentsProps?.widgetMenu
                 )}
               >
@@ -125,7 +128,6 @@ export default function WidgetSelectionHeader({
                   <Chip
                     value={widgetId}
                     size="sm"
-                    key={widgetId}
                     disabled={disabledWidgets?.includes(widgetId)}
                     icon={<IconCheck {...theme.componentsProps.icons.small} />}
                   >
@@ -167,10 +169,11 @@ export default function WidgetSelectionHeader({
     </Flex>
   );
 
-  if (pinnableSection !== undefined) {
+  if (pinnableSection) {
     return (
       <Pinnable
         section={pinnableSection}
+        initialValue={initiallyPinned}
         {...componentsProps?.Pinnable}
         componentsProps={{
           ...componentsProps?.Pinnable?.componentsProps,
