@@ -1,25 +1,45 @@
-import { Chip, Divider, Flex, MantineSize, Text } from "@mantine/core";
 import {
-  getDefaultWidgetContext,
-  useWidgets,
-} from "@/core/components/RemoraidProvider/WidgetsProvider";
+  Chip,
+  Divider,
+  Flex,
+  FlexProps,
+  Menu,
+  MenuProps,
+  Text,
+  TextProps,
+} from "@mantine/core";
+import { useWidgets } from "@/core/components/RemoraidProvider/WidgetsProvider";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { usePage } from "../Page";
-import { IconCheck } from "@tabler/icons-react";
-import { ReactNode } from "react";
-import ScrollableChipGroup from "../ScrollableChipGroup";
+import { IconCheck, IconFocus, IconNavigation } from "@tabler/icons-react";
+import { ReactNode, useState } from "react";
+import ScrollableChipGroup, {
+  ScrollableChipGroupProps,
+} from "../ScrollableChipGroup";
 import { InvalidComponentUsageError } from "@/core/lib/errors";
+import { merge } from "lodash";
+import { FrameLayoutSection } from "@/core/lib/types";
+import Pinnable, { PinnableProps } from "../Pinnable";
+import clsx from "clsx";
 
 export interface WidgetSelectionHeaderProps {
   title?: string;
+  pinnableSection?: FrameLayoutSection.Top | FrameLayoutSection.Bottom;
   disabledWidgets?: string[];
-  mt?: MantineSize | number;
+  componentsProps?: {
+    container?: Partial<FlexProps>;
+    widgetMenu?: Partial<MenuProps>;
+    title?: Partial<TextProps>;
+    ScrollableChipGroup?: Partial<ScrollableChipGroupProps>;
+    Pinnable?: Partial<PinnableProps>;
+  };
 }
 
 export default function WidgetSelectionHeader({
   title,
+  pinnableSection,
   disabledWidgets,
-  mt,
+  componentsProps,
 }: WidgetSelectionHeaderProps): ReactNode {
   const theme = useRemoraidTheme();
   const { isPageRegistered, updateWidgetSelectionBulk, ...widgetsContext } =
@@ -32,42 +52,171 @@ export default function WidgetSelectionHeader({
     );
   }
 
-  // Helpers
-  const widgets = widgetsContext.widgets[page.pageId] ?? {};
+  // State
+  const [hover, setHover] = useState<boolean>(false);
 
-  return (
-    <Flex justify="flex-start" align="center" gap="xs" mt={mt}>
-      <Text size="lg" fw={400}>
+  // Helpers
+  const handleEnter = () => {
+    setHover(true);
+  };
+  const handleLeave = () => {
+    setHover(false);
+  };
+  const widgets = widgetsContext.widgets[page.pageId] ?? {};
+  const selectedWidgets = Object.entries(widgets).reduce(
+    (t: string[], [widgetId, widget]) =>
+      widget?.selected ? [...t, widgetId] : t,
+    []
+  );
+  const element = (
+    <Flex
+      justify="flex-start"
+      align="center"
+      gap="md"
+      {...componentsProps?.container}
+      onMouseEnter={(e) => {
+        if (!pinnableSection) {
+          handleEnter();
+        }
+        componentsProps?.container?.onMouseEnter?.(e);
+      }}
+      onMouseLeave={(e) => {
+        if (!pinnableSection) {
+          handleEnter();
+        }
+        componentsProps?.container?.onMouseEnter?.(e);
+      }}
+      className={clsx(
+        !pinnableSection ? "remoraid-non-widget-segment" : undefined,
+        componentsProps?.container?.className
+      )}
+    >
+      <Text size="md" {...componentsProps?.title}>
         {title ?? page.name}
       </Text>
       <Divider orientation="vertical" />
       {isPageRegistered(page.pageId) && (
         <ScrollableChipGroup
-          value={Object.keys(widgets).filter(
-            (widgetId) => widgets[widgetId]?.selected
-          )}
+          value={selectedWidgets}
+          {...componentsProps?.ScrollableChipGroup}
           onChange={(value: string[]) => {
             updateWidgetSelectionBulk(page.pageId, value);
+            componentsProps?.ScrollableChipGroup?.onChange?.(value);
           }}
-          componentsProps={{ ScrollArea: { flex: 1 } }}
+          componentsProps={merge(
+            { ScrollArea: { flex: 1 } },
+            componentsProps?.ScrollableChipGroup?.componentsProps
+          )}
         >
-          {Object.keys(widgets).map((widgetId) => {
-            const widget =
-              widgets[widgetId] ?? getDefaultWidgetContext({ widgetId });
+          {Object.entries(widgets).map(([widgetId, widget]) => {
+            if (!widget) {
+              return;
+            }
             return (
-              <Chip
-                value={widgetId}
-                size="sm"
-                key={widgetId}
-                disabled={disabledWidgets && disabledWidgets.includes(widgetId)}
-                icon={<IconCheck {...theme.componentsProps.icons.small} />}
+              <Menu
+                {...merge(
+                  {},
+                  theme.componentsProps.Menu,
+                  { trigger: "hover", key: widgetId },
+                  componentsProps?.widgetMenu
+                )}
               >
-                {widget.name}
-              </Chip>
+                <Menu.Target>
+                  <Chip
+                    value={widgetId}
+                    size="sm"
+                    key={widgetId}
+                    disabled={disabledWidgets?.includes(widgetId)}
+                    icon={<IconCheck {...theme.componentsProps.icons.small} />}
+                  >
+                    {widget.name}
+                  </Chip>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Widget menu</Menu.Label>
+                  <Menu.Item
+                    leftSection={
+                      <IconNavigation {...theme.componentsProps.icons.small} />
+                    }
+                    component="a"
+                    href={`#${widgetId}`}
+                    disabled={!widget.selected}
+                  >
+                    Scroll to widget
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={
+                      <IconFocus {...theme.componentsProps.icons.small} />
+                    }
+                    onClick={() => {
+                      updateWidgetSelectionBulk(page.pageId, [widgetId]);
+                    }}
+                    disabled={
+                      selectedWidgets.length === 1 &&
+                      selectedWidgets.includes(widgetId)
+                    }
+                  >
+                    Isolate widget
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             );
           })}
         </ScrollableChipGroup>
       )}
     </Flex>
   );
+
+  if (pinnableSection !== undefined) {
+    return (
+      <Pinnable
+        section={pinnableSection}
+        {...componentsProps?.Pinnable}
+        componentsProps={{
+          ...componentsProps?.Pinnable?.componentsProps,
+          container: {
+            ...componentsProps?.Pinnable?.componentsProps?.container,
+            onMouseEnter: (e) => {
+              handleEnter();
+              componentsProps?.Pinnable?.componentsProps?.container?.onMouseEnter?.(
+                e
+              );
+            },
+            onMouseLeave: (e) => {
+              handleLeave();
+              componentsProps?.Pinnable?.componentsProps?.container?.onMouseLeave?.(
+                e
+              );
+            },
+            className: clsx(
+              "remoraid-non-widget-segment",
+              componentsProps?.Pinnable?.componentsProps?.container?.className
+            ),
+          },
+          button: {
+            ...componentsProps?.Pinnable?.componentsProps?.button,
+            onClick: (e) => {
+              handleLeave();
+              componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
+            },
+          },
+          layoutElement: {
+            includeContainer: false,
+            includePageContainer:
+              pinnableSection === FrameLayoutSection.Top ||
+              pinnableSection === FrameLayoutSection.Bottom,
+            ...componentsProps?.Pinnable?.componentsProps?.layoutElement,
+          },
+          controls: {
+            mounted: hover,
+            ...componentsProps?.Pinnable?.componentsProps?.controls,
+          },
+        }}
+      >
+        {element}
+      </Pinnable>
+    );
+  }
+
+  return element;
 }

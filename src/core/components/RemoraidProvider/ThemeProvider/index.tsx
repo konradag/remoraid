@@ -134,6 +134,18 @@ export const createRemoraidTheme: (
       Tooltip: {
         withArrow: true,
       },
+      Menu: {
+        shadow: "md",
+        withArrow: true,
+        transitionProps: {
+          transition: "pop",
+          duration: transitionDurations.short,
+        },
+        styles: {
+          dropdown: { border: "none", background: transparentBackground },
+          arrow: { border: "none" },
+        },
+      },
     },
   };
 

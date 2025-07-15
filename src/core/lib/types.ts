@@ -4,6 +4,7 @@ import {
   MantineColorScheme,
   MantineSize,
   MantineTheme,
+  MenuProps,
   ScrollAreaProps,
   TooltipProps,
 } from "@mantine/core";
@@ -121,6 +122,7 @@ export interface RemoraidTheme {
     ScrollArea: Partial<ScrollAreaProps>;
     HoverCard: Partial<HoverCardProps>;
     Tooltip: Partial<TooltipProps>;
+    Menu: Partial<MenuProps>;
   };
 }
 export interface RemoraidThemeDependencies {

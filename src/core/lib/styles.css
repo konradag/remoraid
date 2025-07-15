@@ -1,9 +1,11 @@
 .remoraid-navbar-minimal-link {
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-default);
   display: flex;
   align-items: center;
   justify-content: center;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  transition: background-color var(--remoraid-transition-duration-short),
+    color var(--remoraid-transition-duration-short);
   &:hover {
     background-color: light-dark(
       var(--mantine-color-gray-0),
@@ -16,6 +18,13 @@
       background-color: var(--mantine-color-blue-light);
       color: var(--mantine-color-blue-light-color);
     }
+  }
+}
+.remoraid-non-widget-segment {
+  border-radius: var(--mantine-radius-default);
+  transition: background-color var(--remoraid-transition-duration-short);
+  &:hover {
+    background-color: var(--mantine-color-gray-light-hover);
   }
 }
 .remoraid-controls {
