@@ -12,7 +12,7 @@ import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import { asChildrenOfType, PropsWithChildrenOfType } from "@/core/lib/utils";
 import { merge } from "lodash";
 
-export interface ScrollbleChipGroupProps {
+export interface ScrollableChipGroupProps {
   value: string[];
   onChange?: (value: string[]) => void;
   gap?: MantineSize | number;
@@ -26,10 +26,10 @@ export interface ScrollbleChipGroupProps {
 export default function ScrollableChipGroup({
   value,
   onChange,
-  gap,
+  gap = "xs",
   componentsProps,
   children: childrenProp,
-}: PropsWithChildrenOfType<typeof Chip, ScrollbleChipGroupProps>): ReactNode {
+}: PropsWithChildrenOfType<typeof Chip, ScrollableChipGroupProps>): ReactNode {
   // Type safety
   const children = asChildrenOfType(
     Chip,
@@ -57,7 +57,7 @@ export default function ScrollableChipGroup({
         <Flex
           justify="flex-start"
           align="center"
-          gap={gap ?? "xs"}
+          gap={gap}
           h="auto"
           {...componentsProps?.container}
         >

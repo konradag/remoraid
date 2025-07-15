@@ -35,6 +35,7 @@ export {
 } from "./components/RemoraidProvider/CoreUserExperienceProvider";
 export {
   createRemoraidTheme,
+  getCssVars,
   useRemoraidTheme,
   ThemeProviderProps,
 } from "./components/RemoraidProvider/ThemeProvider";
@@ -115,7 +116,7 @@ export {
 } from "./components/RemoraidProvider/HydrationStatusProvider";
 export {
   default as ScrollableChipGroup,
-  ScrollbleChipGroupProps,
+  ScrollableChipGroupProps as ScrollbleChipGroupProps,
 } from "./components/ScrollableChipGroup";
 export {
   useLayouts,

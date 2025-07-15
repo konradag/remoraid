@@ -19,6 +19,7 @@ import React, {
   PropsWithChildren,
   useMemo,
   ReactNode,
+  useLayoutEffect,
 } from "react";
 import { useHydratedMantineColorScheme } from "../HydrationStatusProvider";
 import { merge } from "lodash";
@@ -69,6 +70,8 @@ export const createRemoraidTheme: (
     };
   }
   const defaultTheme: RemoraidTheme = {
+    bodyColor:
+      "light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-9))",
     containerSize: 1300,
     jsonStringifySpace: 2,
     transparentBackground,
@@ -137,7 +140,33 @@ export const createRemoraidTheme: (
   // Merge
   return merge(defaultTheme, customTheme);
 };
-
+export const getCssVars = (theme: RemoraidTheme): Record<string, string> => {
+  const {
+    bodyColor,
+    transitionDurations,
+    primaryGutter,
+    containerSize,
+    transparentBackground,
+  } = theme;
+  return {
+    "--mantine-color-body": bodyColor,
+    "--remoraid-container-size": `${containerSize}px`,
+    "--remoraid-primary-gutter":
+      typeof primaryGutter === "string"
+        ? `var(--mantine-spacing-${primaryGutter})`
+        : `${primaryGutter}px`,
+    ...(transparentBackground && {
+      "--remoraid-transparent-background": transparentBackground,
+    }),
+    ...Object.entries(transitionDurations).reduce(
+      (t, [key, value]) => ({
+        ...t,
+        [`--remoraid-transition-duration-${key}`]: `${value}ms`,
+      }),
+      {}
+    ),
+  };
+};
 const themeContext = React.createContext<RemoraidTheme>(createRemoraidTheme());
 
 export const useRemoraidTheme = (): RemoraidTheme => {
@@ -166,6 +195,16 @@ export default function ThemeProvider({
       dependencies
     );
   }, [colorScheme, theme]);
+
+  // Effects
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    const entries = Object.entries(getCssVars(remoraidTheme));
+    entries.forEach(([key, value]) => root.style.setProperty(key, value));
+    return () => {
+      entries.forEach(([key]) => root.style.removeProperty(key));
+    };
+  }, [remoraidTheme]);
 
   return (
     <themeContext.Provider value={remoraidTheme}>

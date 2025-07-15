@@ -107,6 +107,7 @@ export enum RemoraidIconSize {
   Medium = "medium",
 }
 export interface RemoraidTheme {
+  bodyColor: string;
   containerSize: MantineSize | number;
   jsonStringifySpace: string | number;
   primaryGutter: MantineSize | number;
