@@ -26,7 +26,7 @@ function PlainObjectControl(props: ControlProps) {
   return (
     <>
       <Input.Wrapper
-        label={label}
+        label={label !== "remoraid-array-item" ? label : null}
         description={
           formOptions.withDescriptions ? schema.description : undefined
         }
@@ -35,9 +35,9 @@ function PlainObjectControl(props: ControlProps) {
         {schema.properties && Object.keys(schema.properties).length > 0 ? (
           <Paper
             withBorder
+            bg="var(--remoraid-transparent-background)"
             shadow="0"
             p={formOptions.gutter}
-            bg={theme.transparentBackground}
             mt={mt}
           >
             <JsonForms

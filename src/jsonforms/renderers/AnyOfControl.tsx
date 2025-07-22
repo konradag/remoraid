@@ -7,9 +7,11 @@ import { ControlProps, OwnPropsOfControl } from "@jsonforms/core";
 import { Input, Paper, Select } from "@mantine/core";
 import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
 import { ComponentType } from "react";
+import { useRemoraidTheme } from "@/core";
 
 function PlainAnyOfControl(props: ControlProps) {
   const { data, schema, label, required, handleChange, path } = props;
+  const theme = useRemoraidTheme();
   const { formOptions } = useFormOptions();
   const { renderers, cells } = useJsonForms();
 
@@ -62,6 +64,7 @@ function PlainAnyOfControl(props: ControlProps) {
         <Paper
           withBorder
           shadow="0"
+          bg="var(--remoraid-transparent-background)"
           p={formOptions.gutter}
           mt={
             formOptions.withDescriptions &&

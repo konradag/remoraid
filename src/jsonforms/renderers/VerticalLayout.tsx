@@ -14,7 +14,7 @@ import {
 } from "@jsonforms/vanilla-renderers";
 import { JsonSchema, Layout } from "@jsonforms/core";
 import { JsonFormsDispatch, useJsonForms } from "@jsonforms/react";
-import { useMantineTheme } from "@mantine/core";
+import { useFormOptions } from "../components/FormOptionsProvider";
 
 export const JsonFormsLayout = ({
   className,
@@ -46,14 +46,20 @@ export const renderChildren = (
   enabled: boolean
 ): ReactNode => {
   const { renderers, cells } = useJsonForms();
-  const theme = useMantineTheme();
+  const { formOptions } = useFormOptions();
+
+  // Helpers
+  const gutter =
+    typeof formOptions.gutter === "string"
+      ? `var(--mantine-spacing-${formOptions.gutter})`
+      : `${formOptions.gutter}px`;
 
   return layout.elements.map((child, index) => {
     return (
       <div
         className={className}
         key={`${path}-${index}`}
-        style={{ marginTop: index === 0 ? 0 : theme.spacing.xs }}
+        style={{ marginTop: index === 0 ? 0 : gutter }}
       >
         <JsonFormsDispatch
           renderers={renderers}

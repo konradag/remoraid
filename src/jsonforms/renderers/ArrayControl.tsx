@@ -1,22 +1,20 @@
-import { ControlProps, JsonSchema, OwnPropsOfControl } from "@jsonforms/core";
+import { ControlProps, JsonSchema7, OwnPropsOfControl } from "@jsonforms/core";
 import {
   JsonForms,
   useJsonForms,
   withJsonFormsControlProps,
 } from "@jsonforms/react";
-import {
-  ActionIcon,
-  Button,
-  Flex,
-  Input,
-  Paper,
-  Stack,
-  Tooltip,
-} from "@mantine/core";
+import { Box, Button, Flex, Input, Paper, Stack, Tooltip } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-import { ComponentType, ReactNode, useState } from "react";
+import { ComponentType, ReactNode } from "react";
 import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
-import { useRemoraidTheme } from "remoraid/core";
+import {
+  AlertCategory,
+  AlertMinimal,
+  RemoraidButton,
+  useRemoraidTheme,
+} from "remoraid/core";
+import { isEqual } from "lodash";
 
 function PlainArrayControl(props: ControlProps): ReactNode {
   const theme = useRemoraidTheme();
@@ -24,15 +22,27 @@ function PlainArrayControl(props: ControlProps): ReactNode {
   const { formOptions } = useFormOptions();
   const { renderers, cells } = useJsonForms();
 
-  // State
-  const [isHoveringDelete, setIsHoveringDelete] = useState<number | null>(null);
-
   // Helpers
-  let schemaItems: JsonSchema;
+  let schemaItems: JsonSchema7;
   if (schema.items && !Array.isArray(schema.items)) {
-    schemaItems = schema.items;
+    schemaItems = {
+      type: "object",
+      properties: {
+        item: {
+          ...(schema.items as JsonSchema7),
+          title: "remoraid-array-item",
+        },
+      },
+      required: ["item"],
+    };
   } else {
-    return <>No applicable renderer found for '{label}'.</>;
+    return (
+      <AlertMinimal
+        category={AlertCategory.Negative}
+        title="Renderer missing"
+        text={`Could not find applicable renderer for property '${label}'.`}
+      />
+    );
   }
 
   return (
@@ -47,7 +57,7 @@ function PlainArrayControl(props: ControlProps): ReactNode {
         <Paper
           withBorder={Array.isArray(data) && data.length > 0}
           shadow="0"
-          bg={theme.transparentBackground}
+          bg="var(--remoraid-transparent-background)"
           p={Array.isArray(data) && data.length > 0 ? formOptions.gutter : 0}
           mt={
             formOptions.withDescriptions &&
@@ -57,7 +67,7 @@ function PlainArrayControl(props: ControlProps): ReactNode {
               : 0
           }
         >
-          <Stack align="stretch" justify="flex-start" gap="sm">
+          <Stack align="stretch" justify="flex-start" gap={formOptions.gutter}>
             {Array.isArray(data) ? (
               data.map((item, i) => {
                 return (
@@ -69,55 +79,36 @@ function PlainArrayControl(props: ControlProps): ReactNode {
                     wrap="nowrap"
                     key={i}
                   >
-                    <Paper
-                      p={schemaItems.type === "object" ? formOptions.gutter : 0}
-                      withBorder={schemaItems.type === "object"}
-                      style={{
-                        borderColor:
-                          isHoveringDelete === i
-                            ? "var(--mantine-color-error)"
-                            : undefined,
-                        transition: "border-color .1s",
-                      }}
-                      flex={1}
-                    >
+                    <Box flex={1}>
                       <JsonForms
-                        schema={{
-                          ...schemaItems,
-                          $schema: undefined,
-                        }}
-                        data={item}
+                        schema={schemaItems}
+                        data={{ item }}
                         renderers={renderers ?? []}
                         cells={cells ?? []}
                         onChange={({ data: newData }) => {
+                          if (isEqual(data[i], newData.item)) {
+                            return;
+                          }
                           const dataCopy = [...data];
-                          dataCopy[i] = newData;
+                          dataCopy[i] = newData.item;
                           handleChange(path, dataCopy);
                         }}
                         validationMode="NoValidation"
                       />
-                    </Paper>
-                    <Tooltip label="Delete Item">
-                      <ActionIcon
-                        variant="default"
-                        onClick={() => {
-                          const dataCopy = [...data];
-                          dataCopy.splice(i, 1);
-                          handleChange(path, dataCopy);
-                          setIsHoveringDelete(null);
-                        }}
-                        size="input-sm"
-                        aria-label="Delete Item"
-                        onMouseEnter={() => {
-                          setIsHoveringDelete(i);
-                        }}
-                        onMouseLeave={() => {
-                          setIsHoveringDelete(null);
-                        }}
-                      >
-                        <IconTrash {...theme.componentsProps.icons.medium} />
-                      </ActionIcon>
-                    </Tooltip>
+                    </Box>
+                    <RemoraidButton
+                      responsive={false}
+                      collapsed
+                      label="Delete item"
+                      icon={IconTrash}
+                      onClick={() => {
+                        handleChange(
+                          path,
+                          data.filter((_, index) => index !== i)
+                        );
+                      }}
+                      size="sm"
+                    />
                   </Flex>
                 );
               })
@@ -138,7 +129,7 @@ function PlainArrayControl(props: ControlProps): ReactNode {
                 } else if (schemaItems.type === "object") {
                   defaultValue = {};
                 }
-                handleChange(path, [...(data || []), defaultValue]);
+                handleChange(path, [...(data ?? []), defaultValue]);
               }}
             >
               Add Item
