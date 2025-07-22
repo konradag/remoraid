@@ -174,7 +174,6 @@ export default function WidgetSelectionHeader({
                   </Box>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Label>Widget menu</Menu.Label>
                   <Menu.Item
                     leftSection={
                       <IconNavigation {...theme.componentsProps.icons.small} />

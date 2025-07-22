@@ -100,6 +100,7 @@ export default function NavbarSettingsWidget({
                         />
                       }
                       variant="outline"
+                      size="sm"
                       // disabled={href === "/settings"}
                     >
                       {label}
