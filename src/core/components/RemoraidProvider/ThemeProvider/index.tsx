@@ -120,30 +120,21 @@ export const createRemoraidTheme: (
         type: "hover",
       },
       HoverCard: {
-        shadow: "md",
         withArrow: true,
         transitionProps: {
-          transition: "pop",
           duration: transitionDurations.short,
-        },
-        styles: {
-          dropdown: { border: "none", background: transparentBackground },
-          arrow: { border: "none" },
         },
       },
       Tooltip: {
         withArrow: true,
-      },
-      Menu: {
-        shadow: "md",
-        withArrow: true,
         transitionProps: {
-          transition: "pop",
           duration: transitionDurations.short,
         },
-        styles: {
-          dropdown: { border: "none", background: transparentBackground },
-          arrow: { border: "none" },
+      },
+      Menu: {
+        withArrow: true,
+        transitionProps: {
+          duration: transitionDurations.short,
         },
       },
     },
