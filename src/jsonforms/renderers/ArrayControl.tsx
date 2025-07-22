@@ -12,7 +12,6 @@ import {
   Paper,
   Stack,
   Tooltip,
-  useMantineTheme,
 } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { ComponentType, ReactNode, useState } from "react";
@@ -20,12 +19,9 @@ import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
 import { useRemoraidTheme } from "remoraid/core";
 
 function PlainArrayControl(props: ControlProps): ReactNode {
-  const mantineTheme = useMantineTheme();
   const theme = useRemoraidTheme();
   const { label, schema, data, handleChange, path, required } = props;
-  const {
-    formOptions: { withDescriptions },
-  } = useFormOptions();
+  const { formOptions } = useFormOptions();
   const { renderers, cells } = useJsonForms();
 
   // State
@@ -43,15 +39,18 @@ function PlainArrayControl(props: ControlProps): ReactNode {
     <>
       <Input.Wrapper
         label={label}
-        description={withDescriptions ? schema.description : undefined}
+        description={
+          formOptions.withDescriptions ? schema.description : undefined
+        }
         withAsterisk={required}
       >
         <Paper
           withBorder={Array.isArray(data) && data.length > 0}
           shadow="0"
-          p={Array.isArray(data) && data.length > 0 ? "sm" : 0}
+          bg={theme.transparentBackground}
+          p={Array.isArray(data) && data.length > 0 ? formOptions.gutter : 0}
           mt={
-            withDescriptions &&
+            formOptions.withDescriptions &&
             schema.description &&
             schema.description.length > 0
               ? 4
@@ -71,13 +70,14 @@ function PlainArrayControl(props: ControlProps): ReactNode {
                     key={i}
                   >
                     <Paper
-                      p={schemaItems.type === "object" ? "sm" : 0}
+                      p={schemaItems.type === "object" ? formOptions.gutter : 0}
                       withBorder={schemaItems.type === "object"}
                       style={{
                         borderColor:
                           isHoveringDelete === i
-                            ? mantineTheme.colors.red[6]
+                            ? "var(--mantine-color-error)"
                             : undefined,
+                        transition: "border-color .1s",
                       }}
                       flex={1}
                     >

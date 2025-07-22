@@ -19,6 +19,7 @@ function PlainTimestampControl({
   return (
     <>
       <DatePickerInput
+        variant="default"
         label={label}
         placeholder="Pick a date"
         value={new Date(data * 1000)}

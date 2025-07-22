@@ -4,6 +4,7 @@ import {
   OwnPropsOfLayout,
   RankedTester,
 } from "@jsonforms/core";
+import { MantineSize } from "@mantine/core";
 import { ComponentType } from "react";
 
 export interface JSONFormsRenderer<RendererType> {
@@ -19,4 +20,5 @@ export type RemoraidLayoutRenderer = JSONFormsRenderer<
 export type RemoraidRenderer = RemoraidControlRenderer | RemoraidLayoutRenderer;
 export interface FormOptions {
   withDescriptions: boolean;
+  gutter: MantineSize | number;
 }

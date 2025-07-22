@@ -7,47 +7,61 @@ import { Input, Paper } from "@mantine/core";
 import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
 import { ControlProps, OwnPropsOfControl } from "@jsonforms/core";
 import { ComponentType } from "react";
+import { AlertCategory, AlertMinimal, useRemoraidTheme } from "@/core";
 
 function PlainObjectControl(props: ControlProps) {
   const { label, schema, data, handleChange, path, required } = props;
-  const {
-    formOptions: { withDescriptions },
-  } = useFormOptions();
+  const { formOptions } = useFormOptions();
   const { renderers, cells } = useJsonForms();
+  const theme = useRemoraidTheme();
+
+  // Helpers
+  const mt =
+    formOptions.withDescriptions &&
+    schema.description &&
+    schema.description.length > 0
+      ? 4
+      : 0;
 
   return (
     <>
       <Input.Wrapper
         label={label}
-        description={withDescriptions ? schema.description : undefined}
+        description={
+          formOptions.withDescriptions ? schema.description : undefined
+        }
         withAsterisk={required}
       >
-        <Paper
-          withBorder
-          shadow="0"
-          p="sm"
-          mt={
-            withDescriptions &&
-            schema.description &&
-            schema.description.length > 0
-              ? 4
-              : 0
-          }
-        >
-          <JsonForms
-            schema={{
-              ...schema,
-              $schema: undefined,
-            }}
-            data={data}
-            renderers={renderers ?? []}
-            cells={cells ?? []}
-            onChange={({ data: newData }) => {
-              handleChange(path, newData);
-            }}
-            validationMode="NoValidation"
+        {schema.properties && Object.keys(schema.properties).length > 0 ? (
+          <Paper
+            withBorder
+            shadow="0"
+            p={formOptions.gutter}
+            bg={theme.transparentBackground}
+            mt={mt}
+          >
+            <JsonForms
+              schema={{
+                ...schema,
+                $schema: undefined,
+              }}
+              data={data}
+              renderers={renderers ?? []}
+              cells={cells ?? []}
+              onChange={({ data: newData }) => {
+                handleChange(path, newData);
+              }}
+              validationMode="NoValidation"
+            />
+          </Paper>
+        ) : (
+          <AlertMinimal
+            category={AlertCategory.Negative}
+            title="No properties specified"
+            text="The JSON schema for this object did not specify any properties."
+            componentsProps={{ alert: { mt } }}
           />
-        </Paper>
+        )}
       </Input.Wrapper>
     </>
   );

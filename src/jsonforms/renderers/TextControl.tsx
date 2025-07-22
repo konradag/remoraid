@@ -20,7 +20,7 @@ function PlainTextControl({
     <>
       <TextInput
         label={label}
-        variant="filled"
+        variant="default"
         placeholder=""
         value={data}
         onChange={(event) => {

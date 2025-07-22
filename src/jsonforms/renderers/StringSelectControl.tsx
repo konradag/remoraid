@@ -27,7 +27,7 @@ function PlainTimestampControl({
         }}
         required={required}
         placeholder="Select an option"
-        variant="filled"
+        variant="default"
         description={withDescriptions ? schema.description || null : null}
       />
     </>

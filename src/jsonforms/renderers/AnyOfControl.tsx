@@ -10,9 +10,7 @@ import { ComponentType } from "react";
 
 function PlainAnyOfControl(props: ControlProps) {
   const { data, schema, label, required, handleChange, path } = props;
-  const {
-    formOptions: { withDescriptions },
-  } = useFormOptions();
+  const { formOptions } = useFormOptions();
   const { renderers, cells } = useJsonForms();
 
   // Helpers
@@ -56,15 +54,17 @@ function PlainAnyOfControl(props: ControlProps) {
     <>
       <Input.Wrapper
         label={label}
-        description={withDescriptions ? schema.description || null : null}
+        description={
+          formOptions.withDescriptions ? schema.description ?? null : null
+        }
         withAsterisk={required}
       >
         <Paper
           withBorder
           shadow="0"
-          p="sm"
+          p={formOptions.gutter}
           mt={
-            withDescriptions &&
+            formOptions.withDescriptions &&
             schema.description &&
             schema.description.length > 0
               ? 4
@@ -85,7 +85,7 @@ function PlainAnyOfControl(props: ControlProps) {
             required={required}
             placeholder="Select Value Type"
             variant="default"
-            mb={type && type !== "null" ? "sm" : undefined}
+            mb={type && type !== "null" ? formOptions.gutter : undefined}
           />
           {type && type !== "null" && (
             <JsonForms

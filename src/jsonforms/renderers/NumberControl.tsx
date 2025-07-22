@@ -19,7 +19,7 @@ function PlainNumberControl({
     <>
       <NumberInput
         label={label}
-        variant="filled"
+        variant="default"
         value={data}
         onChange={(newValue) => {
           if (newValue === "") {

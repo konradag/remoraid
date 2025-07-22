@@ -12,23 +12,22 @@ function PlainCheckboxControl({
   required,
   schema,
 }: ControlProps) {
-  const {
-    formOptions: { withDescriptions },
-  } = useFormOptions();
+  const { formOptions } = useFormOptions();
 
   return (
     <>
       <Checkbox
         label={label}
-        py="sm"
-        size="sm"
+        py={formOptions.gutter}
         labelPosition="left"
         checked={data}
         onChange={(event) => {
           handleChange(path, event.target.checked);
         }}
         required={required}
-        description={withDescriptions ? schema.description || null : null}
+        description={
+          formOptions.withDescriptions ? schema.description ?? null : null
+        }
       />
     </>
   );

@@ -8,6 +8,7 @@ import React, {
 
 export const defaultFormOptions: FormOptions = {
   withDescriptions: false,
+  gutter: "md",
 };
 
 export interface FormOptionsContext {
