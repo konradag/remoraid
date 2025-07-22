@@ -67,6 +67,7 @@ export default function WidgetSelectionHeader({
 
   // State
   const [hover, setHover] = useState<boolean>(false);
+  const [isPinned, setIsPinned] = useState<boolean>(initiallyPinned);
 
   // Helpers
   const handleEnter = () => {
@@ -215,7 +216,13 @@ export default function WidgetSelectionHeader({
     if (!activeWidget) {
       return;
     }
-    const activeWidgetChipElement = scrollAreaRef?.current?.querySelector(
+    if (!isPinned) {
+      return;
+    }
+    if (!scrollAreaRef?.current) {
+      return;
+    }
+    const activeWidgetChipElement = scrollAreaRef.current.querySelector(
       `#remoraid-widget-selection-header-chip-${activeWidget}`
     );
     if (!activeWidgetChipElement) {
@@ -258,6 +265,7 @@ export default function WidgetSelectionHeader({
           button: {
             ...componentsProps?.Pinnable?.componentsProps?.button,
             onClick: (e) => {
+              setIsPinned(!isPinned);
               handleLeave();
               componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
             },
