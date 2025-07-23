@@ -106,9 +106,15 @@ export default function WidgetsProvider({
         if (!widget) {
           continue;
         }
+        const selected = selectedWidgetIds.includes(widgetId);
+        const selectionChanged = widget.selected !== selected;
+        if (!selectionChanged) {
+          updatedPage[widgetId] = widget;
+          continue;
+        }
         updatedPage[widgetId] = {
           ...widget,
-          selected: selectedWidgetIds.includes(widgetId),
+          selected,
           hidden: false,
         };
       }
