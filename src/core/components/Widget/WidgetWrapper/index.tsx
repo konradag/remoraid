@@ -77,9 +77,10 @@ export default function WidgetWrapper({
   const handleLeave = () => {
     updateActiveWidget(null);
   };
+  const mounted = Boolean(widget?.selected);
   let element = (
     <Transition
-      mounted={Boolean(widget?.selected)}
+      mounted={mounted}
       transition="fade-left"
       duration={theme.transitionDurations.medium}
       timingFunction="ease"
@@ -133,6 +134,13 @@ export default function WidgetWrapper({
               color="red"
               order={200}
               {...componentsProps?.closeButton}
+              componentsProps={{
+                ...componentsProps?.closeButton?.componentsProps,
+                tooltip: {
+                  disabled: !mounted,
+                  ...componentsProps?.closeButton?.componentsProps?.tooltip,
+                },
+              }}
               onClick={(e) => {
                 if (!page) {
                   return;
