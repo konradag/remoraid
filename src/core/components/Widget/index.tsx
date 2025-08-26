@@ -10,6 +10,8 @@ import {
   Stack,
   StackProps,
   TitleProps,
+  Box,
+  BoxProps,
 } from "@mantine/core";
 import { PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, { WidgetWrapperProps } from "./WidgetWrapper";
@@ -47,6 +49,8 @@ export interface WidgetProps {
   pinnableSection?: WidgetWrapperProps["pinnableSection"];
   componentsProps?: {
     wrapper?: Partial<Omit<WidgetWrapperProps, "config">>;
+    contentContainer?: Partial<StackProps>;
+    childrenContainer?: Partial<BoxProps>;
     loader?: Partial<LoaderProps>;
     title?: Partial<TitleProps>;
     badgeGroup?: Partial<BadgeGroupProps>;
@@ -112,50 +116,61 @@ export default function Widget({
         pinnableSection ?? componentsProps?.wrapper?.pinnableSection
       }
     >
-      <Group justify="space-between" wrap="nowrap">
-        <Group gap={badgesGap} wrap="nowrap">
-          <Title order={1} size="h2" lineClamp={1} {...componentsProps?.title}>
-            {title ?? id}
-          </Title>
-          {badges !== undefined && (
-            <BadgeGroup
-              badges={badges}
-              gap={badgesGap}
-              {...componentsProps?.badgeGroup}
-            />
-          )}
+      <Stack gap="md" h="100%" {...componentsProps?.contentContainer}>
+        <Group justify="space-between" wrap="nowrap">
+          <Group gap={badgesGap} wrap="nowrap">
+            <Title
+              order={1}
+              size="h2"
+              lineClamp={1}
+              {...componentsProps?.title}
+            >
+              {title ?? id}
+            </Title>
+            {badges !== undefined && (
+              <BadgeGroup
+                badges={badges}
+                gap={badgesGap}
+                {...componentsProps?.badgeGroup}
+              />
+            )}
+          </Group>
+          <Group gap={buttonsGap} wrap="nowrap">
+            {buttons !== undefined &&
+              buttons.map((button, i) => {
+                if (isValidElementOfType(RemoraidButton, button)) {
+                  return button;
+                }
+                return <RemoraidButton {...button} key={i} />;
+              })}
+          </Group>
         </Group>
-        <Group gap={buttonsGap} wrap="nowrap">
-          {buttons !== undefined &&
-            buttons.map((button, i) => {
-              if (isValidElementOfType(RemoraidButton, button)) {
-                return button;
+        <Box>
+          <Divider {...componentsProps?.divider} />
+          <Stack
+            align="stretch"
+            gap={alertsGap}
+            mt={alerts && alerts.length > 0 ? "md" : 0}
+            {...componentsProps?.alertsContainer}
+          >
+            {alerts?.map((alert, i) => {
+              if (isValidElementOfType(AlertMinimal, alert)) {
+                return alert;
               }
-              return <RemoraidButton {...button} key={i} />;
+              return <AlertMinimal {...alert} key={i} />;
             })}
-        </Group>
-      </Group>
-      <Divider my="md" {...componentsProps?.divider} />
-      <Stack
-        align="stretch"
-        gap={alertsGap}
-        mb={alerts && alerts.length > 0 ? "md" : 0}
-        {...componentsProps?.alertsContainer}
-      >
-        {alerts?.map((alert, i) => {
-          if (isValidElementOfType(AlertMinimal, alert)) {
-            return alert;
-          }
-          return <AlertMinimal {...alert} key={i} />;
-        })}
+          </Stack>
+        </Box>
+        {loading ? (
+          <Center>
+            <Loader {...componentsProps?.loader} />
+          </Center>
+        ) : (
+          <Box flex={1} {...componentsProps?.childrenContainer}>
+            {children}
+          </Box>
+        )}
       </Stack>
-      {loading ? (
-        <Center>
-          <Loader {...componentsProps?.loader} />
-        </Center>
-      ) : (
-        <>{children}</>
-      )}
     </WidgetWrapper>
   );
 }
