@@ -11,8 +11,8 @@ import {
   StackProps,
   TitleProps,
   Box,
-  BoxProps,
   ScrollArea,
+  ScrollAreaAutosizeProps,
 } from "@mantine/core";
 import { PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, { WidgetWrapperProps } from "./WidgetWrapper";
@@ -26,6 +26,8 @@ import {
   ElementOrPropsOfType,
   isValidElementOfType,
 } from "@/core/lib/utils";
+import { merge } from "lodash";
+import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 
 export interface WidgetProps {
   id: string;
@@ -51,7 +53,7 @@ export interface WidgetProps {
   componentsProps?: {
     wrapper?: Partial<Omit<WidgetWrapperProps, "config">>;
     contentContainer?: Partial<StackProps>;
-    childrenContainer?: Partial<BoxProps>;
+    childrenContainer?: Partial<ScrollAreaAutosizeProps>;
     loader?: Partial<LoaderProps>;
     title?: Partial<TitleProps>;
     badgeGroup?: Partial<BadgeGroupProps>;
@@ -95,6 +97,9 @@ export default function Widget({
       "Check the 'badges' property of this widget."
     )
   );
+
+  // Contexts
+  const theme = useRemoraidTheme();
 
   // Helpers
   const badgesGap = (typeof gaps === "object" ? gaps.badges : gaps) ?? "xs";
@@ -162,7 +167,13 @@ export default function Widget({
             })}
           </Stack>
         </Box>
-        <ScrollArea.Autosize flex={1} {...componentsProps?.childrenContainer}>
+        <ScrollArea.Autosize
+          {...merge(
+            theme.componentsProps.ScrollArea,
+            { flex: 1 },
+            componentsProps?.childrenContainer
+          )}
+        >
           {loading ? (
             <Center>
               <Loader {...componentsProps?.loader} />
