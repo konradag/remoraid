@@ -101,6 +101,8 @@ export default function WidgetWrapper({
           mt={mt}
           pos="relative"
           h="fit-content"
+          mah="100%"
+          display="flex"
           {...componentsProps?.container}
           onMouseEnter={(e) => {
             if (!pinnableSection) {

@@ -12,6 +12,7 @@ import {
   TitleProps,
   Box,
   BoxProps,
+  ScrollArea,
 } from "@mantine/core";
 import { PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, { WidgetWrapperProps } from "./WidgetWrapper";
@@ -116,7 +117,7 @@ export default function Widget({
         pinnableSection ?? componentsProps?.wrapper?.pinnableSection
       }
     >
-      <Stack gap="md" h="100%" {...componentsProps?.contentContainer}>
+      <Stack gap="md" mih={0} {...componentsProps?.contentContainer}>
         <Group justify="space-between" wrap="nowrap">
           <Group gap={badgesGap} wrap="nowrap">
             <Title
@@ -161,15 +162,15 @@ export default function Widget({
             })}
           </Stack>
         </Box>
-        {loading ? (
-          <Center>
-            <Loader {...componentsProps?.loader} />
-          </Center>
-        ) : (
-          <Box flex={1} {...componentsProps?.childrenContainer}>
-            {children}
-          </Box>
-        )}
+        <ScrollArea.Autosize flex={1} {...componentsProps?.childrenContainer}>
+          {loading ? (
+            <Center>
+              <Loader {...componentsProps?.loader} />
+            </Center>
+          ) : (
+            children
+          )}
+        </ScrollArea.Autosize>
       </Stack>
     </WidgetWrapper>
   );
