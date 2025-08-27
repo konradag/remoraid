@@ -116,7 +116,11 @@ export default function WidgetWrapper({
             }
             componentsProps?.container?.onMouseLeave?.(e);
           }}
-          style={merge(transitionStyle, componentsProps?.container?.style)}
+          style={merge(
+            transitionStyle,
+            { flexDirection: "column" },
+            componentsProps?.container?.style
+          )}
           className={clsx(
             "remoraid-segment",
             componentsProps?.container?.className
