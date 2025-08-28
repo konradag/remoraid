@@ -118,6 +118,7 @@ export const createRemoraidTheme: (
         scrollbarSize: 8,
         scrollHideDelay: 20,
         type: "hover",
+        styles: { thumb: { zIndex: 5 } },
       },
       HoverCard: {
         withArrow: true,
