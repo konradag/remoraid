@@ -28,6 +28,7 @@ import {
 } from "@/core/lib/utils";
 import { merge } from "lodash";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import clsx from "clsx";
 
 export interface WidgetProps {
   id: string;
@@ -153,20 +154,23 @@ export default function Widget({
         </Group>
         <Box>
           <Divider {...componentsProps?.divider} />
-          <Stack
-            align="stretch"
-            gap={alertsGap}
-            mt={alerts && alerts.length > 0 ? "md" : 0}
-            {...componentsProps?.alertsContainer}
-          >
-            {alerts?.map((alert, i) => {
-              if (isValidElementOfType(AlertMinimal, alert)) {
-                return alert;
-              }
-              return <AlertMinimal {...alert} key={i} />;
-            })}
-          </Stack>
         </Box>
+        <Stack
+          align="stretch"
+          gap={alertsGap}
+          {...componentsProps?.alertsContainer}
+          className={clsx(
+            "remoraid-widget-alerts-container",
+            componentsProps?.alertsContainer?.className
+          )}
+        >
+          {alerts?.map((alert, i) => {
+            if (isValidElementOfType(AlertMinimal, alert)) {
+              return alert;
+            }
+            return <AlertMinimal {...alert} key={i} />;
+          })}
+        </Stack>
         <ScrollArea.Autosize
           {...merge(
             theme.componentsProps.ScrollArea,
