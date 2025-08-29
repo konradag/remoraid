@@ -25,9 +25,7 @@ import {
   LayoutType,
 } from "@/core/lib/types";
 import { useLayouts } from "../RemoraidProvider/LayoutsProvider";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import clsx from "clsx";
-import { merge } from "lodash";
 
 const layoutContext = createContext<LayoutContext<LayoutType.Frame> | null>(
   null
@@ -63,7 +61,6 @@ function FrameLayout({
   children,
 }: PropsWithChildren<FrameLayoutProps>): ReactNode {
   // Contexts
-  const theme = useRemoraidTheme();
   const { layouts, setLayouts } = useLayouts();
 
   // Helpers
@@ -222,14 +219,7 @@ function FrameLayout({
             )}
           />
           {includeScrollArea ? (
-            <ScrollArea
-              flex={1}
-              {...merge(
-                {},
-                theme.componentsProps.ScrollArea,
-                componentsProps?.ScrollArea
-              )}
-            >
+            <ScrollArea flex={1} {...componentsProps?.ScrollArea}>
               {contentSection}
             </ScrollArea>
           ) : (

@@ -8,8 +8,6 @@ import {
   ScrollAreaProps,
 } from "@mantine/core";
 import { PropsWithChildren, ReactNode, RefObject } from "react";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
-import { merge } from "lodash";
 
 export interface ScrollableChipGroupProps {
   value: string[];
@@ -31,18 +29,11 @@ export default function ScrollableChipGroup({
   componentsProps,
   children,
 }: PropsWithChildren<ScrollableChipGroupProps>): ReactNode {
-  // Contexts
-  const theme = useRemoraidTheme();
-
   return (
     <ScrollArea
       ref={ref}
-      {...merge(
-        {},
-        theme.componentsProps.ScrollArea,
-        { style: { contain: "inline-size" } },
-        componentsProps?.ScrollArea
-      )}
+      {...componentsProps?.ScrollArea}
+      style={{ contain: "inline-size", ...componentsProps?.ScrollArea?.style }}
     >
       <Chip.Group
         value={value}

@@ -34,6 +34,7 @@ export {
   useRemoraidUserExperience,
 } from "./components/RemoraidProvider/CoreUserExperienceProvider";
 export {
+  defaultTransitionDurations,
   createRemoraidTheme,
   getCssVars,
   useRemoraidTheme,

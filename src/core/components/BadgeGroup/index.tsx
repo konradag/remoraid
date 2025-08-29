@@ -92,13 +92,7 @@ export default function BadgeGroup({
         {...componentsProps?.cumulativeBadgeTransition}
       >
         {(transitionStyle) => (
-          <HoverCard
-            {...merge(
-              {},
-              theme.componentsProps.HoverCard,
-              componentsProps?.HoverCard
-            )}
-          >
+          <HoverCard {...componentsProps?.HoverCard}>
             <HoverCard.Target>
               <Badge
                 hiddenFrom={breakpoint}

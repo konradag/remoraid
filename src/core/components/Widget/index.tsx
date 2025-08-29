@@ -26,8 +26,6 @@ import {
   ElementOrPropsOfType,
   isValidElementOfType,
 } from "@/core/lib/utils";
-import { merge } from "lodash";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import clsx from "clsx";
 
 export interface WidgetProps {
@@ -99,9 +97,6 @@ export default function Widget({
     )
   );
 
-  // Contexts
-  const theme = useRemoraidTheme();
-
   // Helpers
   const badgesGap = (typeof gaps === "object" ? gaps.badges : gaps) ?? "xs";
   const buttonsGap = (typeof gaps === "object" ? gaps.buttons : gaps) ?? "xs";
@@ -171,13 +166,7 @@ export default function Widget({
             return <AlertMinimal {...alert} key={i} />;
           })}
         </Stack>
-        <ScrollArea.Autosize
-          {...merge(
-            theme.componentsProps.ScrollArea,
-            { flex: 1 },
-            componentsProps?.childrenContainer
-          )}
-        >
+        <ScrollArea.Autosize flex={1} {...componentsProps?.childrenContainer}>
           {loading ? (
             <Center>
               <Loader {...componentsProps?.loader} />

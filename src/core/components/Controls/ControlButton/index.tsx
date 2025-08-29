@@ -53,12 +53,9 @@ export default function ControlButton({
     >
       {(transitionStyle) => (
         <Tooltip
-          {...merge(
-            {},
-            theme.componentsProps.Tooltip,
-            { label: tooltip, disabled: !Boolean(tooltip) },
-            componentsProps?.tooltip
-          )}
+          label={tooltip}
+          disabled={!Boolean(tooltip)}
+          {...componentsProps?.tooltip}
         >
           <ActionIcon
             data-control-button

@@ -132,12 +132,8 @@ export default function WidgetSelectionHeader({
             return (
               <Menu
                 key={widgetId}
-                {...merge(
-                  {},
-                  theme.componentsProps.Menu,
-                  { trigger: "hover" },
-                  componentsProps?.widgetMenu
-                )}
+                trigger="hover"
+                {...componentsProps?.widgetMenu}
               >
                 <Menu.Target>
                   <Box>

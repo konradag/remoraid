@@ -25,6 +25,13 @@ import { useHydratedMantineColorScheme } from "../HydrationStatusProvider";
 import { merge } from "lodash";
 import { PartialDeep } from "type-fest";
 
+export const defaultTransitionDurations: RemoraidTheme["transitionDurations"] =
+  {
+    [TransitionDuration.Short]: 200,
+    [TransitionDuration.Medium]: 350,
+    [TransitionDuration.Long]: 500,
+  };
+
 export const createRemoraidTheme: (
   customTheme?: PartialDeep<RemoraidTheme>,
   dependencies?: Partial<RemoraidThemeDependencies>
@@ -33,11 +40,7 @@ export const createRemoraidTheme: (
 
   // Root values (values which are dependencies of default values)
   const transitionDurations = merge(
-    {
-      [TransitionDuration.Short]: 200,
-      [TransitionDuration.Medium]: 350,
-      [TransitionDuration.Long]: 500,
-    },
+    defaultTransitionDurations,
     customTheme?.transitionDurations
   );
   const transparentBackground =
@@ -112,30 +115,6 @@ export const createRemoraidTheme: (
         [RemoraidIconSize.Tiny]: {
           size: 12,
           stroke: 2.6,
-        },
-      },
-      ScrollArea: {
-        scrollbarSize: 8,
-        scrollHideDelay: 20,
-        type: "hover",
-        styles: { thumb: { zIndex: 5 } },
-      },
-      HoverCard: {
-        withArrow: true,
-        transitionProps: {
-          duration: transitionDurations.short,
-        },
-      },
-      Tooltip: {
-        withArrow: true,
-        transitionProps: {
-          duration: transitionDurations.short,
-        },
-      },
-      Menu: {
-        withArrow: true,
-        transitionProps: {
-          duration: transitionDurations.short,
         },
       },
     },

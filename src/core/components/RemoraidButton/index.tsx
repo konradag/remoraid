@@ -111,14 +111,7 @@ export default function RemoraidButton<
     >
       {(transitionStyle) => (
         <>
-          <Tooltip
-            {...merge(
-              {},
-              theme.componentsProps.Tooltip,
-              { label },
-              componentsProps?.tooltip
-            )}
-          >
+          <Tooltip label={label} {...componentsProps?.tooltip}>
             <ActionIcon
               aria-label={label}
               variant={variant}

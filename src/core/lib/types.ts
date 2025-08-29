@@ -1,12 +1,8 @@
 import {
-  HoverCardProps,
   MantineBreakpoint,
   MantineColorScheme,
   MantineSize,
   MantineTheme,
-  MenuProps,
-  ScrollAreaProps,
-  TooltipProps,
 } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
@@ -119,10 +115,6 @@ export interface RemoraidTheme {
   componentsProps: {
     icons: Record<RemoraidIconSize, Partial<IconProps>>;
     alerts: Record<AlertCategory, Omit<Partial<AlertMinimalProps>, "category">>;
-    ScrollArea: Partial<ScrollAreaProps>;
-    HoverCard: Partial<HoverCardProps>;
-    Tooltip: Partial<TooltipProps>;
-    Menu: Partial<MenuProps>;
   };
 }
 export interface RemoraidThemeDependencies {
