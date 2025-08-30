@@ -11,7 +11,7 @@ import { PropsWithChildren, ReactNode, useState } from "react";
 import { useRemoraidTheme } from "remoraid/core";
 
 export interface InputWrapperScrollAreaProps {
-  label: string;
+  label?: string;
   mah?: number;
   error?: ReactNode;
   componentsProps?: {
