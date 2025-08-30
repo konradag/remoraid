@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { ContextModalProps } from "@mantine/modals";
 import { JsonInput, JsonInputProps } from "@mantine/core";
-import { useRemoraidTheme } from "remoraid/core";
+import { InputWrapperScrollArea, useRemoraidTheme } from "remoraid/core";
 
 export interface JSONModalProps {
   content: any;
@@ -22,17 +22,16 @@ export default function JSONModal({
       : JSON.stringify(innerProps.content, null, theme.jsonStringifySpace);
 
   return (
-    <>
+    <InputWrapperScrollArea mah={575}>
       <JsonInput
-        variant="filled"
+        onChange={() => {}}
         value={stringValue}
-        validationError="Invalid JSON"
         formatOnBlur
         autosize
         minRows={4}
-        maxRows={24}
+        variant="unstyled"
         {...innerProps.componentsProps?.jsonInput}
       />
-    </>
+    </InputWrapperScrollArea>
   );
 }
