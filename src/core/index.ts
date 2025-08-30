@@ -117,7 +117,7 @@ export {
 } from "./components/RemoraidProvider/HydrationStatusProvider";
 export {
   default as ScrollableChipGroup,
-  ScrollableChipGroupProps as ScrollbleChipGroupProps,
+  ScrollableChipGroupProps,
 } from "./components/ScrollableChipGroup";
 export {
   useLayouts,
@@ -140,6 +140,10 @@ export {
   PinnableProps,
   PinnableDefaultLayoutType,
 } from "./components/Pinnable";
+export {
+  default as InputWrapperScrollArea,
+  InputWrapperScrollAreaProps,
+} from "./components/InputWrapperScrollArea";
 export {
   co,
   Common,
