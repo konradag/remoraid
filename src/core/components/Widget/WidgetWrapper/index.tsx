@@ -74,7 +74,11 @@ export default function WidgetWrapper({
   const handleEnter = () => {
     updateActiveWidget(config.widgetId);
   };
-  const handleLeave = () => {
+  const handleLeave = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const to = e.relatedTarget as Element | null;
+    if (to && to.closest?.("[data-control-button]")) {
+      return;
+    }
     updateActiveWidget(null);
   };
   const mounted = Boolean(widget?.selected);
@@ -105,15 +109,11 @@ export default function WidgetWrapper({
           display="flex"
           {...componentsProps?.container}
           onMouseEnter={(e) => {
-            if (!pinnableSection) {
-              handleEnter();
-            }
+            handleEnter();
             componentsProps?.container?.onMouseEnter?.(e);
           }}
           onMouseLeave={(e) => {
-            if (!pinnableSection) {
-              handleLeave();
-            }
+            handleLeave(e);
             componentsProps?.container?.onMouseLeave?.(e);
           }}
           style={merge(
@@ -152,7 +152,7 @@ export default function WidgetWrapper({
                   return;
                 }
                 updateWidgetSelection(page.pageId, config.widgetId, false);
-                handleLeave();
+                handleLeave(e);
                 componentsProps?.closeButton?.onClick?.(e);
               }}
             />
@@ -171,25 +171,10 @@ export default function WidgetWrapper({
         {...componentsProps?.Pinnable}
         componentsProps={{
           ...componentsProps?.Pinnable?.componentsProps,
-          container: {
-            ...componentsProps?.Pinnable?.componentsProps?.container,
-            onMouseEnter: (e) => {
-              handleEnter();
-              componentsProps?.Pinnable?.componentsProps?.container?.onMouseEnter?.(
-                e
-              );
-            },
-            onMouseLeave: (e) => {
-              handleLeave();
-              componentsProps?.Pinnable?.componentsProps?.container?.onMouseLeave?.(
-                e
-              );
-            },
-          },
           button: {
             ...componentsProps?.Pinnable?.componentsProps?.button,
             onClick: (e) => {
-              handleLeave();
+              handleLeave(e);
               componentsProps?.Pinnable?.componentsProps?.button?.onClick?.(e);
             },
           },
