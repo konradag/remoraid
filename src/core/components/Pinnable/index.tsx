@@ -94,7 +94,7 @@ export default function Pinnable<
       pos="relative"
       ref={containerRef}
       data-hidden={hidden}
-      h="100%"
+      mah="100%"
       {...componentsProps?.container}
       className={clsx(
         "remoraid-pinnable",
