@@ -21,8 +21,9 @@ import {
   getDefaultButtonIconSize,
   OptionalIfExtends,
 } from "@/core/lib/utils";
-import { RemoraidIconSize } from "@/core/lib/types";
+import { ClickTransformation, RemoraidIconSize } from "@/core/lib/types";
 import { merge } from "lodash";
+import clsx from "clsx";
 
 export type RemoraidButtonDefaultResponsivity = true;
 
@@ -39,6 +40,7 @@ interface ExplicitRemoraidButtonProps<Responsive extends boolean> {
   loading?: boolean;
   variant?: Extract<ButtonVariant, ActionIconVariant>;
   mounted?: TransitionProps["mounted"];
+  clickTransformation?: ClickTransformation;
   componentsProps?: {
     tooltip?: Partial<TooltipProps>;
     icon?: Partial<IconProps>;
@@ -76,6 +78,7 @@ export default function RemoraidButton<
   mounted = true,
   icon: iconProp,
   iconSize: iconSizeProp,
+  clickTransformation = ClickTransformation.Default,
   componentsProps,
 }: RemoraidButtonProps<Responsive>): ReactNode {
   // Props default values
@@ -100,6 +103,20 @@ export default function RemoraidButton<
       )}
     />
   );
+  const clickTransformationClassNames: Record<
+    ClickTransformation,
+    string | null
+  > = {
+    [ClickTransformation.Default]: null,
+    [ClickTransformation.None]: "remoraid-button-none",
+    [ClickTransformation.Scale]: "remoraid-button-scale",
+    [ClickTransformation.TiltDown]: "remoraid-button-tilt-down",
+    [ClickTransformation.TiltUp]: "remoraid-button-tilt-up",
+    [ClickTransformation.TiltLeft]: "remoraid-button-tilt-left",
+    [ClickTransformation.TiltRight]: "remoraid-button-tilt-right",
+  };
+  const clickTransformationClass =
+    clickTransformationClassNames[clickTransformation];
 
   return (
     <Transition
@@ -128,11 +145,16 @@ export default function RemoraidButton<
                   : componentsProps?.ActionIcon?.display ??
                     componentsProps?.button?.display
               }
-              style={{
-                ...transitionStyle,
-                ...(componentsProps?.ActionIcon?.style ??
-                  componentsProps?.button?.style),
-              }}
+              style={merge(
+                transitionStyle,
+                componentsProps?.button?.style,
+                componentsProps?.ActionIcon?.style
+              )}
+              className={clsx(
+                clickTransformationClass,
+                componentsProps?.ActionIcon?.className,
+                componentsProps?.button?.className
+              )}
             >
               {iconElement}
             </ActionIcon>
@@ -153,11 +175,16 @@ export default function RemoraidButton<
                 : componentsProps?.Button?.display ??
                   componentsProps?.button?.display
             }
-            style={{
-              ...transitionStyle,
-              ...(componentsProps?.Button?.style ??
-                componentsProps?.button?.style),
-            }}
+            style={merge(
+              transitionStyle,
+              componentsProps?.button?.style,
+              componentsProps?.Button?.style
+            )}
+            className={clsx(
+              clickTransformationClass,
+              componentsProps?.Button?.className,
+              componentsProps?.button?.className
+            )}
           >
             {label}
           </Button>

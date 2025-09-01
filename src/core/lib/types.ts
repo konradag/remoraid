@@ -180,3 +180,12 @@ export interface ContextCluster<Context, StaticID extends string = never> {
     id: ID
   ) => ID extends StaticID ? Context : Context | null;
 }
+export enum ClickTransformation {
+  Default = "default",
+  None = "none",
+  TiltDown = "tiltDown",
+  TiltUp = "tiltUp",
+  TiltRight = "tiltRight",
+  TiltLeft = "tiltLeft",
+  Scale = "scale",
+}

@@ -98,3 +98,33 @@
     display: none;
   }
 }
+.remoraid-button-scale {
+  &:active {
+    transform: scale(0.99);
+  }
+}
+.remoraid-button-tilt-left {
+  &:active {
+    transform: translateX(-1px);
+  }
+}
+.remoraid-button-tilt-right {
+  &:active {
+    transform: translateX(1px);
+  }
+}
+.remoraid-button-tilt-down {
+  &:active {
+    transform: translateY(1px);
+  }
+}
+.remoraid-button-tilt-up {
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+.remoraid-button-none {
+  &:active {
+    transform: none !important;
+  }
+}
