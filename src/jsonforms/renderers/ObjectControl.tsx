@@ -14,8 +14,14 @@ import {
   useRemoraidTheme,
 } from "@/core";
 
-function PlainObjectControl(props: ControlProps) {
-  const { label, schema, data, handleChange, path, required } = props;
+function PlainObjectControl({
+  label: labelProp,
+  schema,
+  data,
+  handleChange,
+  path,
+  required,
+}: ControlProps) {
   const { formOptions } = useFormOptions();
   const { renderers, cells } = useJsonForms();
   const theme = useRemoraidTheme();
@@ -25,21 +31,17 @@ function PlainObjectControl(props: ControlProps) {
   const [error, setError] = useState<boolean>(false);
 
   // Helpers
-  const mt =
-    formOptions.withDescriptions &&
-    schema.description &&
-    schema.description.length > 0
-      ? 4
-      : 0;
+  const label = labelProp !== "remoraid-array-item" ? labelProp : null;
+  const description = formOptions.withDescriptions
+    ? schema.description
+    : undefined;
 
   return (
     <>
       {schema.properties && Object.keys(schema.properties).length > 0 ? (
         <Input.Wrapper
-          label={label !== "remoraid-array-item" ? label : null}
-          description={
-            formOptions.withDescriptions ? schema.description : undefined
-          }
+          label={label}
+          description={description}
           withAsterisk={required}
         >
           <Paper
@@ -47,7 +49,7 @@ function PlainObjectControl(props: ControlProps) {
             bg="var(--remoraid-transparent-background)"
             shadow="0"
             p={formOptions.gutter}
-            mt={mt}
+            mt={Boolean(description) ? 4 : 0}
           >
             <JsonForms
               schema={{
@@ -72,7 +74,10 @@ function PlainObjectControl(props: ControlProps) {
         //   componentsProps={{ alert: { mt } }}
         // />
         <InputWrapperScrollArea
-          label={label !== "remoraid-array-item" ? label : undefined}
+          label={label ?? undefined}
+          error={error ? "Invalid JSON" : undefined}
+          description={description}
+          required={required}
           mah={100}
         >
           <JsonInput
@@ -92,7 +97,7 @@ function PlainObjectControl(props: ControlProps) {
             autosize
             formatOnBlur
             variant="unstyled"
-            error={error ? "Invalid JSON" : undefined}
+            styles={{ input: { border: "none" } }}
           />
         </InputWrapperScrollArea>
       )}
