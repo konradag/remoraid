@@ -78,7 +78,7 @@ function PlainObjectControl({
           error={error ? "Invalid JSON" : undefined}
           description={description}
           required={required}
-          mah={100}
+          mah={140}
         >
           <JsonInput
             onChange={(newValue) => {
