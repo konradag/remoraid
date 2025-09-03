@@ -13,7 +13,9 @@ import { useRemoraidTheme } from "remoraid/core";
 export interface InputWrapperScrollAreaProps {
   label?: string;
   mah?: number;
+  description?: string;
   error?: ReactNode;
+  required?: boolean;
   componentsProps?: {
     container?: Partial<InputWrapperProps>;
     ScrollArea?: Partial<ScrollAreaProps>;
@@ -25,7 +27,9 @@ export default function InputWrapperScrollArea({
   children,
   label,
   mah,
+  description,
   error,
+  required = false,
   componentsProps,
 }: PropsWithChildren<InputWrapperScrollAreaProps>): ReactNode {
   // Style
@@ -40,11 +44,14 @@ export default function InputWrapperScrollArea({
       error={error}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
+      description={description}
+      withAsterisk={required}
       {...componentsProps?.container}
     >
       <Paper
         shadow="none"
         p={0}
+        mt={Boolean(description) ? 4 : 0}
         withBorder
         display="flex"
         bg={theme.transparentBackground}
