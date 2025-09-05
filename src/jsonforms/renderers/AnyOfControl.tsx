@@ -3,54 +3,114 @@ import {
   useJsonForms,
   withJsonFormsControlProps,
 } from "@jsonforms/react";
-import { ControlProps, OwnPropsOfControl } from "@jsonforms/core";
+import {
+  ControlProps,
+  JsonSchema,
+  OwnPropsOfControl,
+  Resolve,
+} from "@jsonforms/core";
 import { Input, Paper, Select } from "@mantine/core";
 import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
-import { ComponentType } from "react";
-import { useRemoraidTheme } from "@/core";
+import { ComponentType, useMemo, useState } from "react";
 
-function PlainAnyOfControl(props: ControlProps) {
-  const { data, schema, label, required, handleChange, path } = props;
-  const theme = useRemoraidTheme();
+function PlainAnyOfControl({
+  data,
+  schema,
+  label,
+  required,
+  handleChange,
+  path,
+  rootSchema,
+}: ControlProps) {
   const { formOptions } = useFormOptions();
-  const { renderers, cells } = useJsonForms();
+  const { core, renderers, cells } = useJsonForms();
 
-  // Helpers
-  const defaultValues: { [index: string]: any } = {
-    number: 0,
-    integer: 0,
-    string: "",
-    array: [],
-    object: {},
-    null: null,
-    boolean: false,
-  };
-  let type: string | undefined = undefined;
-  if (typeof data === "number") {
-    if (
-      Number.isInteger(data) &&
-      schema.anyOf &&
-      schema.anyOf.find((a) => a.type && a.type === "integer")
-    ) {
-      type = "integer";
-    } else {
-      type = "number";
+  // Helpers 1
+  const inferType = (schema: JsonSchema | undefined): string | undefined => {
+    if (!schema) {
+      return undefined;
     }
-  } else if (typeof data === "string") {
-    type = "string";
-  } else if (data === null) {
-    type = "null";
-  } else if (typeof data === "object" && Array.isArray(data)) {
-    type = "array";
-  } else if (typeof data === "object") {
-    type = "object";
-  } else if (typeof data === "boolean") {
-    type = "boolean";
-  }
+    const type = schema.type;
+    if (Array.isArray(type)) {
+      return type.join(" | ");
+    }
+    if (typeof type === "string") {
+      return type;
+    }
+    if (schema.properties) {
+      return "object";
+    }
+    if (schema.items) {
+      return "array";
+    }
+    return undefined;
+  };
+  const options = useMemo(() => {
+    const anyOf = schema.anyOf ?? [];
+    return anyOf.map((opt, idx) => {
+      const resolved = opt.$ref
+        ? Resolve.schema(rootSchema, opt.$ref, rootSchema)
+        : opt;
+      const refLabel =
+        typeof opt.$ref === "string"
+          ? opt.$ref.split("/").slice(-1)[0]
+          : undefined;
+      const typeLabel = inferType(resolved) ?? inferType(opt);
+      const label =
+        resolved?.title ?? refLabel ?? typeLabel ?? `Option ${idx + 1}`;
+      return { original: opt, resolved, label };
+    });
+  }, [schema.anyOf, rootSchema]);
+  const isValidOptionIndex = useMemo(() => {
+    return (optionIndex: number): boolean => {
+      if (!core?.ajv || data === undefined) {
+        return false;
+      }
+      const validate = core.ajv.compile(options[optionIndex].resolved);
+      return validate(data);
+    };
+  }, [core?.ajv, data, options]);
+  const validOptionIndex = useMemo(() => {
+    for (let i = 0; i < options.length; i++) {
+      if (isValidOptionIndex(i)) {
+        return i;
+      }
+    }
+    return -1;
+  }, [options, isValidOptionIndex]);
 
-  const typeProperties = schema.anyOf
-    ? schema.anyOf.find((a) => a.type === type) || {}
-    : {};
+  // State
+  const [selectedOption, setSelectedOption] = useState<string | null>(
+    validOptionIndex >= 0 ? String(validOptionIndex) : null
+  );
+
+  // Helpers 2
+  const schemaDefaultValue = (opt: JsonSchema) => {
+    const t =
+      opt.type ?? (opt.properties ? "object" : opt.items ? "array" : undefined);
+    switch (t) {
+      case "string":
+        return "";
+      case "number":
+      case "integer":
+        return 0;
+      case "boolean":
+        return false;
+      case "array":
+        return [];
+      case "object":
+        return {};
+      case "null":
+        return null;
+      default:
+        return null;
+    }
+  };
+  const selectedSchema = options[Number(selectedOption)].resolved;
+  const selectData = options.map((o, i) => ({
+    value: String(i),
+    label: o.label,
+  }));
 
   return (
     <>
@@ -75,25 +135,34 @@ function PlainAnyOfControl(props: ControlProps) {
           }
         >
           <Select
-            label={`Value Type`}
-            data={schema.anyOf ? schema.anyOf.map((a) => String(a.type)) : []}
-            value={type}
-            onChange={(newValue) => {
-              handleChange(
-                path,
-                newValue ? defaultValues[newValue] : undefined
-              );
+            label="Value type"
+            data={selectData}
+            value={selectedOption}
+            onChange={(value) => {
+              setSelectedOption(value);
+              if (value == null) {
+                handleChange(path, undefined);
+                return;
+              }
+              if (!isValidOptionIndex(Number(value))) {
+                const picked = options[Number(value)]?.resolved;
+                handleChange(path, schemaDefaultValue(picked ?? {}));
+              }
             }}
-            allowDeselect={true}
+            allowDeselect
             required={required}
-            placeholder="Select Value Type"
+            placeholder="Select value type"
             variant="default"
-            mb={type && type !== "null" ? formOptions.gutter : undefined}
+            mb={
+              selectedOption !== null && inferType(selectedSchema) !== "null"
+                ? formOptions.gutter
+                : undefined
+            }
           />
-          {type && type !== "null" && (
+          {selectedOption !== null && (
             <JsonForms
               schema={{
-                ...typeProperties,
+                ...selectedSchema,
                 $schema: undefined,
               }}
               data={data}
