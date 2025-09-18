@@ -20,7 +20,7 @@ function PlainCheckboxControl({
         label={label}
         py={formOptions.gutter}
         labelPosition="left"
-        checked={data}
+        checked={data ?? false}
         onChange={(event) => {
           handleChange(path, event.target.checked);
         }}

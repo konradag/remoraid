@@ -22,7 +22,7 @@ function PlainTextControl({
         label={label}
         variant="default"
         placeholder=""
-        value={data}
+        value={data ?? ""}
         onChange={(event) => {
           handleChange(path, event.currentTarget.value);
         }}

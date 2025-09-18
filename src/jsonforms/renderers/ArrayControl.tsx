@@ -4,7 +4,7 @@ import {
   useJsonForms,
   withJsonFormsControlProps,
 } from "@jsonforms/react";
-import { Box, Button, Flex, Input, Paper, Stack, Tooltip } from "@mantine/core";
+import { Box, Button, Flex, Input, Paper, Stack } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { ComponentType, ReactNode } from "react";
 import { useFormOptions } from "@/jsonforms/components/FormOptionsProvider";
@@ -72,7 +72,7 @@ function PlainArrayControl(props: ControlProps): ReactNode {
               data.map((item, i) => {
                 return (
                   <Flex
-                    gap="xs"
+                    gap={formOptions.gutter}
                     justify="flex-start"
                     align="center"
                     direction="row"
