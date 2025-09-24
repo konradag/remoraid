@@ -2,6 +2,7 @@ export {
   remoraidControlRenderers,
   remoraidLayoutRenderers,
   remoraidRenderers,
+  combineTesters,
 } from "./renderers/index";
 export { renderers } from "./lib/utils";
 export {
