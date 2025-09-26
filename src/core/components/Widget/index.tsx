@@ -127,7 +127,7 @@ export default function Widget({
     >
       <Stack gap="md" mih={0} {...componentsProps?.contentContainer}>
         <Group justify="space-between" wrap="nowrap">
-          <Stack gap="md">
+          <Stack gap={4}>
             <Group gap={badgesGap} wrap="nowrap">
               <Title
                 order={1}
