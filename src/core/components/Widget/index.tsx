@@ -13,6 +13,9 @@ import {
   Box,
   ScrollArea,
   ScrollAreaAutosizeProps,
+  Transition,
+  Text,
+  TextProps,
 } from "@mantine/core";
 import { PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, { WidgetWrapperProps } from "./WidgetWrapper";
@@ -27,10 +30,12 @@ import {
   isValidElementOfType,
 } from "@/core/lib/utils";
 import clsx from "clsx";
+import { merge } from "lodash";
 
 export interface WidgetProps {
   id: string;
   title?: string;
+  description?: string;
   config?: Partial<Omit<WidgetConfiguration, "widgetId">>;
   badges?: ElementOrPropsOfType<typeof BadgeMinimal>[];
   buttons?: ElementOrPropsOfType<
@@ -55,6 +60,7 @@ export interface WidgetProps {
     childrenContainer?: Partial<ScrollAreaAutosizeProps>;
     loader?: Partial<LoaderProps>;
     title?: Partial<TitleProps>;
+    description?: Partial<TextProps>;
     badgeGroup?: Partial<BadgeGroupProps>;
     divider?: Partial<DividerProps>;
     alertsContainer?: Partial<StackProps>;
@@ -64,6 +70,7 @@ export interface WidgetProps {
 export default function Widget({
   id,
   title,
+  description,
   config,
   badges: badgesProp,
   buttons: buttonsProp,
@@ -120,23 +127,40 @@ export default function Widget({
     >
       <Stack gap="md" mih={0} {...componentsProps?.contentContainer}>
         <Group justify="space-between" wrap="nowrap">
-          <Group gap={badgesGap} wrap="nowrap">
-            <Title
-              order={1}
-              size="h2"
-              lineClamp={1}
-              {...componentsProps?.title}
-            >
-              {title ?? id}
-            </Title>
-            {badges !== undefined && (
-              <BadgeGroup
-                badges={badges}
-                gap={badgesGap}
-                {...componentsProps?.badgeGroup}
-              />
-            )}
-          </Group>
+          <Stack gap="md">
+            <Group gap={badgesGap} wrap="nowrap">
+              <Title
+                order={1}
+                size="h2"
+                lineClamp={1}
+                {...componentsProps?.title}
+              >
+                {title ?? id}
+              </Title>
+              {badges !== undefined && (
+                <BadgeGroup
+                  badges={badges}
+                  gap={badgesGap}
+                  {...componentsProps?.badgeGroup}
+                />
+              )}
+            </Group>
+            <Transition mounted={Boolean(description)}>
+              {(transitionStyle) => (
+                <Text
+                  size="sm"
+                  c="dimmed"
+                  {...componentsProps?.description}
+                  style={merge(
+                    transitionStyle,
+                    componentsProps?.description?.style
+                  )}
+                >
+                  {description}
+                </Text>
+              )}
+            </Transition>
+          </Stack>
           <Group gap={buttonsGap} wrap="nowrap">
             {buttons !== undefined &&
               buttons.map((button, i) => {
