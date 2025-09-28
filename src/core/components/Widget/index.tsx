@@ -190,15 +190,17 @@ export default function Widget({
             return <AlertMinimal {...alert} key={i} />;
           })}
         </Stack>
-        <ScrollArea.Autosize flex={1} {...componentsProps?.childrenContainer}>
-          {loading ? (
-            <Center>
-              <Loader {...componentsProps?.loader} />
-            </Center>
-          ) : (
-            children
-          )}
-        </ScrollArea.Autosize>
+        {(loading || Boolean(children)) && (
+          <ScrollArea.Autosize flex={1} {...componentsProps?.childrenContainer}>
+            {loading ? (
+              <Center>
+                <Loader {...componentsProps?.loader} />
+              </Center>
+            ) : (
+              children
+            )}
+          </ScrollArea.Autosize>
+        )}
       </Stack>
     </WidgetWrapper>
   );
