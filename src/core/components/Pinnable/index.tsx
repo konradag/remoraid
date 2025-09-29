@@ -27,6 +27,7 @@ interface ExplicitPinnableProps<T extends LayoutType> {
   layoutId?: string;
   controlsContainer?: HTMLDivElement | null;
   hidden?: boolean;
+  onPinnedValueChange?: (newValue: boolean) => void;
   componentsProps?: {
     controls?: Partial<ControlsProps>;
     button?: Partial<ControlButtonProps>;
@@ -52,6 +53,7 @@ export default function Pinnable<
   layoutId,
   controlsContainer,
   hidden = false,
+  onPinnedValueChange,
   componentsProps,
   children,
 }: PropsWithChildren<PinnableProps<T>>): ReactNode {
@@ -82,7 +84,13 @@ export default function Pinnable<
         order={100}
         {...componentsProps?.button}
         onClick={(e) => {
-          setPinned((p) => !p);
+          setPinned((pinnedValue) => {
+            const newValue = !pinnedValue;
+            if (onPinnedValueChange !== undefined) {
+              onPinnedValueChange(newValue);
+            }
+            return !pinnedValue;
+          });
           componentsProps?.button?.onClick?.(e);
         }}
       />
