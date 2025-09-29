@@ -40,10 +40,13 @@ export const useWidgets = (): WidgetsContext => {
 };
 
 export const useWidget = (
-  pageId: string,
-  widgetId: string
+  pageId: string | undefined,
+  widgetId: string | undefined
 ): WidgetContext | null => {
   const { widgets } = useWidgets();
+  if (pageId === undefined || widgetId === undefined) {
+    return null;
+  }
   return widgets?.[pageId]?.[widgetId] ?? null;
 };
 
