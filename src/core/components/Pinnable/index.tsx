@@ -2,6 +2,7 @@ import {
   ComponentProps,
   PropsWithChildren,
   ReactNode,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -65,10 +66,7 @@ export default function Pinnable<
   const { layouts } = useLayouts();
 
   // State
-  const [pinned, setPinned] = useState<boolean>(() => {
-    onPinnedValueChange?.(initialValue);
-    return initialValue;
-  });
+  const [pinned, setPinned] = useState<boolean>(initialValue);
 
   // Helpers
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -87,11 +85,7 @@ export default function Pinnable<
         order={100}
         {...componentsProps?.button}
         onClick={(e) => {
-          setPinned((pinnedValue) => {
-            const newValue = !pinnedValue;
-            onPinnedValueChange?.(newValue);
-            return !pinnedValue;
-          });
+          setPinned((prev) => !prev);
           componentsProps?.button?.onClick?.(e);
         }}
       />
@@ -125,6 +119,11 @@ export default function Pinnable<
       {children}
     </Box>
   );
+
+  // Effects
+  useEffect(() => {
+    onPinnedValueChange?.(pinned);
+  }, [pinned]);
 
   if (!layout) {
     return null;
