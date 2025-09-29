@@ -86,9 +86,7 @@ export default function Pinnable<
         onClick={(e) => {
           setPinned((pinnedValue) => {
             const newValue = !pinnedValue;
-            if (onPinnedValueChange !== undefined) {
-              onPinnedValueChange(newValue);
-            }
+            onPinnedValueChange?.(newValue);
             return !pinnedValue;
           });
           componentsProps?.button?.onClick?.(e);
