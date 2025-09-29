@@ -65,7 +65,10 @@ export default function Pinnable<
   const { layouts } = useLayouts();
 
   // State
-  const [pinned, setPinned] = useState<boolean>(initialValue);
+  const [pinned, setPinned] = useState<boolean>(() => {
+    onPinnedValueChange?.(initialValue);
+    return initialValue;
+  });
 
   // Helpers
   const containerRef = useRef<HTMLDivElement | null>(null);
