@@ -17,7 +17,7 @@ import {
   Text,
   TextProps,
 } from "@mantine/core";
-import { PropsWithChildren, ReactNode } from "react";
+import { Children, PropsWithChildren, ReactNode } from "react";
 import WidgetWrapper, { WidgetWrapperProps } from "./WidgetWrapper";
 import BadgeMinimal from "@/core/components/BadgeMinimal";
 import BadgeGroup, { BadgeGroupProps } from "@/core/components/BadgeGroup";
@@ -190,7 +190,7 @@ export default function Widget({
             return <AlertMinimal {...alert} key={i} />;
           })}
         </Stack>
-        {(loading || Boolean(children)) && (
+        {(loading || Children.toArray(children).length > 0) && (
           <ScrollArea.Autosize flex={1} {...componentsProps?.childrenContainer}>
             {loading ? (
               <Center>
