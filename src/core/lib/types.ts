@@ -43,9 +43,14 @@ export type UserExperience =
   | Partial<Record<string, any>>
   | PrimitiveUserExperience
   | PrimitiveUserExperience[];
+export enum NavbarMode {
+  Responsive = "responsive",
+  Collapsed = "collapsed",
+  Expanded = "expanded",
+}
 export interface CoreUserExperience {
   showWelcomeMessage: boolean;
-  navbar: { hiddenPages: string[] };
+  navbar: { hiddenPages: string[]; mode: NavbarMode };
 }
 export type UserExperienceProviderProps<T extends UserExperience> = {
   initialValue?: T extends PrimitiveUserExperience | PrimitiveUserExperience[]

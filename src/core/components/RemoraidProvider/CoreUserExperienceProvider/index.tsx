@@ -1,5 +1,6 @@
 import {
   CoreUserExperience,
+  NavbarMode,
   UserExperienceContext,
   UserExperienceProviderProps,
 } from "@/core/lib/types";
@@ -10,7 +11,7 @@ import UserExperienceProviderWrapper, {
 
 export const defaultUserExperience: CoreUserExperience = {
   showWelcomeMessage: true,
-  navbar: { hiddenPages: [] },
+  navbar: { hiddenPages: [], mode: NavbarMode.Responsive },
 };
 
 export const defaultUserExperienceCookieName = "remoraid-core-user-experience";

@@ -6,7 +6,7 @@ import SettingsWidget from "../SettingsWidget";
 import { WidgetProps } from "../Widget";
 import { useRemoraidUserExperience } from "../RemoraidProvider/CoreUserExperienceProvider";
 import { isEqual } from "lodash";
-import { Chip, Group } from "@mantine/core";
+import { Chip, Group, Select } from "@mantine/core";
 import { useRemoraidApp } from "../AppShell/AppProvider";
 import { IconLink } from "@tabler/icons-react";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
@@ -15,6 +15,7 @@ import {
   ElementOfType,
   isValidElementOfType,
 } from "@/core/lib/utils";
+import { NavbarMode } from "@/core/lib/types";
 
 export const defaultNavbarSettingsWidgetId = "navbar-settings";
 
@@ -46,6 +47,13 @@ export default function NavbarSettingsWidget({
     useRemoraidUserExperience();
   const app = useRemoraidApp();
   const theme = useRemoraidTheme();
+
+  // Helpers
+  const modeLabels: Record<NavbarMode, string> = {
+    [NavbarMode.Responsive]: "Responsive",
+    [NavbarMode.Collapsed]: "Collapsed",
+    [NavbarMode.Expanded]: "Expanded",
+  };
 
   return (
     <SettingsWidget
@@ -110,6 +118,27 @@ export default function NavbarSettingsWidget({
               )}
             </Group>
           </Chip.Group>
+        </SettingsTable.Row>
+        <SettingsTable.Row
+          key="select-navbar-mode"
+          label="Select the navbar mode"
+        >
+          <Select
+            value={userExperience.navbar.mode}
+            data={Object.values(NavbarMode).map((mode) => ({
+              value: mode,
+              label: modeLabels[mode as NavbarMode],
+            }))}
+            onChange={(newValue) => {
+              if (newValue === null) {
+                return;
+              }
+              updateUserExperience((prev) => ({
+                ...prev,
+                navbar: { ...prev.navbar, mode: newValue as NavbarMode },
+              }));
+            }}
+          />
         </SettingsTable.Row>
         {additionalRows &&
           additionalRows.map((row, i) => {
