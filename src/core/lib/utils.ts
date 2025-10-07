@@ -116,9 +116,18 @@ export const getDefaultButtonIconSize = (
   buttonSize: MantineSize
 ): RemoraidIconSize => {
   if (buttonSize === "xs") {
+    return RemoraidIconSize.ExtraSmall;
+  }
+  if (buttonSize === "sm") {
     return RemoraidIconSize.Small;
   }
-  return RemoraidIconSize.Medium;
+  if (buttonSize === "md") {
+    return RemoraidIconSize.Medium;
+  }
+  if (buttonSize === "lg") {
+    return RemoraidIconSize.Large;
+  }
+  return RemoraidIconSize.Large;
 };
 export const scrollToWidget = (widgetId: string): void => {
   const widgetElement = document.getElementById(widgetId);

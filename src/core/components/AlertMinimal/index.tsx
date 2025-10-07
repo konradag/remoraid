@@ -37,7 +37,7 @@ export default function AlertMinimal({
     onClose,
     mounted = true,
     icon: Icon,
-    iconSize = RemoraidIconSize.Medium,
+    iconSize = RemoraidIconSize.Small,
     componentsProps,
   } = merge({}, theme.componentsProps.alerts[category], props);
 
