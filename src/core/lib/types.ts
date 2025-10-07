@@ -178,6 +178,10 @@ export interface LayoutsContext {
     >
   >;
 }
+export interface LayoutElementContext<T extends LayoutType> {
+  layoutType: T;
+  section: LayoutSection<T>;
+}
 export interface ContextCluster<Context, StaticID extends string = never> {
   contexts: Partial<Record<string, React.Context<Context>>>;
   defaultValues: Partial<Record<string, Context>>;
