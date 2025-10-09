@@ -109,6 +109,7 @@ export enum RemoraidIconSize {
   Small = "small",
   Medium = "medium",
   Large = "large",
+  Huge = "huge",
 }
 export interface RemoraidTheme {
   bodyColor: string;

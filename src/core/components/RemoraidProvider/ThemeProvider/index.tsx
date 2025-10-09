@@ -104,11 +104,12 @@ export const createRemoraidTheme: (
         },
       },
       icons: {
-        [RemoraidIconSize.Large]: { size: 28, stroke: 1.7 },
-        [RemoraidIconSize.Medium]: { size: 24, stroke: 1.7 },
-        [RemoraidIconSize.Small]: { size: 20, stroke: 2 },
-        [RemoraidIconSize.ExtraSmall]: { size: 16, stroke: 2.3 },
         [RemoraidIconSize.Tiny]: { size: 12, stroke: 2.6 },
+        [RemoraidIconSize.ExtraSmall]: { size: 16, stroke: 2.3 },
+        [RemoraidIconSize.Small]: { size: 20, stroke: 2 },
+        [RemoraidIconSize.Medium]: { size: 24, stroke: 1.7 },
+        [RemoraidIconSize.Large]: { size: 28, stroke: 1.7 },
+        [RemoraidIconSize.Huge]: { size: 44, stroke: 1.7 },
       },
     },
   };
