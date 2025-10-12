@@ -9,19 +9,15 @@ import {
 } from "@/core/lib/utils";
 import { WidgetProps } from "../Widget";
 import { SettingsTableRowProps } from "../SettingsWidget/SettingsTable/Row";
-import {
-  FrameLayoutSection,
-  NavbarMode,
-  NavbarPosition,
-} from "@/core/lib/types";
-import { useAppShellUserExperience } from "../AppShell/AppShellUserExperienceProvider";
 import { useRemoraidApp } from "../AppShell/AppProvider";
+import { useAppShellUserExperience } from "../AppShell/AppShellUserExperienceProvider";
+import { FooterPosition, FrameLayoutSection } from "@/core/lib/types";
 import SettingsWidget from "../SettingsWidget";
-import { supportedNavbarPositions } from "../AppShell/Navbar";
+import { supportedFooterPositions } from "../AppShell/Footer";
 
-export const defaultNavbarSettingsWidgetId = "navbar-settings";
+export const defaultFooterSettingsWidgetId = "footer-settings";
 
-export interface NavbarSettingsWidgetProps {
+export interface FooterSettingsWidgetProps {
   additionalRows?: (
     | ComponentProps<typeof SettingsTable.Row>
     | ElementOfType<typeof SettingsTable.Row>
@@ -30,17 +26,17 @@ export interface NavbarSettingsWidgetProps {
   componentsProps?: { table: Partial<SettingsTableRowProps> };
 }
 
-export default function NavbarSettingsWidget({
+export default function FooterSettingsWidget({
   additionalRows: additionalRowsProp,
   widgetProps,
   componentsProps,
-}: NavbarSettingsWidgetProps): ReactNode {
+}: FooterSettingsWidgetProps): ReactNode {
   // Type safety
   const additionalRows = additionalRowsProp?.map((additionalRow) =>
     asElementOrPropsOfType(
       SettingsTable.Row,
       additionalRow,
-      "Check the 'additionalRows' property of 'NavbarSettingsWidget'."
+      "Check the 'additionalRows' property of 'FooterSettingsWidget'."
     )
   );
 
@@ -50,12 +46,7 @@ export default function NavbarSettingsWidget({
   const app = useRemoraidApp();
 
   // Helpers
-  const modeLabels: Record<NavbarMode, string> = {
-    [NavbarMode.Responsive]: "Responsive",
-    [NavbarMode.Collapsed]: "Collapsed",
-    [NavbarMode.Expanded]: "Expanded",
-  };
-  const positionLabels: Record<Exclude<NavbarPosition, null>, string> = {
+  const positionLabels: Record<Exclude<FooterPosition, null>, string> = {
     [FrameLayoutSection.Bottom]: "Bottom",
     [FrameLayoutSection.Top]: "Top",
     [FrameLayoutSection.Left]: "Left",
@@ -66,29 +57,29 @@ export default function NavbarSettingsWidget({
   return (
     <SettingsWidget
       widgetProps={{
-        id: defaultNavbarSettingsWidgetId,
-        title: "Navbar Settings",
+        id: defaultFooterSettingsWidgetId,
+        title: "Footer Settings",
         ...widgetProps,
       }}
       onRestoreDefaultValues={() => {
         updateUserExperience((prev) => ({
           ...prev,
-          navbar: initialUserExperience.navbar,
+          footer: initialUserExperience.footer,
         }));
       }}
-      custom={!isEqual(userExperience.navbar, initialUserExperience.navbar)}
+      custom={!isEqual(userExperience.footer, initialUserExperience.footer)}
     >
       <SettingsTable {...componentsProps?.table}>
         <SettingsTable.Row
-          key="select-navbar-position"
-          label="Select navbar position"
+          key="select-footer-position"
+          label="Select footer position"
         >
           <Select
-            value={userExperience.navbar.position ?? "hidden"}
+            value={userExperience.footer.position ?? "hidden"}
             data={
-              app.navbarVariant === null
+              app.footerVariant === null
                 ? []
-                : supportedNavbarPositions[app.navbarVariant].map(
+                : supportedFooterPositions[app.footerVariant].map(
                     (position) => ({
                       value: position ?? "hidden",
                       label:
@@ -102,30 +93,12 @@ export default function NavbarSettingsWidget({
               }
               updateUserExperience((prev) => ({
                 ...prev,
-                navbar: {
-                  ...prev.navbar,
+                footer: {
+                  ...prev.footer,
                   position: (newValue === "hidden"
                     ? null
-                    : newValue) as NavbarPosition,
+                    : newValue) as FooterPosition,
                 },
-              }));
-            }}
-          />
-        </SettingsTable.Row>
-        <SettingsTable.Row key="select-navbar-mode" label="Select navbar mode">
-          <Select
-            value={userExperience.navbar.mode}
-            data={Object.values(NavbarMode).map((mode) => ({
-              value: mode,
-              label: modeLabels[mode as NavbarMode],
-            }))}
-            onChange={(newValue) => {
-              if (newValue === null) {
-                return;
-              }
-              updateUserExperience((prev) => ({
-                ...prev,
-                navbar: { ...prev.navbar, mode: newValue as NavbarMode },
               }));
             }}
           />

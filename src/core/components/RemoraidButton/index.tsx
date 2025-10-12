@@ -14,16 +14,23 @@ import {
   TransitionProps,
 } from "@mantine/core";
 import { Icon, IconClick, IconProps } from "@tabler/icons-react";
-import { ReactNode } from "react";
-import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import {
+  isValidElement,
+  MouseEventHandler,
+  ReactElement,
+  ReactNode,
+} from "react";
+import { merge } from "lodash";
+import clsx from "clsx";
+import { ClickTransformation, RemoraidIconSize } from "@/core/lib/types";
 import {
   Common,
   getDefaultButtonIconSize,
   OptionalIfExtends,
 } from "@/core/lib/utils";
-import { ClickTransformation, RemoraidIconSize } from "@/core/lib/types";
-import { merge } from "lodash";
-import clsx from "clsx";
+import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+
+export const defaultRemoraidButtonSize = "sm";
 
 export type RemoraidButtonDefaultResponsivity = true;
 
@@ -34,9 +41,9 @@ interface ExplicitRemoraidButtonProps<Responsive extends boolean> {
   color?: MantineColor;
   breakpoint?: true extends Responsive ? MantineBreakpoint : never;
   collapsed?: false extends Responsive ? boolean : never;
-  icon?: Icon;
+  icon?: Icon | ReactElement;
   iconSize?: RemoraidIconSize;
-  onClick?: () => void;
+  onClick?: MouseEventHandler;
   loading?: boolean;
   variant?: Extract<ButtonVariant, ActionIconVariant>;
   mounted?: TransitionProps["mounted"];
@@ -67,34 +74,36 @@ export default function RemoraidButton<
   Responsive extends boolean = RemoraidButtonDefaultResponsivity
 >({
   label,
-  responsive: ResponsiveProp,
+  responsive: responsiveProp,
   breakpoint: breakpointProp,
   collapsed: collapsedProp,
-  size = "sm",
+  size = defaultRemoraidButtonSize,
   color,
   onClick,
   loading,
   variant = "default",
   mounted = true,
-  icon: iconProp,
+  icon: Icon = IconClick,
   iconSize: iconSizeProp,
   clickTransformation = ClickTransformation.Default,
   componentsProps,
 }: RemoraidButtonProps<Responsive>): ReactNode {
-  // Props default values
-  const responsive: boolean =
-    ResponsiveProp ?? (true satisfies RemoraidButtonDefaultResponsivity);
-  const breakpoint: MantineBreakpoint = breakpointProp ?? "md";
-  const collapsed: boolean = collapsedProp ?? false;
-  const iconSize: RemoraidIconSize =
-    iconSizeProp ?? getDefaultButtonIconSize(size);
-  const Icon: Icon = iconProp ?? IconClick;
-
   // Contexts
   const theme = useRemoraidTheme();
 
+  // Props default values
+  const responsive: boolean =
+    responsiveProp ?? (true satisfies RemoraidButtonDefaultResponsivity);
+  const breakpoint: MantineBreakpoint =
+    breakpointProp ?? theme.breakpoints.buttonCollapse;
+  const collapsed: boolean = collapsedProp ?? false;
+  const iconSize: RemoraidIconSize =
+    iconSizeProp ?? getDefaultButtonIconSize(size);
+
   // Helpers
-  const iconElement = (
+  const iconElement = isValidElement(Icon) ? (
+    Icon
+  ) : (
     <Icon
       {...merge(
         {},
@@ -165,7 +174,7 @@ export default function RemoraidButton<
             variant={variant}
             size={size}
             color={color}
-            leftSection={iconProp ? iconElement : undefined}
+            leftSection={Boolean(Icon) ? iconElement : undefined}
             {...componentsProps?.button}
             {...componentsProps?.Button}
             visibleFrom={!responsive ? undefined : breakpoint}

@@ -1,23 +1,6 @@
-.remoraid-navbar-minimal-link {
-  border-radius: var(--mantine-radius-default);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
-  transition: background-color var(--remoraid-transition-duration-short),
-    color var(--remoraid-transition-duration-short);
-  &:hover {
-    background-color: light-dark(
-      var(--mantine-color-gray-0),
-      var(--mantine-color-dark-5)
-    );
-  }
-  &[data-active] {
-    &,
-    &:hover {
-      background-color: var(--mantine-color-blue-light);
-      color: var(--mantine-color-blue-light-color);
-    }
+.remoraid-navbar-container {
+  &:empty {
+    display: none;
   }
 }
 .remoraid-segment {

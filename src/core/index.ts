@@ -5,24 +5,36 @@ export {
 export {
   default as AppShell,
   remoraidAppShellLayoutId,
-  defaultAppShellNavbarPositions,
-  defaultAppShellFooterPositions,
   AppShellProps,
-  AppShellNavbarVariant,
-  AppShellFooterVariant,
-  DefaultNavbarVariant,
-  DefaultFooterVariant,
-  AppShellNavbarPosition,
-  AppShellFooterPosition,
 } from "./components/AppShell";
-export { NavbarMinimalProps } from "./components/AppShell/NavbarMinimal";
-export { FooterMinimalProps } from "./components/AppShell/FooterMinimal";
+export {
+  default as Navbar,
+  NavbarProps,
+  supportedNavbarPositions,
+  defaultNavbarPositions,
+  getDefaultNavigationElements,
+} from "./components/AppShell/Navbar";
+export { NavbarMinimalProps } from "./components/AppShell/Navbar/NavbarMinimal";
+export { NavbarMinimalContentProps } from "./components/AppShell/Navbar/NavbarMinimal/NavbarMinimalContent";
+export { NavigationMenuProps } from "./components/AppShell/Navbar/NavbarMinimal/NavbarMinimalContent/NavigationMenu";
+export {
+  default as Footer,
+  FooterProps,
+  supportedFooterPositions,
+  defaultFooterPositions,
+} from "./components/AppShell/Footer";
+export { FooterMinimalProps } from "./components/AppShell/Footer/FooterMinimal";
 export {
   default as AppProvider,
+  AppProviderProps,
   useRemoraidApp,
   defaultAppContext,
-  AppProviderProps,
 } from "./components/AppShell/AppProvider";
+export {
+  defaultAppShellUserExperience,
+  defaultAppShellUserExperienceCookieName,
+  useAppShellUserExperience,
+} from "./components/AppShell/AppShellUserExperienceProvider";
 export {
   default as UserExperienceProviderWrapper,
   UserExperienceProviderWrapperProps,
@@ -109,6 +121,11 @@ export {
   NavbarSettingsWidgetProps,
   defaultNavbarSettingsWidgetId,
 } from "./components/NavbarSettingsWidget";
+export {
+  default as FooterSettingsWidget,
+  FooterSettingsWidgetProps,
+  defaultFooterSettingsWidgetId,
+} from "./components/FooterSettingsWidget";
 export {
   default as HydrationStatusProvider,
   HydrationStatusProviderProps,

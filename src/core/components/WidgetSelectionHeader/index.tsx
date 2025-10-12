@@ -152,7 +152,9 @@ export default function WidgetSelectionHeader({
                       size="sm"
                       disabled={disabledWidgets?.includes(widgetId)}
                       icon={
-                        <IconCheck {...theme.componentsProps.icons.small} />
+                        <IconCheck
+                          {...theme.componentsProps.icons.extraSmall}
+                        />
                       }
                       {...componentsProps?.Chip}
                       styles={merge(

@@ -6,7 +6,12 @@ import {
 } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
 import { ImageProps } from "next/image";
-import React, { Dispatch, ReactNode, SetStateAction } from "react";
+import React, {
+  Dispatch,
+  MouseEventHandler,
+  ReactElement,
+  SetStateAction,
+} from "react";
 import { PartialDeep } from "type-fest";
 import { AlertMinimalProps } from "../components/AlertMinimal";
 
@@ -15,13 +20,51 @@ export interface RemoraidAuthContext {
   user: RemoraidUser;
   onLogout?: () => void;
 }
-export type AppLogo = (props: Omit<ImageProps, "src" | "alt">) => ReactNode;
+export enum NavbarVariant {
+  Minimal = "minimal",
+}
+export enum FooterVariant {
+  Minimal = "minimal",
+}
+export enum NavbarMode {
+  Responsive = "responsive",
+  Collapsed = "collapsed",
+  Expanded = "expanded",
+}
+export enum NavigationElementType {
+  Anchor = "anchor",
+  Button = "button",
+}
+export interface NavigationElementBase {
+  label: string;
+  children?: NavigationElement[];
+  priority?: number;
+  icon?: Icon;
+  static?: boolean;
+  mounted?: boolean;
+}
+export interface NavigationElementAnchor extends NavigationElementBase {
+  type: NavigationElementType.Anchor;
+  href: string;
+}
+export interface NavigationElementButton extends NavigationElementBase {
+  type: NavigationElementType.Button;
+  onClick: MouseEventHandler;
+}
+export type NavigationElement =
+  | NavigationElementButton
+  | NavigationElementAnchor;
+export type AppLogo = (props: Omit<ImageProps, "src" | "alt">) => ReactElement;
+export type NavbarMobileVariant = null;
+export type AppShellFooterVariant = FooterVariant | null;
+export type AppShellNavbarVariant = NavbarVariant | null;
+export type AppShellNavbarMobileVariant = NavbarMobileVariant | null;
 export interface StaticRemoraidAppContext {
-  navigablePages: {
-    label: string;
-    href: string;
-    icon?: Icon;
-  }[];
+  name: string;
+  nav: NavigationElement[];
+  navbarVariant: AppShellNavbarVariant;
+  navbarMobileVariant: AppShellNavbarMobileVariant;
+  footerVariant: AppShellFooterVariant;
   logo?: AppLogo;
   auth?: RemoraidAuthContext;
 }
@@ -30,24 +73,33 @@ export type CustomAppVariables = {
 };
 export type RemoraidAppContext<V extends CustomAppVariables> =
   StaticRemoraidAppContext & V;
-export type AppContextProps<V extends CustomAppVariables> =
-  StaticRemoraidAppContext & V;
-export enum NavbarVariant {
-  Minimal = "minimal",
+export enum NavbarOrientation {
+  Vertical = "vertical",
+  Horizontal = "horizontal",
 }
-export enum FooterVariant {
-  Minimal = "minimal",
+export type NavbarPosition = FrameLayoutSection | null;
+export type NavbarMobilePosition = FrameLayoutSection | null;
+export type FooterPosition = FrameLayoutSection | null;
+export interface AppShellUserExperience {
+  navbar: {
+    position: NavbarPosition;
+    mobilePosition: NavbarMobilePosition;
+    mode: NavbarMode;
+  };
+  footer: {
+    position: FooterPosition;
+  };
+}
+export interface DefaultNavigationElementsDependencies {
+  colorScheme: MantineColorScheme;
+  setColorScheme: (value: MantineColorScheme) => void;
+  auth: RemoraidAuthContext;
 }
 export type PrimitiveUserExperience = string | number | boolean;
 export type UserExperience =
   | Partial<Record<string, any>>
   | PrimitiveUserExperience
   | PrimitiveUserExperience[];
-export enum NavbarMode {
-  Responsive = "responsive",
-  Collapsed = "collapsed",
-  Expanded = "expanded",
-}
 export interface CoreUserExperience {
   showWelcomeMessage: boolean;
   navbar: { hiddenPages: string[]; mode: NavbarMode };
@@ -102,6 +154,7 @@ export enum TransitionDuration {
 export enum RemoraidBreakpoint {
   ButtonCollapse = "buttonCollapse",
   BadgeGroupCollapse = "badgeGroupCollapse",
+  NavbarStaticElementsCollapse = "navbarStaticElementsCollapse",
 }
 export enum RemoraidIconSize {
   Tiny = "tiny",

@@ -83,6 +83,7 @@ export const createRemoraidTheme: (
     breakpoints: {
       [RemoraidBreakpoint.ButtonCollapse]: "md",
       [RemoraidBreakpoint.BadgeGroupCollapse]: "md",
+      [RemoraidBreakpoint.NavbarStaticElementsCollapse]: "xs",
     },
     primaryGutter: "md",
     componentsProps: {
