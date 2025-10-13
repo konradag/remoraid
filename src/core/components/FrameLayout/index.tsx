@@ -192,6 +192,7 @@ function FrameLayout({
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Left]}
           className={clsx(
             "remoraid-frame-layout-section",
+            "remoraid-frame-layout-left-section",
             componentsProps?.sectionContainers?.[FrameLayoutSection.Left]
               ?.className
           )}
@@ -247,6 +248,7 @@ function FrameLayout({
           {...componentsProps?.sectionContainers?.[FrameLayoutSection.Right]}
           className={clsx(
             "remoraid-frame-layout-section",
+            "remoraid-frame-layout-right-section",
             componentsProps?.sectionContainers?.[FrameLayoutSection.Right]
               ?.className
           )}

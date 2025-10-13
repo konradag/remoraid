@@ -66,6 +66,12 @@
     }
   }
 }
+.remoraid-frame-layout-bottom-section {
+  flex-direction: column-reverse;
+}
+.remoraid-frame-layout-right-section {
+  flex-direction: row-reverse;
+}
 .remoraid-page-container {
   &:has(> .remoraid-page) {
     &:not(:has(> .remoraid-page > :not([data-hidden="true"]))) {
