@@ -32,7 +32,7 @@ export default function AppProvider<V extends CustomAppVariables>({
   children,
 }: PropsWithChildren<AppProviderProps<V>>): ReactNode {
   return (
-    <appContext.Provider value={merge(appContextProp, defaultAppContext)}>
+    <appContext.Provider value={merge(defaultAppContext, appContextProp)}>
       {children}
     </appContext.Provider>
   );
