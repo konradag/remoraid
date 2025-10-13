@@ -65,7 +65,10 @@ export default function NavbarMinimal({
           componentsProps?.layoutElement?.componentsProps
         )}
       >
-        <NavbarMinimalContent orientation={NavbarOrientation.Vertical} />
+        <NavbarMinimalContent
+          orientation={NavbarOrientation.Vertical}
+          {...componentsProps?.content}
+        />
       </FrameLayout.Element>
     );
   }
@@ -74,7 +77,10 @@ export default function NavbarMinimal({
     position === FrameLayoutSection.Bottom
   ) {
     const content = (
-      <NavbarMinimalContent orientation={NavbarOrientation.Horizontal} />
+      <NavbarMinimalContent
+        orientation={NavbarOrientation.Horizontal}
+        {...componentsProps?.content}
+      />
     );
     if (pinnable) {
       return (
@@ -148,7 +154,10 @@ export default function NavbarMinimal({
   if (position === FrameLayoutSection.Content) {
     return (
       <PageContainer {...componentsProps?.container}>
-        <NavbarMinimalContent orientation={NavbarOrientation.Horizontal} />
+        <NavbarMinimalContent
+          orientation={NavbarOrientation.Horizontal}
+          {...componentsProps?.content}
+        />
       </PageContainer>
     );
   }

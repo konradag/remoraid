@@ -17,6 +17,7 @@ import NavigationMenu, { NavigationMenuProps } from "./NavigationMenu";
 import { IconDots } from "@tabler/icons-react";
 import { getDefaultNavigationElements } from "../..";
 import {
+  ClickTransformation,
   FrameLayoutSection,
   NavbarMode,
   NavbarOrientation,
@@ -91,22 +92,28 @@ export default function NavbarMinimalContent({
   } else if (mode === NavbarMode.Expanded) {
     buttonCollapsed = false;
   }
-  const buttonSize = componentsProps?.button?.size ?? defaultRemoraidButtonSize;
-  const logoButtonSize = componentsProps?.logoButton?.size ?? buttonSize;
+  const buttonClickTransformation =
+    orientation === NavbarOrientation.Horizontal
+      ? ClickTransformation.TiltRight
+      : ClickTransformation.Default;
+  const logoButtonSize =
+    componentsProps?.logoButton?.size ??
+    componentsProps?.button?.size ??
+    defaultRemoraidButtonSize;
   const logoIconSize = getDefaultButtonIconSize(logoButtonSize);
-  const logoProps = {
-    style: {
-      width: theme.componentsProps.icons[logoIconSize].size,
-    },
-  };
   const logoButton = app.logo ? (
     <RemoraidButton
       label={app.name}
       variant="subtle"
-      icon={app.logo(logoProps)}
-      size={buttonSize}
+      icon={app.logo({
+        style: {
+          width: theme.componentsProps.icons[logoIconSize].size,
+          height: theme.componentsProps.icons[logoIconSize].size,
+        },
+      })}
       responsive={buttonResponsive}
       collapsed={buttonCollapsed}
+      clickTransformation={buttonClickTransformation}
       {...componentsProps?.button}
       {...componentsProps?.logoButton}
       componentsProps={merge(
@@ -141,9 +148,9 @@ export default function NavbarMinimalContent({
               ? "light"
               : "default"
           }
-          size={buttonSize}
           responsive={buttonResponsive}
           collapsed={buttonCollapsed}
+          clickTransformation={buttonClickTransformation}
           {...componentsProps?.button}
           componentsProps={merge(
             {
@@ -205,9 +212,9 @@ export default function NavbarMinimalContent({
           <RemoraidButton
             label={"Static elements"}
             icon={IconDots}
-            size={buttonSize}
             responsive={buttonResponsive}
             collapsed={buttonCollapsed}
+            clickTransformation={buttonClickTransformation}
             {...componentsProps?.button}
             componentsProps={merge(
               {
