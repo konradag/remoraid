@@ -179,7 +179,7 @@ export default function Widget({
           gap={alertsGap}
           {...componentsProps?.alertsContainer}
           className={clsx(
-            "remoraid-widget-alerts-container",
+            "hide-if-empty",
             componentsProps?.alertsContainer?.className
           )}
         >

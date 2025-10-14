@@ -1,8 +1,3 @@
-.remoraid-navbar-container {
-  &:empty {
-    display: none;
-  }
-}
 .remoraid-segment {
   scroll-margin-top: var(--remoraid-frame-layout-content-section-padding-top);
 }
@@ -20,12 +15,7 @@
     cursor: grabbing;
   }
   &:not(:has(> .remoraid-controls-group > button[data-control-button="true"])) {
-    display: none;
-  }
-}
-.remoraid-badge-group {
-  &:empty {
-    display: none;
+    display: none !important;
   }
 }
 .remoraid-frame-layout {
@@ -75,22 +65,22 @@
 .remoraid-page-container {
   &:has(> .remoraid-page) {
     &:not(:has(> .remoraid-page > :not([data-hidden="true"]))) {
-      display: none;
+      display: none !important;
     }
   }
 }
 [data-hidden="true"] {
-  display: none;
+  display: none !important;
+}
+.hide-if-empty {
+  &:empty {
+    display: none !important;
+  }
 }
 .remoraid-widget-children-container:has(
     > div > .mantine-ScrollArea-root > .mantine-ScrollArea-viewport > div:empty
   ) {
   display: none !important;
-}
-.remoraid-widget-alerts-container {
-  &:empty {
-    display: none;
-  }
 }
 .remoraid-button-scale {
   &:active {

@@ -77,10 +77,7 @@ export default function BadgeGroup({
         wrap="nowrap"
         visibleFrom={numVisibleBadges > 1 ? breakpoint : undefined}
         {...componentsProps?.container}
-        className={clsx(
-          "remoraid-badge-group",
-          componentsProps?.container?.className
-        )}
+        className={clsx("hide-if-empty", componentsProps?.container?.className)}
       >
         {badgesElement}
       </Group>

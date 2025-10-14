@@ -91,7 +91,7 @@ export default function NavbarMinimal({
             container: {
               ...componentsProps?.container?.componentsProps?.container,
               className: clsx(
-                "remoraid-navbar-container",
+                "hide-if-empty",
                 componentsProps?.container?.componentsProps?.container
                   ?.className
               ),
