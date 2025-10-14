@@ -28,21 +28,21 @@
   &:has(
       > .remoraid-frame-layout-vertical-container
         > .remoraid-frame-layout-top-section
-        > :not([data-hidden="true"])
+        > :not([data-hidden="true"], style)
     ) {
     --remoraid-frame-layout-content-section-padding-top: 0;
   }
   &:has(
       > .remoraid-frame-layout-vertical-container
         > .remoraid-frame-layout-bottom-section
-        > :not([data-hidden="true"])
+        > :not([data-hidden="true"], style)
     ) {
     --remoraid-frame-layout-content-section-padding-bottom: 0;
   }
 }
 .remoraid-frame-layout-section {
   padding: 0;
-  &:has(> :not([data-hidden="true"])) {
+  &:has(> :not([data-hidden="true"], style)) {
     &:not(.remoraid-frame-layout-content-section) {
       padding: var(--remoraid-frame-layout-gutter);
     }
@@ -64,7 +64,7 @@
 }
 .remoraid-page-container {
   &:has(> .remoraid-page) {
-    &:not(:has(> .remoraid-page > :not([data-hidden="true"]))) {
+    &:not(:has(> .remoraid-page > :not([data-hidden="true"], style))) {
       display: none !important;
     }
   }
@@ -77,10 +77,18 @@
     display: none !important;
   }
 }
-.remoraid-widget-children-container:has(
-    > div > .mantine-ScrollArea-root > .mantine-ScrollArea-viewport > div:empty
-  ) {
-  display: none !important;
+.remoraid-widget-children-container {
+  &:not(
+      :has(
+          > div
+            > .mantine-ScrollArea-root
+            > .mantine-ScrollArea-viewport
+            > div
+            :not([data-hidden="true"], style)
+        )
+    ) {
+    display: none !important;
+  }
 }
 .remoraid-button-scale {
   &:active {
