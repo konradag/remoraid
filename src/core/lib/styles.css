@@ -82,6 +82,11 @@
 [data-hidden="true"] {
   display: none;
 }
+.remoraid-widget-children-container:has(
+    > div > .mantine-ScrollArea-root > .mantine-ScrollArea-viewport > div:empty
+  ) {
+  display: none !important;
+}
 .remoraid-widget-alerts-container {
   &:empty {
     display: none;

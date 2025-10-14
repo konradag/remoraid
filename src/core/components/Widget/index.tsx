@@ -191,7 +191,14 @@ export default function Widget({
           })}
         </Stack>
         {(loading || Children.toArray(children).length > 0) && (
-          <ScrollArea.Autosize flex={1} {...componentsProps?.childrenContainer}>
+          <ScrollArea.Autosize
+            flex={1}
+            {...componentsProps?.childrenContainer}
+            className={clsx(
+              "remoraid-widget-children-container",
+              componentsProps?.childrenContainer?.className
+            )}
+          >
             {loading ? (
               <Center>
                 <Loader {...componentsProps?.loader} />
