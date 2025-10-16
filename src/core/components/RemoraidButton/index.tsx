@@ -83,7 +83,7 @@ export default function RemoraidButton<
   loading,
   variant = "default",
   mounted = true,
-  icon: Icon = IconClick,
+  icon: iconProp,
   iconSize: iconSizeProp,
   clickTransformation = ClickTransformation.Default,
   componentsProps,
@@ -99,6 +99,7 @@ export default function RemoraidButton<
   const collapsed: boolean = collapsedProp ?? false;
   const iconSize: RemoraidIconSize =
     iconSizeProp ?? getDefaultButtonIconSize(size);
+  const Icon = iconProp ?? IconClick;
 
   // Helpers
   const iconElement = isValidElement(Icon) ? (
@@ -174,7 +175,7 @@ export default function RemoraidButton<
             variant={variant}
             size={size}
             color={color}
-            leftSection={Boolean(Icon) ? iconElement : undefined}
+            leftSection={iconProp !== undefined ? iconElement : undefined}
             {...componentsProps?.button}
             {...componentsProps?.Button}
             visibleFrom={!responsive ? undefined : breakpoint}
