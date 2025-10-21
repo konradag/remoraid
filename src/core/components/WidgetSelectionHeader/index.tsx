@@ -97,7 +97,7 @@ export default function WidgetSelectionHeader({
       }}
       onMouseLeave={(e) => {
         if (!pinnableSection) {
-          handleEnter();
+          handleLeave();
         }
         componentsProps?.container?.onMouseEnter?.(e);
       }}
