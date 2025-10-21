@@ -11,6 +11,10 @@ const sharedBuildConfig: (
   withClientBanner?: boolean
 ) => Omit<BuildConfig, "entrypoints"> = (p, withClientBanner) => ({
   outdir: `./dist/${p ?? ""}`,
+  jsx: "automatic",
+  define: {
+    "process.env.NODE_ENV": '"production"',
+  },
   external: [
     ...Object.keys(packageJson.peerDependencies || {}),
     ...packages.filter((e) => e !== p).map((e) => `remoraid/${e}`),
