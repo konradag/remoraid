@@ -11,7 +11,11 @@ const sharedBuildConfig: (
   withClientBanner?: boolean
 ) => Omit<BuildConfig, "entrypoints"> = (p, withClientBanner) => ({
   outdir: `./dist/${p ?? ""}`,
-  jsx: "automatic",
+  jsx: {
+    runtime: "automatic",
+    development: false,
+    importSource: "react",
+  },
   define: {
     "process.env.NODE_ENV": '"production"',
   },
