@@ -10,6 +10,7 @@ import {
   ReactElement,
 } from "react";
 import { RemoraidIconSize } from "./types";
+import { Icon } from "@tabler/icons-react";
 
 export const co = <T>(
   condition: (value: T) => boolean,
@@ -138,4 +139,11 @@ export const scrollToWidget = (widgetId: string): void => {
     behavior: "smooth",
     block: "start",
   });
+};
+export const isIcon = (value: unknown): value is Icon => {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const candidate = value as Record<string, unknown>;
+  return "render" in candidate && typeof candidate.render === "function";
 };

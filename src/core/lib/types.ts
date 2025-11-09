@@ -65,7 +65,7 @@ export interface StaticRemoraidAppContext {
   navbarVariant: AppShellNavbarVariant;
   navbarMobileVariant: AppShellNavbarMobileVariant;
   footerVariant: AppShellFooterVariant;
-  logo?: AppLogo;
+  logo?: Icon | ImageProps["src"] | ReactElement;
   auth?: RemoraidAuthContext;
 }
 export type CustomAppVariables = {

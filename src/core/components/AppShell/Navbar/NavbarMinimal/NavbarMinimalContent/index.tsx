@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from "react";
+import { isValidElement, ReactElement, ReactNode } from "react";
 import {
   Box,
   FloatingPosition,
@@ -31,7 +31,8 @@ import RemoraidButton, {
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { useFrameLayoutElement } from "@/core/components/FrameLayout/Element";
 import { useHydratedMantineColorScheme } from "@/core/components/RemoraidProvider/HydrationStatusProvider";
-import { getDefaultButtonIconSize } from "@/core/lib/utils";
+import { getDefaultButtonIconSize, isIcon } from "@/core/lib/utils";
+import Image, { ImageProps } from "next/image";
 
 export interface NavbarMinimalContentProps {
   orientation: NavbarOrientation;
@@ -45,6 +46,7 @@ export interface NavbarMinimalContentProps {
     logoButton?:
       | Partial<RemoraidButtonProps<true>>
       | Partial<RemoraidButtonProps<false>>;
+    logo?: Partial<ImageProps>;
     NavigationMenu?: Partial<NavigationMenuProps>;
   };
 }
@@ -105,12 +107,22 @@ export default function NavbarMinimalContent({
     <RemoraidButton
       label={app.name}
       variant="subtle"
-      icon={app.logo({
-        style: {
-          width: theme.componentsProps.icons[logoIconSize].size,
-          height: theme.componentsProps.icons[logoIconSize].size,
-        },
-      })}
+      icon={
+        isValidElement(app.logo) || isIcon(app.logo) ? (
+          app.logo
+        ) : (
+          <Image
+            src={app.logo}
+            alt="App logo"
+            {...componentsProps?.logo}
+            style={{
+              width: theme.componentsProps.icons[logoIconSize].size,
+              height: theme.componentsProps.icons[logoIconSize].size,
+              ...componentsProps?.logo?.style,
+            }}
+          />
+        )
+      }
       responsive={buttonResponsive}
       collapsed={buttonCollapsed}
       clickTransformation={buttonClickTransformation}

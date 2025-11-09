@@ -180,5 +180,6 @@ export {
   asElementOrPropsOfType,
   getDefaultButtonIconSize,
   scrollToWidget,
+  isIcon,
 } from "./lib/utils";
 export * from "./lib/types";

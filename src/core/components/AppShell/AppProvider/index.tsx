@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, ReactNode, useContext } from "react";
-import { SetRequired } from "type-fest";
+import { SetOptional } from "type-fest";
 import { merge } from "lodash";
 import {
   CustomAppVariables,
@@ -24,15 +24,23 @@ export const useRemoraidApp = (): RemoraidAppContext<CustomAppVariables> => {
 };
 
 export interface AppProviderProps<V extends CustomAppVariables> {
-  appContext: SetRequired<Partial<RemoraidAppContext<V>>, "name" | "nav">;
+  appContext: SetOptional<
+    RemoraidAppContext<V>,
+    "navbarVariant" | "footerVariant" | "navbarMobileVariant"
+  >;
 }
 
 export default function AppProvider<V extends CustomAppVariables>({
   appContext: appContextProp,
   children,
 }: PropsWithChildren<AppProviderProps<V>>): ReactNode {
+  // Helpers
+  const { logo, ...appContextPropWithoutLogo } = appContextProp;
+
   return (
-    <appContext.Provider value={merge(defaultAppContext, appContextProp)}>
+    <appContext.Provider
+      value={{ ...merge(defaultAppContext, appContextPropWithoutLogo), logo }}
+    >
       {children}
     </appContext.Provider>
   );
