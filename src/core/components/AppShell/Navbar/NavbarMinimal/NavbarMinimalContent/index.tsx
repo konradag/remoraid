@@ -215,7 +215,8 @@ export default function NavbarMinimalContent({
   const staticButtons = staticElements
     .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
     .map((element, i) => button(element, `static-nav-element-${i}`));
-  const collapseStaticElements = staticElements.length > 1;
+  const collapseStaticElements =
+    staticElements.filter((element) => element.mounted ?? true).length > 1;
   const staticMenuButton = collapseStaticElements ? (
     <Box hiddenFrom={collapseStaticElementsBreakpoint}>
       <NavigationMenu
