@@ -1,5 +1,5 @@
 import { BoxProps, Box } from "@mantine/core";
-import { ComponentProps, PropsWithChildren, ReactNode } from "react";
+import { ComponentProps, PropsWithChildren, ReactNode, useEffect } from "react";
 import AppProvider, { AppProviderProps } from "./AppProvider";
 import { merge } from "lodash";
 import AppShellUserExperienceProvider from "./AppShellUserExperienceProvider";
@@ -12,6 +12,7 @@ import {
 } from "@/core/lib/types";
 import FrameLayout, { FrameLayoutProps } from "../FrameLayout";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
+import { useHydratedMantineColorScheme } from "../RemoraidProvider/HydrationStatusProvider";
 
 export const remoraidAppShellLayoutId = "remoraid-app-shell";
 
@@ -40,6 +41,26 @@ function AppShell<V extends CustomAppVariables>({
 }: PropsWithChildren<AppShellProps<V>>): ReactNode {
   // Contexts
   const theme = useRemoraidTheme();
+  const { colorScheme } = useHydratedMantineColorScheme();
+
+  // Effects
+  useEffect(() => {
+    let meta: HTMLMetaElement | null = document.querySelector(
+      'meta[name="theme-color"]'
+    );
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.appendChild(meta);
+    }
+    const { backgroundColor: computedBodyColor } = getComputedStyle(
+      document.body
+    );
+    if (!computedBodyColor) {
+      return;
+    }
+    meta.content = computedBodyColor;
+  }, [colorScheme]);
 
   return (
     <AppProvider<V> appContext={appContext} {...componentsProps?.AppProvider}>
