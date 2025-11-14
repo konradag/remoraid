@@ -50,7 +50,7 @@ function AppShell<V extends CustomAppVariables>({
           componentsProps?.AppShellUserExperienceProvider?.initialValue
         )}
       >
-        <Box h="100vh" {...componentsProps?.container}>
+        <Box h="100dvh" {...componentsProps?.container}>
           <FrameLayout
             layoutId={remoraidAppShellLayoutId}
             gutter={gutter ?? theme.primaryGutter}
