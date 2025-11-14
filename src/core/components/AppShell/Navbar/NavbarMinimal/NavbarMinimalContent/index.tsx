@@ -15,7 +15,7 @@ import { merge } from "lodash";
 import { useRemoraidApp } from "../../../AppProvider";
 import NavigationMenu, { NavigationMenuProps } from "./NavigationMenu";
 import { IconDots } from "@tabler/icons-react";
-import { getDefaultNavigationElements } from "../..";
+import Navbar, { getDefaultNavigationElements } from "../..";
 import {
   ClickTransformation,
   FrameLayoutSection,
@@ -223,10 +223,18 @@ export default function NavbarMinimalContent({
         elements={staticElements}
         target={
           <RemoraidButton
-            label={"Static elements"}
+            label="Static elements"
             icon={IconDots}
-            responsive={buttonResponsive}
-            collapsed={buttonCollapsed}
+            responsive={
+              orientation === NavbarOrientation.Vertical
+                ? buttonResponsive
+                : false
+            }
+            collapsed={
+              orientation === NavbarOrientation.Vertical
+                ? buttonCollapsed
+                : true
+            }
             clickTransformation={buttonClickTransformation}
             {...componentsProps?.button}
             componentsProps={merge(
