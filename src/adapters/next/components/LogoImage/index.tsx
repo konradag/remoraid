@@ -8,7 +8,7 @@ import {
   defaultRemoraidButtonSize,
 } from "remoraid/core";
 
-export interface NavbarLogoProps {
+export interface LogoImageProps {
   src: ImageProps["src"];
   size?: RemoraidIconSize;
   buttonSize?: MantineSize;
@@ -17,12 +17,12 @@ export interface NavbarLogoProps {
   };
 }
 
-export default function NavbarLogo({
+export default function LogoImage({
   src,
   size,
   buttonSize,
   componentsProps,
-}: NavbarLogoProps): ReactElement {
+}: LogoImageProps): ReactElement {
   // Contexts
   const theme = useRemoraidTheme();
 
