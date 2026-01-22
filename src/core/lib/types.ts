@@ -5,7 +5,6 @@ import {
   MantineTheme,
 } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
-import { ImageProps } from "next/image";
 import React, {
   Dispatch,
   MouseEventHandler,
@@ -54,7 +53,6 @@ export interface NavigationElementButton extends NavigationElementBase {
 export type NavigationElement =
   | NavigationElementButton
   | NavigationElementAnchor;
-export type AppLogo = (props: Omit<ImageProps, "src" | "alt">) => ReactElement;
 export type NavbarMobileVariant = null;
 export type AppShellFooterVariant = FooterVariant | null;
 export type AppShellNavbarVariant = NavbarVariant | null;
@@ -65,7 +63,7 @@ export interface StaticRemoraidAppContext {
   navbarVariant: AppShellNavbarVariant;
   navbarMobileVariant: AppShellNavbarMobileVariant;
   footerVariant: AppShellFooterVariant;
-  logo?: Icon | ImageProps["src"] | ReactElement;
+  logo?: Icon | ReactElement;
   auth?: RemoraidAuthContext;
 }
 export type CustomAppVariables = {
@@ -132,11 +130,11 @@ export interface WidgetsContext {
   updateWidgetSelection: (
     pageId: string,
     widgetId: string,
-    value: boolean
+    value: boolean,
   ) => void;
   updateWidgetSelectionBulk: (
     pageId: string,
-    selectedWidgetIds: string[]
+    selectedWidgetIds: string[],
   ) => void;
   isWidgetSelected: (pageId: string, widgetId: string) => boolean;
   hideWidget: (pageId: string, widgetId: string) => void;
@@ -183,7 +181,7 @@ export interface RemoraidThemeDependencies {
   colorScheme: MantineColorScheme;
 }
 export type RemoraidThemeCallback = (
-  dependencies: Partial<RemoraidThemeDependencies>
+  dependencies: Partial<RemoraidThemeDependencies>,
 ) => PartialDeep<RemoraidTheme>;
 export interface WidgetConfiguration {
   widgetId: string;
@@ -205,6 +203,11 @@ export interface SettingsWidgetContext {
 export interface HydrationStatus {
   hasHydrated: boolean;
   ensureHydration: <T>(v: T) => T | undefined;
+}
+export interface RouterAdapter {
+  pathname: string;
+  push: (href: string) => void;
+  replace?: (href: string) => void;
 }
 export enum LayoutType {
   Frame = "frame",
@@ -242,7 +245,7 @@ export interface ContextCluster<Context, StaticID extends string = never> {
   generalDefaultValue: Context;
   createContext: (id: string, defaultValue?: Context) => React.Context<Context>;
   useContext: <ID extends string>(
-    id: ID
+    id: ID,
   ) => ID extends StaticID ? Context : Context | null;
 }
 export enum ClickTransformation {

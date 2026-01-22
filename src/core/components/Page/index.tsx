@@ -5,12 +5,12 @@ import React, {
   useContext,
   useEffect,
 } from "react";
-import { usePathname } from "next/navigation";
 import { PageConfiguration } from "@/core/lib/types";
 import { useWidgets } from "../RemoraidProvider/WidgetsProvider";
 import PageContainer, { PageContainerProps } from "./PageContainer";
 import { useRemoraidTheme } from "../RemoraidProvider/ThemeProvider";
 import clsx from "clsx";
+import { useRemoraidRouter } from "../RemoraidProvider/RouterProvider";
 
 const pageContext = React.createContext<PageConfiguration | null>(null);
 
@@ -38,7 +38,7 @@ export default function Page({
 }: PropsWithChildren<PageProps>): ReactNode {
   // Contexts
   const theme = useRemoraidTheme();
-  const pathname = usePathname();
+  const { pathname } = useRemoraidRouter();
   const { isPageRegistered, registerPage } = useWidgets();
 
   // Helpers

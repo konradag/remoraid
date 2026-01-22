@@ -1,6 +1,6 @@
 {
   "name": "remoraid",
-  "version": "2.43.2",
+  "version": "2.44.0",
   "author": "Konrad Goldammer",
   "repository": {
     "type": "git",
@@ -17,13 +17,15 @@
     "bun-dts": "^0.1.22",
     "next": "16.0.3",
     "react": "^19.1.0",
-    "react-cookie": "^8.0.1"
+    "react-cookie": "^8.0.1",
+    "react-router-dom": "^7.12.0"
   },
   "peerDependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-cookie": "^8.0.1",
     "next": "16.0.3",
+    "react-router-dom": "^7.12.0",
     "@mantine/core": "^7.17.4",
     "@mantine/hooks": "^7.17.4",
     "@mantine/dates": "7.17.4",
@@ -32,6 +34,14 @@
     "@jsonforms/core": "^3.5.1",
     "@jsonforms/react": "^3.5.1",
     "@jsonforms/vanilla-renderers": "^3.5.1"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    },
+    "react-router-dom": {
+      "optional": true
+    }
   },
   "exports": {
     "./core": {
@@ -56,6 +66,16 @@
       "types": "./dist/modals/index.d.ts",
       "import": "./dist/modals/index.js",
       "require": "./dist/modals/index.cjs"
+    },
+    "./adapters/next": {
+      "types": "./dist/adapters/next/index.d.ts",
+      "import": "./dist/adapters/next/index.js",
+      "require": "./dist/adapters/next/index.cjs"
+    },
+    "./adapters/react-router": {
+      "types": "./dist/adapters/react-router/index.d.ts",
+      "import": "./dist/adapters/react-router/index.js",
+      "require": "./dist/adapters/react-router/index.cjs"
     }
   },
   "bugs": "https://github.com/konradag/remoraid/issues",

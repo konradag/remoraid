@@ -8,8 +8,8 @@ import {
   TransitionProps,
   useMantineTheme,
 } from "@mantine/core";
-import { usePathname, useRouter } from "next/navigation";
 import { isValidElement, ReactElement, ReactNode } from "react";
+import { useRemoraidRouter } from "@/core/components/RemoraidProvider/RouterProvider";
 
 export interface NavigationMenuProps {
   target: ReactElement | NavigationElement;
@@ -30,8 +30,8 @@ export default function NavigationMenu({
   // Contexts
   const theme = useRemoraidTheme();
   const mantineTheme = useMantineTheme();
-  const pathname = usePathname();
-  const router = useRouter();
+  const router = useRemoraidRouter();
+  const { pathname } = router;
 
   // Helpers
   const item = (element: NavigationElement): ReactElement => (

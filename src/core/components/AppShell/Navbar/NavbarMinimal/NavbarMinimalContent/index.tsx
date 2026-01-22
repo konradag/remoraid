@@ -1,4 +1,4 @@
-import { isValidElement, ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 import {
   Box,
   FloatingPosition,
@@ -9,13 +9,12 @@ import {
   ScrollArea,
   Stack,
 } from "@mantine/core";
-import { usePathname, useRouter } from "next/navigation";
 import { useAppShellUserExperience } from "../../../AppShellUserExperienceProvider";
 import { merge } from "lodash";
 import { useRemoraidApp } from "../../../AppProvider";
 import NavigationMenu, { NavigationMenuProps } from "./NavigationMenu";
 import { IconDots } from "@tabler/icons-react";
-import Navbar, { getDefaultNavigationElements } from "../..";
+import { getDefaultNavigationElements } from "../..";
 import {
   ClickTransformation,
   FrameLayoutSection,
@@ -25,14 +24,12 @@ import {
   NavigationElementType,
 } from "@/core/lib/types";
 import RemoraidButton, {
-  defaultRemoraidButtonSize,
   RemoraidButtonProps,
 } from "@/core/components/RemoraidButton";
 import { useRemoraidTheme } from "@/core/components/RemoraidProvider/ThemeProvider";
 import { useFrameLayoutElement } from "@/core/components/FrameLayout/Element";
 import { useHydratedMantineColorScheme } from "@/core/components/RemoraidProvider/HydrationStatusProvider";
-import { getDefaultButtonIconSize, isIcon } from "@/core/lib/utils";
-import Image, { ImageProps } from "next/image";
+import { useRemoraidRouter } from "@/core/components/RemoraidProvider/RouterProvider";
 
 export interface NavbarMinimalContentProps {
   orientation: NavbarOrientation;
@@ -46,7 +43,6 @@ export interface NavbarMinimalContentProps {
     logoButton?:
       | Partial<RemoraidButtonProps<true>>
       | Partial<RemoraidButtonProps<false>>;
-    logo?: Partial<ImageProps>;
     NavigationMenu?: Partial<NavigationMenuProps>;
   };
 }
@@ -62,8 +58,8 @@ export default function NavbarMinimalContent({
   const { userExperience: appShellUserExperience } =
     useAppShellUserExperience();
   const app = useRemoraidApp();
-  const router = useRouter();
-  const pathname = usePathname();
+  const router = useRemoraidRouter();
+  const { pathname } = router;
   const layoutElement = useFrameLayoutElement();
   const { colorScheme, setColorScheme } = useHydratedMantineColorScheme();
 
@@ -98,31 +94,11 @@ export default function NavbarMinimalContent({
     orientation === NavbarOrientation.Horizontal
       ? ClickTransformation.TiltRight
       : ClickTransformation.Default;
-  const logoButtonSize =
-    componentsProps?.logoButton?.size ??
-    componentsProps?.button?.size ??
-    defaultRemoraidButtonSize;
-  const logoIconSize = getDefaultButtonIconSize(logoButtonSize);
   const logoButton = app.logo ? (
     <RemoraidButton
       label={app.name}
       variant="subtle"
-      icon={
-        isValidElement(app.logo) || isIcon(app.logo) ? (
-          app.logo
-        ) : (
-          <Image
-            src={app.logo}
-            alt="App logo"
-            {...componentsProps?.logo}
-            style={{
-              width: theme.componentsProps.icons[logoIconSize].size,
-              height: theme.componentsProps.icons[logoIconSize].size,
-              ...componentsProps?.logo?.style,
-            }}
-          />
-        )
-      }
+      icon={app.logo}
       responsive={buttonResponsive}
       collapsed={buttonCollapsed}
       clickTransformation={buttonClickTransformation}
@@ -137,7 +113,7 @@ export default function NavbarMinimalContent({
           tooltip: { position: floatingPosition },
         },
         componentsProps?.button?.componentsProps,
-        componentsProps?.logoButton?.componentsProps
+        componentsProps?.logoButton?.componentsProps,
       )}
       onClick={(e) => {
         componentsProps?.button?.onClick?.(e);
@@ -179,7 +155,7 @@ export default function NavbarMinimalContent({
                     : undefined,
               },
             },
-            componentsProps?.button?.componentsProps
+            componentsProps?.button?.componentsProps,
           )}
           onClick={(e) => {
             if (element.type === NavigationElementType.Anchor) {
@@ -198,7 +174,7 @@ export default function NavbarMinimalContent({
         {
           Menu: { position: floatingPosition },
         },
-        componentsProps?.NavigationMenu?.componentsProps
+        componentsProps?.NavigationMenu?.componentsProps,
       )}
     />
   );
@@ -248,7 +224,7 @@ export default function NavbarMinimalContent({
                       : undefined,
                 },
               },
-              componentsProps?.button?.componentsProps
+              componentsProps?.button?.componentsProps,
             )}
           />
         }
@@ -257,7 +233,7 @@ export default function NavbarMinimalContent({
           {
             Menu: { position: floatingPosition },
           },
-          componentsProps?.NavigationMenu?.componentsProps
+          componentsProps?.NavigationMenu?.componentsProps,
         )}
       />
     </Box>

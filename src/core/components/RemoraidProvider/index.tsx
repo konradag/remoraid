@@ -11,10 +11,12 @@ import HydrationStatusProvider, {
   HydrationStatusProviderProps,
 } from "./HydrationStatusProvider";
 import LayoutsProvider, { LayoutsProviderProps } from "./LayoutsProvider";
+import RouterProvider, { RouterProviderProps } from "./RouterProvider";
 
 export interface RemoraidProviderProps {
   theme?: ThemeProviderProps["theme"];
   initialUserExperience?: UserExperienceProviderProps<CoreUserExperience>["initialValue"];
+  router?: RouterProviderProps["router"];
   componentsProps?: {
     ThemeProvider?: Partial<ThemeProviderProps>;
     CoreUserExperienceProvider?: Partial<
@@ -24,6 +26,7 @@ export interface RemoraidProviderProps {
     CookiesProvider?: Partial<ReactCookieProps>;
     HydrationStatusProviderProps?: Partial<HydrationStatusProviderProps>;
     LayoutsProviderProps?: Partial<LayoutsProviderProps>;
+    RouterProvider?: Partial<RouterProviderProps>;
   };
 }
 
@@ -31,26 +34,29 @@ export default function RemoraidProvider({
   children,
   theme,
   initialUserExperience,
+  router,
   componentsProps,
 }: PropsWithChildren<RemoraidProviderProps>): ReactNode {
   return (
     <CookiesProvider {...componentsProps?.CookiesProvider}>
-      <HydrationStatusProvider
-        {...componentsProps?.HydrationStatusProviderProps}
-      >
-        <ThemeProvider theme={theme} {...componentsProps?.ThemeProvider}>
-          <CoreUserExperienceProvider
-            initialValue={initialUserExperience}
-            {...componentsProps?.CoreUserExperienceProvider}
-          >
-            <WidgetsProvider {...componentsProps?.WidgetsProvider}>
-              <LayoutsProvider {...componentsProps?.LayoutsProviderProps}>
-                {children}
-              </LayoutsProvider>
-            </WidgetsProvider>
-          </CoreUserExperienceProvider>
-        </ThemeProvider>
-      </HydrationStatusProvider>
+      <RouterProvider router={router} {...componentsProps?.RouterProvider}>
+        <HydrationStatusProvider
+          {...componentsProps?.HydrationStatusProviderProps}
+        >
+          <ThemeProvider theme={theme} {...componentsProps?.ThemeProvider}>
+            <CoreUserExperienceProvider
+              initialValue={initialUserExperience}
+              {...componentsProps?.CoreUserExperienceProvider}
+            >
+              <WidgetsProvider {...componentsProps?.WidgetsProvider}>
+                <LayoutsProvider {...componentsProps?.LayoutsProviderProps}>
+                  {children}
+                </LayoutsProvider>
+              </WidgetsProvider>
+            </CoreUserExperienceProvider>
+          </ThemeProvider>
+        </HydrationStatusProvider>
+      </RouterProvider>
     </CookiesProvider>
   );
 }

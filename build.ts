@@ -3,12 +3,18 @@ import { dts } from "bun-dts";
 import { cp } from "fs/promises";
 import packageJson from "./package.json";
 
-const packages: string[] = ["core", "server", "jsonforms", "modals"];
+const packages: string[] = [
+  "core",
+  "server",
+  "jsonforms",
+  "modals",
+  "adapters",
+];
 type Package = (typeof packages)[number];
 
 const sharedBuildConfig: (
   p?: Package,
-  withClientBanner?: boolean
+  withClientBanner?: boolean,
 ) => Omit<BuildConfig, "entrypoints"> = (p, withClientBanner) => ({
   outdir: `./dist/${p ?? ""}`,
   jsx: {
@@ -42,6 +48,13 @@ const buildConfigs: { [P in Package]: BuildConfig } = {
     ...sharedBuildConfig("modals", true),
     entrypoints: ["./src/modals/index.ts"],
   },
+  adapters: {
+    ...sharedBuildConfig("adapters", true),
+    entrypoints: [
+      "./src/adapters/next/index.ts",
+      "./src/adapters/react-router/index.ts",
+    ],
+  },
 };
 
 await Promise.all([
@@ -51,14 +64,14 @@ await Promise.all([
       plugins: [dts()],
       format: "esm",
       naming: "[dir]/[name].js",
-    })
+    }),
   ),
   ...packages.map((p) =>
     Bun.build({
       ...buildConfigs[p],
       format: "cjs",
       naming: "[dir]/[name].cjs",
-    })
+    }),
   ),
   cp("./src/core/lib/styles.css", "./dist/core/styles.css"),
 ]);

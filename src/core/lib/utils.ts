@@ -15,7 +15,7 @@ import { Icon } from "@tabler/icons-react";
 export const co = <T>(
   condition: (value: T) => boolean,
   value: T,
-  fallback: T
+  fallback: T,
 ): T => (condition(value) ? value : fallback);
 export type Common<A, B> = Pick<A & B, keyof A & keyof B>;
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
@@ -24,7 +24,7 @@ export type OptionalIfExtends<T, K extends keyof T, V1, V2> = [V1] extends [V2]
   : T;
 export type ElementOfType<
   T extends ElementType,
-  P = ComponentProps<T>
+  P = ComponentProps<T>,
 > = ReactElement<P, T>;
 export type ChildrenOfType<T extends ElementType> =
   | ElementOfType<T>
@@ -36,16 +36,16 @@ export type PropsWithChildrenOfType<T extends ElementType, P = {}> = P & {
 };
 export type ElementOrPropsOfType<
   T extends ElementType,
-  P = ComponentProps<T>
+  P = ComponentProps<T>,
 > = ElementOfType<T, P> | P;
 export const isValidElementOfType = <T extends ElementType>(
   type: T,
-  value: unknown
+  value: unknown,
 ): value is ElementOfType<T> => {
   return isValidElement(value) && value.type === type;
 };
 export const getElementTypeName = (
-  type: ElementType | ReactElement["type"]
+  type: ElementType | ReactElement["type"],
 ): string => {
   if (typeof type === "string") {
     return type;
@@ -58,47 +58,47 @@ export const getElementTypeName = (
 export const asElementOfType = <T extends ElementType>(
   type: T,
   element: ReactElement,
-  additionalErrorMessage?: string
+  additionalErrorMessage?: string,
 ): ElementOfType<T> => {
   if (isValidElementOfType(type, element)) {
     return element;
   }
   throw new TypeError(
     `Expected React element of type ${getElementTypeName(
-      type
+      type,
     )}, but received type: ${getElementTypeName(element.type)}.${
       additionalErrorMessage !== undefined && additionalErrorMessage.length > 0
         ? ` ${additionalErrorMessage}`
         : ""
-    }`
+    }`,
   );
 };
 export const asChildrenOfType = <T extends ElementType>(
   type: T,
   children: ChildrenOfType<ElementType>,
-  additionalErrorMessage?: string
+  additionalErrorMessage?: string,
 ): ChildrenOfType<T> => {
   if (children === undefined || children === null) {
     return children;
   }
   if (Array.isArray(children)) {
     return children.map((child) =>
-      asChildrenOfType(type, child, additionalErrorMessage)
+      asChildrenOfType(type, child, additionalErrorMessage),
     );
   }
   return asElementOfType(
     type,
     children as ReactElement,
-    additionalErrorMessage
+    additionalErrorMessage,
   );
 };
 export const asElementOrPropsOfType = <
   T extends ElementType,
-  P = ComponentProps<T>
+  P = ComponentProps<T>,
 >(
   type: T,
   elementOrProps: ReactElement | P,
-  additionalErrorMessage?: string
+  additionalErrorMessage?: string,
 ): ElementOrPropsOfType<T, P> => {
   if (isValidElement(elementOrProps)) {
     return asElementOfType(type, elementOrProps, additionalErrorMessage);
@@ -106,7 +106,7 @@ export const asElementOrPropsOfType = <
   return elementOrProps;
 };
 export const isMantinePrimaryShade = (
-  shade: MantinePrimaryShade | MantineColorShade
+  shade: MantinePrimaryShade | MantineColorShade,
 ): shade is MantinePrimaryShade => {
   if (isNaN(Number(shade))) {
     return true;
@@ -114,7 +114,7 @@ export const isMantinePrimaryShade = (
   return false;
 };
 export const getDefaultButtonIconSize = (
-  buttonSize: MantineSize
+  buttonSize: MantineSize,
 ): RemoraidIconSize => {
   if (buttonSize === "xs") {
     return RemoraidIconSize.ExtraSmall;
@@ -140,6 +140,7 @@ export const scrollToWidget = (widgetId: string): void => {
     block: "start",
   });
 };
+// Util 'isIcon' is no longer used internally; Remove?
 export const isIcon = (value: unknown): value is Icon => {
   if (typeof value !== "object" || value === null) {
     return false;

@@ -78,6 +78,7 @@ export {
   default as RemoraidButton,
   RemoraidButtonProps,
   RemoraidButtonDefaultResponsivity,
+  defaultRemoraidButtonSize,
 } from "./components/RemoraidButton";
 export { default as Controls, ControlsProps } from "./components/Controls";
 export {
@@ -136,6 +137,11 @@ export {
   default as ScrollableChipGroup,
   ScrollableChipGroupProps,
 } from "./components/ScrollableChipGroup";
+export {
+  default as RouterProvider,
+  RouterProviderProps,
+  useRemoraidRouter,
+} from "./components/RemoraidProvider/RouterProvider";
 export {
   useLayouts,
   LayoutsProviderProps,

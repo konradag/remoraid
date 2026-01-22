@@ -1,8 +1,8 @@
 import React, { PropsWithChildren, ReactNode } from "react";
 import Page, { PageProps } from "../Page";
-import { usePathname } from "next/navigation";
 import AlertMinimal from "../AlertMinimal";
 import { AlertCategory } from "@/core/lib/types";
+import { useRemoraidRouter } from "../RemoraidProvider/RouterProvider";
 
 export interface NotFoundPageProps {
   message?: string;
@@ -17,7 +17,7 @@ export default function NotFoundPage({
   componentsProps,
 }: PropsWithChildren<NotFoundPageProps>): ReactNode {
   // Contexts
-  const pathname = usePathname();
+  const { pathname } = useRemoraidRouter();
 
   return (
     <Page name="Not Found" {...componentsProps?.page}>
