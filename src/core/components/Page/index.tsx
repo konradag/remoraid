@@ -54,7 +54,7 @@ export default function Page({
   }, []);
 
   return (
-    <pageContext.Provider value={{ name: name ?? pathname, pageId, ...config }}>
+    <pageContext.Provider value={{ name: name ?? pageId, pageId, ...config }}>
       <PageContainer {...componentsProps?.PageContainer}>
         <Stack
           gap={gap ?? theme.primaryGutter}
