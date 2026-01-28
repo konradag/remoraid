@@ -8,7 +8,8 @@ const packages: string[] = [
   "server",
   "jsonforms",
   "modals",
-  "adapters",
+  "adapters/next",
+  "adapters/react-router",
 ];
 type Package = (typeof packages)[number];
 
@@ -48,12 +49,13 @@ const buildConfigs: { [P in Package]: BuildConfig } = {
     ...sharedBuildConfig("modals", true),
     entrypoints: ["./src/modals/index.ts"],
   },
-  adapters: {
-    ...sharedBuildConfig("adapters", true),
-    entrypoints: [
-      "./src/adapters/next/index.ts",
-      "./src/adapters/react-router/index.ts",
-    ],
+  "adapters/next": {
+    ...sharedBuildConfig("adapters/next", true),
+    entrypoints: ["./src/adapters/next/index.ts"],
+  },
+  "adapters/react-router": {
+    ...sharedBuildConfig("adapters/react-router", true),
+    entrypoints: ["./src/adapters/react-router/index.ts"],
   },
 };
 
