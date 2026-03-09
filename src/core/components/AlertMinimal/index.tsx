@@ -62,11 +62,12 @@ export default function AlertMinimal({
                 {...merge(
                   {},
                   theme.componentsProps.icons[iconSize],
-                  componentsProps?.icon
+                  componentsProps?.icon,
                 )}
               />
             ) : undefined
           }
+          {...componentsProps?.alert}
           style={merge(transitionStyle, componentsProps?.alert?.style)}
         >
           {text}
