@@ -3,6 +3,7 @@ import {
   Chip,
   ChipProps,
   Divider,
+  DividerProps,
   Flex,
   FlexProps,
   Menu,
@@ -35,6 +36,7 @@ export interface WidgetSelectionHeaderProps {
     container?: Partial<FlexProps>;
     widgetMenu?: Partial<MenuProps>;
     title?: Partial<TextProps>;
+    divider?: Partial<DividerProps>;
     ScrollableChipGroup?: Partial<ScrollableChipGroupProps>;
     Chip?: Partial<ChipProps>;
     Pinnable?: Partial<PinnableProps>;
@@ -61,7 +63,7 @@ export default function WidgetSelectionHeader({
   if (!page) {
     throw new InvalidComponentUsageError(
       "WidgetSelectionHeader",
-      "must be used as child of 'Page'."
+      "must be used as child of 'Page'.",
     );
   }
 
@@ -81,7 +83,7 @@ export default function WidgetSelectionHeader({
   const selectedWidgets = Object.entries(widgets).reduce(
     (t: string[], [widgetId, widget]) =>
       widget?.selected ? [...t, widgetId] : t,
-    []
+    [],
   );
   const element = (
     <Flex
@@ -104,13 +106,13 @@ export default function WidgetSelectionHeader({
       className={clsx(
         !pinnableSection ? "remoraid-non-widget-segment" : undefined,
         !pinnableSection ? "remoraid-segment" : undefined,
-        componentsProps?.container?.className
+        componentsProps?.container?.className,
       )}
     >
       <Text size="md" {...componentsProps?.title}>
         {title ?? page.name}
       </Text>
-      <Divider orientation="vertical" />
+      <Divider orientation="vertical" {...componentsProps?.divider} />
       {isPageRegistered(page.pageId) && (
         <ScrollableChipGroup
           value={selectedWidgets}
@@ -122,7 +124,7 @@ export default function WidgetSelectionHeader({
           }}
           componentsProps={merge(
             { ScrollArea: { flex: 1 } },
-            componentsProps?.ScrollableChipGroup?.componentsProps
+            componentsProps?.ScrollableChipGroup?.componentsProps,
           )}
         >
           {Object.entries(widgets).map(([widgetId, widget]) => {
@@ -164,7 +166,7 @@ export default function WidgetSelectionHeader({
                               "background-color var(--remoraid-transition-duration-short)",
                           },
                         },
-                        componentsProps?.Chip?.styles
+                        componentsProps?.Chip?.styles,
                       )}
                       id={`remoraid-widget-selection-header-chip-${widgetId}`}
                     >
@@ -221,7 +223,7 @@ export default function WidgetSelectionHeader({
       return;
     }
     const activeWidgetChipElement = scrollAreaRef.current.querySelector(
-      `#remoraid-widget-selection-header-chip-${activeWidget}`
+      `#remoraid-widget-selection-header-chip-${activeWidget}`,
     );
     if (!activeWidgetChipElement) {
       return;
@@ -245,19 +247,19 @@ export default function WidgetSelectionHeader({
             onMouseEnter: (e) => {
               handleEnter();
               componentsProps?.Pinnable?.componentsProps?.container?.onMouseEnter?.(
-                e
+                e,
               );
             },
             onMouseLeave: (e) => {
               handleLeave();
               componentsProps?.Pinnable?.componentsProps?.container?.onMouseLeave?.(
-                e
+                e,
               );
             },
             className: clsx(
               "remoraid-segment",
               "remoraid-non-widget-segment",
-              componentsProps?.Pinnable?.componentsProps?.container?.className
+              componentsProps?.Pinnable?.componentsProps?.container?.className,
             ),
           },
           button: {
