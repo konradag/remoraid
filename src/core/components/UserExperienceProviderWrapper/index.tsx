@@ -3,7 +3,7 @@ import {
   UserExperience,
   UserExperienceContext,
 } from "@/core/lib/types";
-import { merge } from "lodash";
+import { mergeWith } from "lodash";
 import React, {
   Context,
   createContext,
@@ -16,7 +16,7 @@ import { useCookies } from "react-cookie";
 import { PartialDeep } from "type-fest";
 
 export const createUserExperienceContext = <T extends UserExperience>(
-  defaultUserExperience: T
+  defaultUserExperience: T,
 ): Context<UserExperienceContext<T>> =>
   createContext<UserExperienceContext<T>>({
     userExperience: defaultUserExperience,
@@ -36,7 +36,7 @@ export interface UserExperienceProviderWrapperProps<T extends UserExperience> {
 }
 
 export default function UserExperienceProviderWrapper<
-  T extends UserExperience
+  T extends UserExperience,
 >({
   children,
   context,
@@ -48,11 +48,21 @@ export default function UserExperienceProviderWrapper<
   const [cookies, setCookie] = useCookies();
 
   // Helpers 1
-  const initialUserExperience = merge(defaultUserExperience, initialValue);
+  const initialUserExperience = mergeWith(
+    {},
+    defaultUserExperience,
+    initialValue,
+    (_objValue, srcValue) => {
+      if (Array.isArray(srcValue)) {
+        return [...srcValue];
+      }
+      return undefined;
+    },
+  );
 
   // State
   const [userExperience, setUserExperience] = useState<T>(
-    initialUserExperience
+    initialUserExperience,
   );
   const [processedCookie, setProcessedCookie] = useState<boolean>(false);
 
